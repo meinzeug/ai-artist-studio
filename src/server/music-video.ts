@@ -565,8 +565,11 @@ export async function tickMusicVideos() {
   const lock = await pool.connect();
   let acquired = false;
   try {
-    acquired = (await lock.query("SELECT pg_try_advisory_lock(71420921) ok"))
-      .rows[0].ok;
+    acquired = (
+      await lock.query(
+        "SELECT pg_try_advisory_lock(71420921,hashtext(current_schema())) ok",
+      )
+    ).rows[0].ok;
     if (!acquired) return;
     const rows = await query(
       "SELECT v.* FROM music_video_productions v JOIN settings s ON s.user_id=v.user_id JOIN artist_automations a ON a.artist_id=v.artist_id JOIN artists ar ON ar.id=v.artist_id WHERE v.state IN ('planning','images','rendering') AND NOT s.emergency_stop AND a.enabled AND NOT ar.archived ORDER BY v.created_at LIMIT 20",
@@ -578,7 +581,10 @@ export async function tickMusicVideos() {
         await blocked(p, (e as Error).message);
       }
   } finally {
-    if (acquired) await lock.query("SELECT pg_advisory_unlock(71420921)");
+    if (acquired)
+      await lock.query(
+        "SELECT pg_advisory_unlock(71420921,hashtext(current_schema()))",
+      );
     lock.release();
   }
 }

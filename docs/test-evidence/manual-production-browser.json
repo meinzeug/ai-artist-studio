@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-09-20T20:49:24.697Z",
+  "provider": "explicit synthetic text fixture",
+  "runState": "waiting_for_input",
+  "stage": "music",
+  "manualStarts": 1,
+  "aiJobs": 1,
+  "sunoApiCalls": 0,
+  "imageApiCalls": 0,
+  "scheduleUnchanged": true,
+  "packageDownloaded": true,
+  "desktop": 1440,
+  "mobile": 390,
+  "browserErrors": []
+}

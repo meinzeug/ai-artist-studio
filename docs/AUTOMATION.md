@@ -26,7 +26,11 @@ Neue Artist-Produktionen erstellen standardmäßig ein Musikvideo für die gesam
 
 Die erste Produktion beginnt sofort. Weitere Produktionen starten standardmäßig **09:00 Europe/Berlin**; Uhrzeit, Musikweg und Pause sind je Artist unter **Tägliche Automatik / Automatik einstellen** bedienbar. Bestehende Artists können hier ausdrücklich aktiviert werden; ihre vorhandene Identität wird erhalten.
 
-Es gibt höchstens einen Lauf pro lokalem Kalendertag und einen noch laufenden/wartenden Produktionslauf pro Artist. Eine offene Audio- oder Fehlerübergabe verhindert einen Rückstau neuer Songs. Fertige Videos dürfen dagegen auf ihre manuelle Veröffentlichung warten, während am nächsten Tag ein neuer Song entsteht. Ausfalltage werden nicht stapelweise nachproduziert.
+Es gibt höchstens einen automatisch geplanten Lauf pro lokalem Kalendertag und einen noch laufenden/wartenden Produktionslauf pro Artist. Eine offene Audio- oder Fehlerübergabe verhindert einen Rückstau neuer Songs. Fertige Videos dürfen dagegen auf ihre manuelle Veröffentlichung warten, während am nächsten Tag ein neuer Song entsteht. Ausfalltage werden nicht stapelweise nachproduziert.
+
+### Sofort einen weiteren Song starten
+
+Unter **Manuelle Aufgaben → Neue Produktion** lässt sich ein zusätzlicher Song für den gewählten Artist starten, auch nach einer bereits abgeschlossenen Tagesproduktion. Der Dialog zeigt die aktuelle Providerverbindung und Grenzen; anschließend **Produktion bestätigen & starten** wählen. Künstleridentität, Hauptporträt und nächster täglicher Termin bleiben bestehen. Offene Produktionen oder Vollvideos müssen zuerst abgeschlossen werden. Wiederholte Klicks mit derselben Startkennung erzeugen keinen zweiten Lauf. Die bestehenden Text-, Bild- und Musikbudgets gelten weiterhin.
 
 Bei einer Zeitumstellung wird eine nicht existierende Startzeit um die DST-Lücke nach hinten verschoben; bei einer doppelten Uhrzeit wird das erste Vorkommen verwendet. Diese Regel gilt nur für den wiederkehrenden internen Produktionsstart. Veröffentlichungsnachweise behalten die explizite Auswahl bei mehrdeutigen Uhrzeiten.
 

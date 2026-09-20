@@ -81,3 +81,9 @@ Bestehende Artists werden nur auf ausdrücklichen Start hin automatisiert. Autom
 | Fertige Szenen behalten; Grenzen respektieren | dauerhafte Szenenaufträge, Budgetstopp, geschützte Fortsetzung und manueller Bildimport | konkurrierender Start, unbekannter Anbieterzustand, Budget und Wiederaufnahme getestet |
 
 Details und konkrete Serverabnahme: [Vollständige Musikvideos](FULL_MUSIC_VIDEOS.md), [Testbericht](TEST_REPORT.md).
+
+## Zusatzstart einer Produktion
+
+| Anforderung | Implementierung | Nachweis |
+|---|---|---|
+| Bestehenden Artist sofort einen weiteren Song entwickeln lassen | `auto_start`, `StartProduction`, Migration 008 | `manual-production.test.ts`: Tageslauf und Zusatzlauf, Deduplizierung, Referenz/Termin, Budgetstopp; `manual-production.spec.ts`: Dashboard bis Suno-Paket |

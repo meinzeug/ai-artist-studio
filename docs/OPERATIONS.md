@@ -119,3 +119,7 @@ Nach Sicherung und Ende laufender Provideraufträge Migration 007 und den aktual
 Der Renderer begrenzt sich auf zwei Bildquellen gleichzeitig; Bildaufträge laufen einzeln innerhalb der bisherigen Grenzen. Fortschritt, fertige Szenen und unveränderliche Referenzen werden in PostgreSQL gesichert. Bei Budget-/Providerblockern unter „Vollständige Musikvideos“ fortsetzen, nachdem die Ursache behoben wurde. Bereits unklar übermittelte Bildaufträge zuerst klären. Einen laufenden externen Auftrag nicht durch Löschen von Queue-/Datenbankeinträgen wiederholen.
 
 Restore nach Migration 007 mit 52 Tabellen, 64 Datensätzen, sieben Dateihashes und echtem DB-Neustart bestanden; dieser Test verwendet ausschließlich eine separate synthetische Testproduktion. [Nachweis](test-evidence/full-music-video-restore.json).
+
+## Zusätzliche Produktionen (Migration 008)
+
+Vor dem Update laufende Aufträge auslaufen lassen und Daten sichern. Migration 008 ergänzt Startart/Startkennung an `automation_runs` und ersetzt den allgemeinen Tagesindex durch einen partiellen Index für geplante Tagesproduktionen. Vorhandene Läufe bleiben tägliche Produktionen. Web und sämtliche Worker gemeinsam aktualisieren und neu starten, da sich auch der Scheduler-Sperrschlüssel auf das aktuelle Datenbankschema bezieht. Keine neue Abhängigkeit. Zusätzliche Produktionen über den Dashboard-Dialog starten; keine Termine oder bestehenden Laufdaten zum Erzwingen eines Starts manipulieren.

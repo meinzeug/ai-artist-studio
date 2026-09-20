@@ -2,6 +2,16 @@
 
 Abnahme: **2026-09-20**, Linux/Ubuntu, Node 22.23.1, PostgreSQL 16.15, Redis 7.0.15, FFmpeg 6.1.1, Google Chrome 153.0.8010.47. Produktiv- und Testdaten sind getrennt. Es wurde keine echte öffentliche Veröffentlichung und kein zusätzlicher kostenpflichtiger Medien-API-Auftrag ausgeführt. Native Codex-Text-/Bildtests nutzen das bestehende ChatGPT-Kontingent.
 
+## Zusätzlicher Produktionsstart und zehnfache Bildlimits (2026-09-20)
+
+- **82/82 Unit-/Integrationstests** bestanden, `npm run typecheck` und `npm run build` erfolgreich. Drei neue Tests prüfen konkurrierende identische Startkennungen, unveränderte Identität/Porträtreferenz/Tagesplanung, Besitzschutz, Provider-/Policy-Versionen, Pause/Not-Aus und einen echten Stopp bei ausgeschöpftem Textbudget.
+- Ein erster gemeinsamer Testlauf hatte neun Folgefehler durch datenbankweite Scheduler-Sperren zwischen unabhängigen Testschemas. Die Sperren berücksichtigen jetzt das aktuelle Schema; Worker derselben Datenbasis schließen sich weiterhin aus. Der vollständige Wiederholungslauf bestand alle 82 Tests.
+- Bildlimits auf ausdrücklichen Betreiberwunsch über den authentifizierten Dashboard-Command von **10/Tag und 100/Monat auf 100/Tag und 1000/Monat** erhöht. Codex-Verbindung weiterhin aktiv, bestehende Künstlerfreigabe auf die neue Konfigurationsversion aktualisiert. Bezahlte API-Budgets unverändert. Historische Angaben von 10/100 in älteren Abnahmen beschreiben deren damaligen Stand.
+- **Gezielter Playwright-Test bestanden:** Zusatzstart über den echten Dashboard-Dialog, ein gespeicherter Song mit Lyrics/Stil, manuelle Suno-Aufgabe und echtes ZIP. Explizit synthetischer Textprovider, keine Suno-/Bild-API-Aufrufe. Desktop und 390px-Mobilansicht geprüft. Beim ersten Lauf wurde eine falsche erwartete Providerkennung im Test auf den realen Wert `suno_manual` korrigiert. Mobil wartet der Screenshot auf die abgeschlossene Seitenleisten-Animation.
+- Der anschließende echte Serverstart wird nach Ausführung ergänzt. SunoAPI.org ist nicht verbunden; der neue Song benötigt daher eine eigene manuelle Aufnahme. Frühere MP3/MP4 werden nicht dem neuen Song zugeordnet.
+
+Nachweise: `tests/manual-production.test.ts`, `tests/e2e/manual-production.spec.ts`, [Browserdaten](test-evidence/manual-production-browser.json), [Desktop](screenshots/manual-production-desktop.png), [Mobil](screenshots/manual-production-mobile.png); lokale Logs `.local/manual-start-final-tests.log`, `.local/manual-start-typecheck.log`, `.local/manual-start-final-build.log`.
+
 ## Vollständiges Musikvideo mit Lyrics-Storyboard (2026-09-20)
 
 - **79/79 Unit-/Integrationstests** bestanden. Typprüfung und Produktionsbuild erfolgreich. Neue Tests: volle Zeitverteilung bei 188,784 Sekunden, echte Lyrics-Bezüge, unterschiedliche Motive, Bestätigung und numerische Kostenprüfung, Besitzschutz, konkurrierender Start, persistentes Storyboard, manuelle Szenenübergabe, geschützte Referenz, Wiederaufnahme und Budgetstopp ohne neuen unklaren Bildauftrag, Not-Aus und Übergang der Künstlerautomatik zur Vollversion.

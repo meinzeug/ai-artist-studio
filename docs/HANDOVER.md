@@ -2,6 +2,12 @@
 
 Stand **2026-09-20**. Implementierung im bestehenden Repository `/home/dennis/ai-artist-studio`, Ausgangscommit `8bf8730`. Keine fremden Änderungen verworfen und keine fremden Projekt-Credentials übernommen.
 
+## Aktuelle Erweiterung: sofort eine weitere Produktion
+
+Unter **Manuelle Aufgaben → Neue Produktion** kann ein bestehender Artist einen weiteren Song entwickeln, ohne bis zum nächsten Tageslauf zu warten. Der Bestätigungsdialog bindet die aktuellen Provider-Versionen; offene Produktionen, Not-Aus und Budgetgrenzen bleiben wirksam. Migration 008 trennt geplante Tagesläufe von zusätzlichen Starts mit eigener Deduplizierungskennung. Künstleridentität, Hauptporträt und Tagesplanung bleiben bestehen. 82 Unit-/Integrationstests, Typprüfung, Build und gezielter Playwright-Test bis zum Suno-ZIP bestanden. Die Browserprüfung verwendet einen ausdrücklich synthetischen Textprovider; Serverabnahme wird nach Ausführung ergänzt.
+
+Auf dorfspy wurden die Codex-Bildlimits auf ausdrücklichen Wunsch auf **100/Tag und 1000/Monat** erhöht und die bestehende Artist-Automatik erneut bestätigt. SunoAPI.org ist weiterhin nicht verbunden; die nächste tatsächliche Aufnahme muss im manuellen Auftrag produziert/importiert werden.
+
 ## Anwendung öffnen
 
 **https://artist.dorfspy.de** — produktiver Server `91.99.217.84`, Zugriff über Caddy/HTTPS. Hetzner-DNS A-Eintrag angelegt, Let’s-Encrypt-Zertifikat erfolgreich ausgestellt. Web, Worker und Runner laufen als eigene automatisch startende systemd-Dienste; die vorher vorhandene Anwendung bleibt in Betrieb.

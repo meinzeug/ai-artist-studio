@@ -182,6 +182,103 @@ export async function automationCommand(
       return { id, run_id: runId };
     });
   }
+  if (action === "auto_start") {
+    const v = z
+      .object({
+        artist_id: z.uuid(),
+        version: z.number().int().positive(),
+        approved: z.literal(true),
+      })
+      .parse(d);
+    const artist = await ownArtist(user, v.artist_id);
+    return transaction(async (c) => {
+      const settings = (await one(
+        "SELECT * FROM settings WHERE user_id=$1 FOR UPDATE",
+        [user],
+        c,
+      ))!;
+      if (settings.emergency_stop) throw new AppError("Not-Aus aktiv.");
+      const old = await one(
+        "SELECT id,artist_id FROM automation_runs WHERE user_id=$1 AND start_key=$2",
+        [user, key],
+        c,
+      );
+      if (old) {
+        if (old.artist_id !== artist.id)
+          throw new AppError(
+            "Startkennung gehört zu einem anderen Artist.",
+            409,
+          );
+        return { id: artist.id, run_id: old.id };
+      }
+      const policy = await one(
+        "SELECT * FROM artist_automations WHERE artist_id=$1 FOR UPDATE",
+        [artist.id],
+        c,
+      );
+      if (!policy?.enabled || artist.archived)
+        throw new AppError(
+          "Zuerst die Automatik für diesen Artist aktivieren.",
+        );
+      if (policy.version !== v.version)
+        throw new AppError(
+          "Automatik inzwischen geändert. Vorschau neu öffnen.",
+          409,
+        );
+      const { image, music } = await approvals(user, d, c);
+      if (
+        policy.approved_image_version !== (image?.version ?? null) ||
+        policy.approved_music_version !== (music?.version ?? null)
+      )
+        throw new AppError(
+          "Aktuelle Provider und Budgets zuerst in den Automatik-Einstellungen bestätigen.",
+          409,
+        );
+      const active = await one(
+        "SELECT id FROM automation_runs WHERE artist_id=$1 AND state IN ('running','waiting_for_input') LIMIT 1",
+        [artist.id],
+        c,
+      );
+      const film = await one(
+        "SELECT id FROM music_video_productions WHERE artist_id=$1 AND state IN ('planning','images','rendering','blocked') LIMIT 1",
+        [artist.id],
+        c,
+      );
+      if (active || film)
+        throw new AppError(
+          "Die vorhandene Produktion zuerst abschließen oder ihre offene Aufgabe bearbeiten.",
+          409,
+        );
+      const id = randomUUID();
+      await c.query(
+        "INSERT INTO automation_runs(id,user_id,artist_id,local_day,start_kind,start_key,stage,identity_ready,full_music_video,video_scene_count) VALUES($1,$2,$3,$4,'manual',$5,$6,true,$7,$8)",
+        [
+          id,
+          user,
+          artist.id,
+          localProductionDay(new Date(), policy.timezone),
+          key,
+          policy.reference_asset_id ? "song" : "portrait",
+          policy.full_music_video,
+          policy.video_scene_count,
+        ],
+      );
+      await audit(
+        user,
+        "automation.manual_start",
+        artist.id,
+        {
+          run_id: id,
+          image_version: image?.version ?? null,
+          music_version: music?.version ?? null,
+          full_music_video: policy.full_music_video,
+          video_scene_count: policy.video_scene_count,
+        },
+        c,
+      );
+      return { id: artist.id, run_id: id };
+    });
+  }
   if (action === "auto_settings") {
     const v = z
       .object({
@@ -1077,7 +1174,9 @@ export async function tickAutomation(now = new Date()) {
   let acquired = false;
   try {
     acquired = (
-      await lock.query("SELECT pg_try_advisory_lock(71420920) acquired")
+      await lock.query(
+        "SELECT pg_try_advisory_lock(71420920,hashtext(current_schema())) acquired",
+      )
     ).rows[0].acquired;
     if (!acquired) return;
     const due = await query(
@@ -1091,9 +1190,17 @@ export async function tickAutomation(now = new Date()) {
           [p.artist_id],
           c,
         ))!;
-        if (!latest.enabled) return;
+        if (!latest.enabled || new Date(latest.next_run_at) > now) return;
+        if (
+          await one(
+            "SELECT id FROM automation_runs WHERE artist_id=$1 AND state IN ('running','waiting_for_input') LIMIT 1",
+            [p.artist_id],
+            c,
+          )
+        )
+          return;
         await c.query(
-          "INSERT INTO automation_runs(id,user_id,artist_id,local_day,stage,identity_ready) VALUES($1,$2,$3,$4,$5,true) ON CONFLICT(artist_id,local_day) DO NOTHING",
+          "INSERT INTO automation_runs(id,user_id,artist_id,local_day,stage,identity_ready) VALUES($1,$2,$3,$4,$5,true) ON CONFLICT(artist_id,local_day) WHERE start_kind='daily' DO NOTHING",
           [
             randomUUID(),
             p.user_id,
@@ -1107,7 +1214,7 @@ export async function tickAutomation(now = new Date()) {
           [p.artist_id, nextProductionTime(now, p.timezone, p.daily_time)],
         );
         await c.query(
-          "UPDATE automation_runs SET full_music_video=$2,video_scene_count=$3 WHERE artist_id=$1 AND local_day=$4 AND stage IN ('song','portrait') AND song_id IS NULL",
+          "UPDATE automation_runs SET full_music_video=$2,video_scene_count=$3 WHERE artist_id=$1 AND local_day=$4 AND start_kind='daily' AND stage IN ('song','portrait') AND song_id IS NULL",
           [
             p.artist_id,
             latest.full_music_video,
@@ -1141,7 +1248,10 @@ export async function tickAutomation(now = new Date()) {
       }
     }
   } finally {
-    if (acquired) await lock.query("SELECT pg_advisory_unlock(71420920)");
+    if (acquired)
+      await lock.query(
+        "SELECT pg_advisory_unlock(71420920,hashtext(current_schema()))",
+      );
     lock.release();
   }
 }

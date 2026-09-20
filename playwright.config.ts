@@ -39,7 +39,9 @@ export default defineConfig({
         process.cwd() +
         "/tests/mocks/veo-preload.mjs --import=" +
         process.cwd() +
-        "/tests/mocks/music-video-preload.mjs",
+        "/tests/mocks/music-video-preload.mjs --import=" +
+        process.cwd() +
+        "/tests/mocks/manual-production-preload.mjs",
     },
   },
 });

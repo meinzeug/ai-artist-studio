@@ -20,7 +20,7 @@ Dein selbst gehostetes Studio entwickelt virtuelle Musikkünstler und produziert
 
 Danach entsteht täglich ein neuer Song mit Lyrics, Musikstil und einem **vollständigen Musikvideo über die gesamte Songlänge**: Die KI schreibt ein Storyboard passend zu den Lyrics, erzeugt standardmäßig acht neue Bildmotive mit Künstlerreferenz und setzt sie mit Kamerabewegungen und weichen Überblendungen um. Zusätzlich entstehen drei Kurzclips samt Beschreibung. SunoAPI.org kann die Musik innerhalb deiner bestätigten Creditgrenzen erzeugen. Ohne API bekommst du unter **Manuelle Aufgaben** ein fertiges Suno-Paket; nach dem MP3-Upload läuft die Videoproduktion automatisch weiter. [Vollständige Musikvideos →](docs/FULL_MUSIC_VIDEOS.md)
 
-Die fertigen Videos stehen dort als MP4 oder ZIP bereit. Du prüfst sie, lädst sie bei TikTok hoch und trägst den Veröffentlichungslink ein. Produktionszeit, Pause und Budgets sind pro Artist einstellbar. Das Hauptporträt bleibt die feste Bildreferenz; perfekte Gesichtsgleichheit ist nicht garantiert. [Ablauf, Voraussetzungen und Fehlerbehandlung →](docs/AUTOMATION.md)
+Die fertigen Videos stehen dort als MP4 oder ZIP bereit. Du prüfst sie, lädst sie bei TikTok hoch und trägst den Veröffentlichungslink ein. Unter **Manuelle Aufgaben → Neue Produktion** kannst du auch sofort einen weiteren Song starten. Produktionszeit, Pause und Budgets sind pro Artist einstellbar. Das Hauptporträt bleibt die feste Bildreferenz; perfekte Gesichtsgleichheit ist nicht garantiert. [Ablauf, Voraussetzungen und Fehlerbehandlung →](docs/AUTOMATION.md)
 
 ## Ein durchgängiger Produktionsweg
 

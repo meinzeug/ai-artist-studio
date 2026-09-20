@@ -2,7 +2,13 @@
 
 Stand: **2026-09-20**. Arbeit im bestehenden Projektverzeichnis, keine fremden Änderungen überschrieben.
 
-## Aktueller Auftrag: vollständiges Musikvideo
+## Aktueller Auftrag: zusätzlicher Live-Produktionsdurchlauf
+
+- Auf Nutzerwunsch Bildlimits auf dorfspy über den regulären Command auf 100/Tag und 1000/Monat erhöht (vorher 10/100); gleiche Codex-Verbindung und bestehende Artist-Automatik erneut bestätigt. Keine kostenpflichtigen API-Budgets geändert.
+- Zusatzstart für einen vorhandenen Artist ohne Warten auf den nächsten Tag: eigene Startkennung und tägliche Eindeutigkeit getrennt, maximal eine aktive Produktion, Schutz für laufende Vollvideos, unveränderter Termin und Katalog-/Porträtgrundlage.
+- 82 Unit-/Integrationstests, Typprüfung, Build und gezielte Browserprüfung bis zur manuellen Suno-Aufgabe bestanden; anschließend regulär deployen und den echten Start über das Dashboard beobachten. Suno ist derzeit nicht verbunden; neue Aufnahme bleibt eine echte notwendige manuelle Übergabe.
+
+## Vorheriger Auftrag: vollständiges Musikvideo
 
 - Bisherige Ausgabe nachvollzogen: drei 30-Sekunden-Teaser, ein Hauptporträt/eine Songszene, dauerhafte redaktionelle Texte. Das erfüllt den neuen Anspruch an ein vollständiges Musikvideo nicht.
 - Vollständige Aufnahme als Hauptausgabe; persistentes KI-Storyboard anhand der zugeordneten Lyrics und Künstleridentität, acht neue referenzbasierte Szenenbilder standardmäßig (konfigurierbar), unterschiedliche Einstellungen und Kamerabewegungen.

@@ -358,7 +358,8 @@ export function ManualTasks() {
   const { data, artistId, act, nav, toast } = useStudio();
   const [all, setAll] = useState(false),
     [completed, setCompleted] = useState(false),
-    [settings, setSettings] = useState<Row | null>(null);
+    [settings, setSettings] = useState<Row | null>(null),
+    [start, setStart] = useState<Row | null>(null);
   const policies = (data.artist_automations ?? []).filter(
     (p: Row) => all || p.artist_id === artistId,
   );
@@ -442,6 +443,22 @@ export function ManualTasks() {
               </div>
               <div className="actions">
                 <button
+                  className="primary"
+                  disabled={
+                    !p.enabled ||
+                    ["running", "waiting_for_input"].includes(current?.state) ||
+                    (data.music_video_productions ?? []).some(
+                      (v: Row) =>
+                        v.artist_id === p.artist_id &&
+                        !["ready", "cancelled"].includes(v.state),
+                    )
+                  }
+                  title="Startet einen zusätzlichen Song mit der vorhandenen Künstleridentität. Offene Produktionen zuerst abschließen."
+                  onClick={() => setStart(artist)}
+                >
+                  <Sparkles size={15} /> Neue Produktion
+                </button>
+                <button
                   onClick={() =>
                     act("auto_pause", {
                       artist_id: p.artist_id,
@@ -461,6 +478,12 @@ export function ManualTasks() {
             </div>
             {current && (
               <>
+                <small className="muted">
+                  {current.start_kind === "manual"
+                    ? "Zusätzlich gestartete Produktion"
+                    : "Tägliche Produktion"}{" "}
+                  · {formatDate(current.created_at, p.timezone)}
+                </small>
                 <div className="automation-steps">
                   {Object.entries(automationStageNames).map(([key, label]) => (
                     <span
@@ -570,7 +593,75 @@ export function ManualTasks() {
           onClose={() => setSettings(null)}
         />
       )}
+      {start && (
+        <StartProduction artist={start} onClose={() => setStart(null)} />
+      )}
     </>
+  );
+}
+function StartProduction({
+  artist,
+  onClose,
+}: {
+  artist: Row;
+  onClose: () => void;
+}) {
+  const { data } = useStudio(),
+    { run, busy, error } = useAutomaticAction();
+  const [snapshot] = useState(() => ({
+    policy: data.artist_automations.find((p: Row) => p.artist_id === artist.id),
+    image: data.image_connection ?? null,
+    music: data.music_connection ?? null,
+    key: crypto.randomUUID(),
+  }));
+  return (
+    <Modal
+      title="Neue Produktion starten"
+      description={`Ein zusätzlicher Song für ${artist.name}.`}
+      onClose={() => !busy && onClose()}
+      wide
+    >
+      <p>
+        Die KI entwickelt eine neue Idee und Lyrics anhand der Künstleridentität
+        und des bisherigen Katalogs. Danach folgt Suno per eingerichteter API
+        oder als manuelle Aufgabe. Das vorhandene Hauptporträt dient weiterhin
+        als Referenz.
+      </p>
+      <p>
+        {snapshot.policy.full_music_video
+          ? `Geplant: eine Vollversion mit ${snapshot.policy.video_scene_count} neuen Bildmotiven und drei Kurzclips.`
+          : "Geplant: eine neue Bildszene und drei Kurzclips."}{" "}
+        Der tägliche Termin bleibt bestehen.
+      </p>
+      <BudgetPreview image={snapshot.image} music={snapshot.music} />
+      {error && (
+        <p role="alert" className="error">
+          {error}
+        </p>
+      )}
+      <button
+        className="primary"
+        disabled={busy}
+        onClick={async () => {
+          const result = await run(
+            "auto_start",
+            {
+              artist_id: artist.id,
+              version: snapshot.policy.version,
+              approved: true,
+              image_version: snapshot.image?.version ?? null,
+              music_version: snapshot.music?.version ?? null,
+            },
+            snapshot.key,
+          );
+          if (result) onClose();
+        }}
+      >
+        {busy
+          ? "Produktion wird angelegt …"
+          : "Produktion bestätigen & starten"}
+      </button>
+    </Modal>
   );
 }
 function MusicTask({ task, run }: { task: Row; run: Row }) {
