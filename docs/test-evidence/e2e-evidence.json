@@ -1,11 +1,11 @@
 {
-  "testedAt": "2026-09-20T15:32:24.138Z",
-  "artist_id": "8e34d168-7de7-436d-9585-5181b2b51091",
-  "song_id": "d2583bce-5532-44a4-9191-c8c803bb2701",
+  "testedAt": "2026-09-20T16:08:04.860Z",
+  "artist_id": "cc47fbb1-923e-4f40-9ddc-07b410b7aeda",
+  "song_id": "f53ed8f9-cdfa-47d5-a86e-f92b01fc6844",
   "render_ids": [
-    "2f379a0b-b4e4-4cf7-bee1-0273fb5ef550",
-    "a44a2f05-a8c9-4cac-aecd-3049ca1eba61",
-    "3b4b4594-a0e8-46b0-b585-2ce811de997a"
+    "d08a691f-a6af-44ee-aadc-40101402fd36",
+    "711cbebb-bcf0-43a4-ab6b-839adfb62291",
+    "0ea6c0a7-9686-4174-b7ff-538230ae5f0b"
   ],
   "live_provider": "codex",
   "steps": [

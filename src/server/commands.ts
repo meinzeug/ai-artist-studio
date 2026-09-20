@@ -52,6 +52,10 @@ export async function command(userId: string, raw: unknown): Promise<any> {
     .parse(raw);
   const d = envelope.data,
     key = envelope.key ?? randomUUID();
+  if (envelope.action.startsWith("veo_")) {
+    const { videoCommand } = await import("./video-generation");
+    return videoCommand(userId, envelope.action, d, key);
+  }
   if (envelope.action.startsWith("suno_")) {
     const { sunoCommand } = await import("./suno");
     return sunoCommand(userId, envelope.action, d);
@@ -879,8 +883,10 @@ export async function command(userId: string, raw: unknown): Promise<any> {
       return { id: eid };
     }
     case "queue_ai": {
-      if (typeof d.kind === "string" && d.kind.startsWith("suno_"))
-        throw new AppError("Musikproduktion benötigt den eigenen Freigabeweg.");
+      if (typeof d.kind === "string" && /^(suno_|veo_)/.test(d.kind))
+        throw new AppError(
+          "Externe Produktion benötigt den eigenen Freigabeweg.",
+        );
       const kind = z
         .enum(
           jobKinds.filter(
@@ -1103,6 +1109,15 @@ export async function command(userId: string, raw: unknown): Promise<any> {
       );
       if (pending)
         throw new AppError("Laufende und wartende Jobs zuerst abbrechen.");
+      if (
+        await one(
+          "SELECT id FROM video_generations WHERE artist_id=$1 AND state NOT IN ('succeeded','failed','cancelled') LIMIT 1",
+          [aid],
+        )
+      )
+        throw new AppError(
+          "Offene Veo-Generierungen zuerst abschließen oder externen Status klären.",
+        );
       const assets = await query(
         "SELECT storage_key FROM assets WHERE artist_id=$1",
         [aid],

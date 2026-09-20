@@ -715,7 +715,7 @@ function VariantEditor({
             label="Clip-Start (Sekunden)"
             name="clip_start"
             type="number"
-            step="0.01"
+            step="any"
             min="0"
             defaultValue={variant.clip_start}
           />
@@ -723,7 +723,7 @@ function VariantEditor({
             label="Clip-Ende (Sekunden)"
             name="clip_end"
             type="number"
-            step="0.01"
+            step="any"
             max={asset?.metadata.duration}
             defaultValue={variant.clip_end}
           />
@@ -751,7 +751,7 @@ function VariantEditor({
             <input
               aria-label={"Zeile " + (i + 1) + " Start"}
               type="number"
-              step=".1"
+              step="any"
               value={t.start}
               onChange={(e) =>
                 setTimings(
@@ -764,7 +764,7 @@ function VariantEditor({
             <input
               aria-label={"Zeile " + (i + 1) + " Ende"}
               type="number"
-              step=".1"
+              step="any"
               value={t.end}
               onChange={(e) =>
                 setTimings(
@@ -808,7 +808,7 @@ function VariantEditor({
             <input
               aria-label="Markierung Sekunde"
               type="number"
-              step=".1"
+              step="any"
               value={m.time}
               onChange={(e) =>
                 setMarkers(

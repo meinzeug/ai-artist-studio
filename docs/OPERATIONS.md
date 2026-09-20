@@ -93,3 +93,9 @@ TikTok OAuth/Display benötigt registrierte Developer-App, explizite Scopes `use
 Quellen und Provisionierung: [Deployment-Skripte](../scripts/deploy/README.md). Der Next-Build muss bei diesem nativen Weg auf dem Zielhost ausgeführt werden, da Turbopack externe Modulaliasse in `node_modules` anlegt. Es genügt nicht, nur `.next` von einem anderen Pfad zu kopieren. Auf dem kleinen Host geprüft: `NODE_OPTIONS=--max-old-space-size=768 npm run build`.
 
 Serverbackup: Web und Worker stoppen, DB weiterlaufen lassen; `scripts/backup.ts` als `artist-studio` mit der geschützten Web-Umgebung starten. Backup außerhalb des Webroots unter einem nur für diesen Benutzer lesbaren Pfad speichern. Runner-Auth ausdrücklich ausnehmen. Schlüssel separat sichern. Bei Updates nur die drei Studio-Dienste verändern.
+
+## Optionale Veo-Szenen
+
+Migration `004_video_generation.sql` vor Start des aktualisierten Workers/Webs ausführen. Keine zusätzliche CLI, GPU oder npm-Abhängigkeit. Google-Key ausschließlich im Dashboard konfigurieren; verschlüsselt in `video_connections`, niemals in Runner-Env oder KI-Prompts. API-Projekt und Abrechnung separat einrichten. Tages-/Monatsbudgets mit bestätigtem USD-Kostenansatz beginnen standardmäßig bei 0. [Einrichtung und Wiederaufnahme](VIDEO_PRODUCTION.md).
+
+Sicherungen enthalten die verschlüsselte Verbindung sowie Szenenaufträge/Reservierungen in den drei neuen Tabellen. Der vorhandene außerhalb der DB verwahrte `TOKEN_ENCRYPTION_KEY` ist beim Restore weiter erforderlich. Unklare externe Operationen nach Wiederherstellung abfragen, niemals blind erneut generieren.

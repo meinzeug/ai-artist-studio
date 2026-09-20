@@ -3331,3 +3331,12 @@ tr:last-child td {
 .suno-order {padding:15px 0;border-top:1px solid var(--line);margin-top:14px;}
 .suno-order>small {display:block;margin:10px 0;overflow-wrap:anywhere;}
 @media(max-width:600px){.suno-connection .panel-heading{align-items:flex-start;flex-direction:column;gap:14px;}.suno-connection .actions{flex-wrap:wrap;}.suno-guide li{padding-left:40px;}}
+
+/* Main local music-video flow and optional provider scenes. */
+.video-workflow { display:flex; gap:24px; align-items:center; justify-content:space-between; margin-bottom:24px; }
+.video-workflow button { flex-shrink:0; }
+.optional-video { margin-top:24px; }
+.optional-video .grid-two { margin-top:20px; }
+.optional-video details { margin:16px 0; overflow-wrap:anywhere; }
+.veo-reference { width:100%; max-height:420px; aspect-ratio:9/16; object-fit:cover; border-radius:16px; background:#101015; }
+@media(max-width:700px) { .video-workflow { flex-direction:column; align-items:stretch; } .optional-video .panel-heading { align-items:flex-start; flex-direction:column; } }

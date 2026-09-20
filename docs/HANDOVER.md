@@ -30,7 +30,7 @@ Die 13 deutschen Ansichten, privater Dateispeicher, Timeline/Untertitel/Crop, Co
 
 ## Prüfergebnisse
 
-38 Unit-/Integrationstests, Typprüfung und Produktionsbuild bestanden. Die Kernstrecke wurde mit echter lokaler Codex-ChatGPT-Anmeldung und drei realen MP4-Dateien im Browser getestet. Suno-Dashboard und Produktionsfreigabe mit ausdrücklich simulierten Anbieterantworten bestanden. Beide echten CLI-Anmeldewege bis zum Loginlink und deren Abbruch wurden im Browser geprüft. Desktop/390px-Mobilansichten geprüft und Screenshots gespeichert.
+47 Unit-/Integrationstests, Typprüfung und Produktionsbuild bestanden. Die Kernstrecke wurde mit echter lokaler Codex-ChatGPT-Anmeldung und drei realen MP4-Dateien im Browser getestet. Suno-Dashboard und Produktionsfreigabe mit ausdrücklich simulierten Anbieterantworten bestanden. Beide echten CLI-Anmeldewege bis zum Loginlink und deren Abbruch wurden im Browser geprüft. Desktop/390px-Mobilansichten geprüft und Screenshots gespeichert.
 
 Serverprüfung: gültiges HTTPS, `/api/health` 200, `/api/state` ohne Session 401, Einrichtung ohne gültigen Code 403, beide CLIs erkannt und Loginlinks erzeugt. Keine öffentliche Musikveröffentlichung und keine kostenpflichtige Suno-Livegeneration ausgeführt.
 
@@ -46,7 +46,8 @@ Historische Kernabnahme umfasst tatsächlichen Worker-SIGKILL/Wiederaufnahme sow
 | Suno Platform | Separate Endpunktspezifikation und Zugang fehlen weiterhin. |
 | TikTok OAuth/Display | Registrierte Developer-App, Redirect/Scopes und Kontozustimmung fehlen; implementiert, kein Live-Test. |
 | TikTok Posting/Business | Keine Zulassung für private interne Direct-Post-Nutzung behauptet. Export/Handveröffentlichung und manueller Datenimport sind verfügbar. |
-| Bild-/Videogeneratoren | Kein externer Generator gewählt. Upload, Storyboards und lokales Rendering nutzbar. |
+| Google Veo (optional) | Dashboard-Verbindung, Startbild-Generierung, Budget und Import implementiert. Separater Google-Key, API-Abrechnung und Liveabnahme fehlen. |
+| Bildgenerierung | Upload und Storyboards nutzbar; kein Bildadapter im Studio aktiviert. |
 
 ## Betriebsgrenzen
 
@@ -59,3 +60,7 @@ Historische Kernabnahme umfasst tatsächlichen Worker-SIGKILL/Wiederaufnahme sow
 ## Weiterentwicklung
 
 `AGENTS.md` und `GEMINI.md` sind konsistent. Quellcode, Migrationen, Tests, Deployment-Skripte, Dokumentation und echte Screenshots werden auf ausdrücklichen Wunsch des Betreibers nach `origin/main` committed und gepusht. Aktuellen Git-Stand mit `git log -1` prüfen. Externe Fähigkeiten bleiben getrennt nach dokumentiert/implementiert/konfiguriert/live getestet in der [Integrationsmatrix](INTEGRATION_MATRIX.md).
+
+## Ergänzung: lokale Musikvideos und optionale KI-Szenen
+
+Das Video-Studio führt ausdrücklich durch **Künstlerbilder + Suno-MP3 → lokale FFmpeg-MP4**. Ein zusätzlicher aufklappbarer Bereich unterstützt Veo-Szenen mit Startbild, separater Verbindung und Kostenfreigabe. Fertige Szenen lassen sich direkt in die vorhandene Timeline übernehmen; ausschließlich die gewählte Songaufnahme wird als Tonspur exportiert. Einrichtung und Fehlerbehandlung: [VIDEO_PRODUCTION.md](VIDEO_PRODUCTION.md). Keine zusätzliche Bibliothek oder globale CLI-Konfiguration erforderlich; additive Migration `004_video_generation.sql`.

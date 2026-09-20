@@ -7,7 +7,7 @@ PostgreSQL speichert relationale Entitäten, Versionen, Jobzustände, Versuche, 
 
 CLI-Runner: eigener Prozess, Token zwischen Worker und Runner, Umgebungs-Allowlist, isolierte Arbeitsverzeichnisse, nur Textschemas. Keine DB-/Social-/Musik-Credentials. Linux Landlock ABI ≥4 als tatsächlich geprüfte Datei-/TCP-Grenze (User-Namespaces/bubblewrap waren hier nicht verfügbar), ergänzend dedizierter Compose-Container, Tools providerseitig gesperrt, keine Host-Home-Freigabe. CLI-Auth separat und vom Datenbackup ausgeschlossen.
 
-Providergrenzen: Text (Codex/Gemini), Musik (manuelles Suno, ausdrücklich gewähltes SunoAPI.org und weiterhin gesperrte separate Suno Platform), Medien (Upload plus Erweiterungsschnittstelle), Social (manueller Export, optional TikTok OAuth/Display). Jeder Adapter meldet Fähigkeiten und tatsächlichen Verbindungszustand.
+Providergrenzen: Text (Codex/Gemini), Musik (manuelles Suno, ausdrücklich gewähltes SunoAPI.org und weiterhin gesperrte separate Suno Platform), Medien (Upload, FFmpeg und optionaler Veo-Adapter), Social (manueller Export, optional TikTok OAuth/Display). Jeder Adapter meldet Fähigkeiten und tatsächlichen Verbindungszustand.
 
 Dateien liegen außerhalb public, Downloads prüfen Anmeldung/Eigentümer und unterstützen Range. Dateityperkennung anhand des Inhalts, FFprobe und Bilddecoder prüfen importierte Medien. Bearbeitungen erzeugen neue Assets mit Elternbeziehung und SHA-256.
 
@@ -24,3 +24,7 @@ Drei systemd-Dienste unter getrennten Benutzern: Web/Worker `artist-studio`, Run
 CLI-Login: Dashboard → authentifizierter Backend-Proxy → Runner → offizielle CLI. Gemini benötigt einen Python-PTY-Helfer für den offiziellen interaktiven Google-Codeweg, Codex verwendet Gerätecode. Nur Loginlink, Gerätecode und Status gelangen an den angemeldeten Betreiber; OAuth-Tokens verbleiben beim Runner. Studio-eigene Refreshes werden atomar gespeichert.
 
 SunoAPI: `music_connections` enthält AES-GCM-verschlüsselte Schlüssel und Creditgrenzen. Atomare Creditreservierung und persistierter Übermittlungsbeginn gehen dem einzigen Generierungs-POST voraus. Statusjobs fragen ausschließlich bereits bekannte Aufträge ab. Öffentliche Callbacks können keinen Status verändern. Audioimports prüfen öffentliche DNS-Ziele, pinnen DNS-Ergebnis pro Request, begrenzen Redirects/Größe und verwenden Dateisignaturen/ffprobe.
+
+## Optionale Videoszenen
+
+`video_connections` hält den verschlüsselten Google-Key und ausdrücklich bestätigte USD-Kostenansätze. `video_generations` speichert unveränderliche Szenenaufträge und Startbild-Hashes, `video_cost_reservations` die atomare Budgetreservierung. `veo_generate` ist ein externer Job mit einem Übermittlungsversuch. `veo_sync` fragt nur vorhandene Operationen ab; Downloads und Importe sind dedupliziert. Die gemeinsame FFmpeg-Pipeline ersetzt Szenenton durch die gewählte Songaufnahme. Der CLI-Runner erhält keinen Veo-Key. Details: VIDEO_PRODUCTION.md.

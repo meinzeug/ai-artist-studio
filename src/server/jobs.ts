@@ -39,6 +39,8 @@ export async function enqueue(
               "prepare_music_package",
               "suno_generate",
               "suno_sync",
+              "veo_generate",
+              "veo_sync",
             ].includes(kind)
           ? "analysis"
           : "ai";

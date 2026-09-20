@@ -86,6 +86,10 @@ export async function runTask(
   progress: (n: number) => Promise<void>,
 ) {
   const input = job.input;
+  if (job.kind === "veo_generate" || job.kind === "veo_sync") {
+    const { runVideoJob } = await import("../server/video-generation");
+    return runVideoJob(job, signal);
+  }
   if (job.kind === "suno_generate" || job.kind === "suno_sync") {
     const { runSunoJob } = await import("../server/suno");
     return runSunoJob(job, signal);

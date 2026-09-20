@@ -50,3 +50,7 @@ AI Artist Studio ist eine private, deutsche Produktionszentrale für virtuelle M
 Aktuelle plattformweite Trendrecherche, automatisches Audio-Alignment, Stimm-/Gesichtsgarantie, Lippensynchronität, automatisches Training und öffentliche Direktposts werden nicht angeboten. Storyboards und Produktionsaufträge sind echte Textartefakte. Bilder/Videos werden ohne zusätzlich verbundenen Provider importiert. Manuelle Exporte sind vollständige Arbeitswege.
 
 Einzelbetreiber, mehrere Künstler und Konten sind der Betriebsumfang. Das Rollenfeld ist für spätere Zusammenarbeit vorbereitet; ein Team- und Einladungsprodukt wird nicht vorgetäuscht.
+
+## Ergänzung 2026-09-20: Produktionsweg für Musikvideos
+
+Verbindlicher Standard: importierte Künstlerbilder und Suno-MP3 werden lokal mit FFmpeg zu TikTok-MP4 zusammengesetzt (`src/components/video.tsx`, `src/server/media.ts`, Kern-E2E). Echte KI-Video-Szenen sind ein optionaler Zusatz (`src/providers/veo.ts`, `src/server/video-generation.ts`, `src/components/veo.tsx`), mit gesonderter API-Verbindung, Budget und Zustimmung. Nachweis: `tests/veo.test.ts` (inklusive tatsächlicher Audiofrequenzprüfung) und `tests/e2e/veo.spec.ts` (simulierter Google-Anbieter, reale Medien). Kein Veo-Liveerfolg behauptet.

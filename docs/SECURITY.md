@@ -37,3 +37,7 @@ Der Backend-Proxy verlangt Betreiberrolle, Session und Origin. Loginstatus ist a
 Server: getrennte nicht privilegierte Unix-Benutzer, systemd `NoNewPrivileges`, `ProtectSystem=strict`, private temporäre Verzeichnisse, Schreibrechte nur in eigenem Datenverzeichnis, CPU-/Speicher-/Prozessgrenzen. Caddy stellt HTTPS bereit. Keine Datenbank-/Runnerports werden extern veröffentlicht. Hetzner-API-Key bleibt außerhalb App, Server-Env und Repository.
 
 SunoAPI-Callback ist öffentlich erreichbar, besitzt keine Schreibbefugnis auf Produktionszustände und quittiert nur begrenzte Requests. Status und Audio-IDs kommen aus authentifiziertem Polling. Der Suno-API-Key wird AES-GCM-verschlüsselt in der DB gespeichert; der Schlüssel liegt separat.
+
+## Veo (optional)
+
+Gesonderter API-Key, AES-GCM und explizite Bild-/Kostenfreigabe. Modellabfrage/Generierung verwenden den festen offiziellen Google-Host ohne Redirects. Download-URIs sind auf Google-Dateiendpunkte begrenzt; HTTPS-Downloads prüfen/pinnen öffentliche DNS-Ziele, begrenzen Größe und Redirects und entfernen API-Header beim Hostwechsel. Providerfehler geben weder Antwortkörper noch Schlüssel wieder. Startbilder werden per Hash geprüft, mit Pixellimit dekodiert und als separate JPEG-Ableitung übertragen. Alle Kostenreservierungen sperren dieselbe Betreiber-Einstellungszeile. `queue_ai` und Director erlauben keinen Umweg um die Freigabe. Nur bekannte externe Aufträge sind wiederholt abfragbar. Unklare Übermittlungen bleiben ohne automatischen Neuauftrag.

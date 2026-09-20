@@ -1,4 +1,5 @@
 "use client";
+import { VeoConnectionCard } from "./veo";
 import { useState } from "react";
 import { CliConnect } from "./cli-connect";
 import { SunoConnectionCard } from "./suno";
@@ -41,6 +42,8 @@ const kindNames: Record<string, string> = {
   analyze_metrics: "Kennzahlen analysieren",
   draft_reply: "Antwortentwurf",
   render_video: "Video rendern",
+  veo_generate: "Veo-Szene erzeugen",
+  veo_sync: "Veo-Ergebnis abrufen",
   analyze_asset: "Audioanalyse",
   sync_metrics: "TikTok-Lesedaten",
   prepare_music_package: "Suno-Paket erstellen",
@@ -350,14 +353,15 @@ export function Settings() {
           </div>
           {detected?.error && <p className="error">{detected.error}</p>}
           <SunoConnectionCard />
+          <VeoConnectionCard />
           <div className="panel">
             <h3>Weitere Produktionsprovider</h3>
             <div className="provider-row">
-              <strong>Bild & Video</strong>
+              <strong>Bilder</strong>
               <Badge status="blocked_external" />
               <span>
-                Kein Generierungsprovider konfiguriert. Upload und FFmpeg sind
-                verfügbar.
+                Kein Bildgenerierungsprovider konfiguriert. Upload und FFmpeg
+                sind verfügbar.
               </span>
               <button onClick={() => nav("library")}>Medien importieren</button>
             </div>

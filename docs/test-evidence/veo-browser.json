@@ -1,0 +1,37 @@
+{
+  "at": "2026-09-20T16:19:51.963Z",
+  "provider": "offline simulation, no paid Google request",
+  "generationState": "succeeded",
+  "importedFile": "video/mp4",
+  "output": {
+    "format": "mov,mp4,m4a,3gp,3g2,mj2",
+    "inputs": [
+      {
+        "id": "2c7f7eee-1ef0-4860-a5d8-75eed82f8882",
+        "sha256": "ab272aa26be1d053bc0289023f68c4fca70469a69898bffbb9018c3253f1a8c3"
+      }
+    ],
+    "streams": [
+      {
+        "type": "video",
+        "codec": "h264",
+        "width": 1080,
+        "height": 1920,
+        "pix_fmt": "yuv420p",
+        "frame_rate": "30/1"
+      },
+      {
+        "type": "audio",
+        "codec": "aac",
+        "channels": 2,
+        "frame_rate": "0/0",
+        "sample_rate": "48000"
+      }
+    ],
+    "duration": 3.033333,
+    "render_id": "a4bea12f-b2e4-48f1-a462-2c7861f123d1"
+  },
+  "desktop": true,
+  "mobile": true,
+  "javascriptErrors": []
+}

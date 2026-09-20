@@ -8,7 +8,7 @@ Ein selbst gehostetes Produktionsstudio für virtuelle Musikkünstler — von de
 
 **Deutsch · Ohne lokale GPU · ChatGPT- und Google-Login · Private Medien**
 
-[Studio öffnen](https://artist.dorfspy.de) · [Installation](docs/OPERATIONS.md) · [Suno verbinden](docs/SUNO_API_SETUP.md) · [KI-Konten verbinden](docs/CLI_LOGIN.md)
+[Studio öffnen](https://artist.dorfspy.de) · [Installation](docs/OPERATIONS.md) · [Suno verbinden](docs/SUNO_API_SETUP.md) · [KI-Konten verbinden](docs/CLI_LOGIN.md) · [Musikvideos erstellen](docs/VIDEO_PRODUCTION.md)
 
 </div>
 
@@ -34,7 +34,7 @@ flowchart LR
 | **Songwriting** | Echte KI-Ideen und Lyrics erstellen, Passagen gezielt überarbeiten, menschliche Zeilen schützen und Versionen vergleichen. |
 | **Suno** | SunoAPI.org im Dashboard verbinden, Guthaben prüfen, Produktion freigeben und fertige Aufnahmen automatisch importieren. Alternativ vollständiges Produktionspaket und manueller Import. |
 | **Medien** | Private Dateien, Herkunft/Rechte, Originale und Ableitungen, Audioplayer, Wellenform, technische Analyse und Variantenvergleich. |
-| **Video-Studio** | Charakter & Lyrics, visueller Szenenclip und Cover-Visualizer: echte MP4 in 1080 × 1920 mit H.264/AAC. Timeline, Untertitel, Crop und Renderqueue. |
+| **Video-Studio** | Künstlerbilder + Suno-MP3 lokal mit FFmpeg: Charakter & Lyrics, visueller Szenenclip und Cover-Visualizer: echte MP4 in 1080 × 1920 mit H.264/AAC. Timeline, Untertitel, Crop und Renderqueue. |
 | **Veröffentlichung** | Kampagnen und Kalender, unveränderliche Freigaben, MP4/Cover/Caption/Checkliste als ZIP, manuelle Veröffentlichungsnachweise. |
 | **Lernschleife** | Kommentare importieren, Antwortentwürfe schreiben, tatsächliche Kennzahlen auswerten und begründete nächste Produktionen planen. |
 
@@ -55,6 +55,12 @@ Die Konten werden auf dem Computer des separaten Runners verbunden. Tokens bleib
 Auf der Übersicht **Suno API verbinden** wählen, eigenen Schlüssel eintragen und das Guthaben prüfen. Die **Einrichtungsanleitung** ist jederzeit als Modal verfügbar. Für Generierungen werden Modell, bestätigter Creditbedarf, Tages-/Monatslimit und HTTPS-Rückmelde-Adresse hinterlegt.
 
 **SunoAPI.org ist ein separater Drittanbieter**, mit eigenem API-Konto und Credits. Das Studio speichert den Schlüssel verschlüsselt, verlangt eine Produktionsfreigabe und sendet bei unklarem externem Zustand keinen zweiten Generierungsauftrag. [Einrichtung und Fehlerbehandlung →](docs/SUNO_API_SETUP.md)
+
+### Musikvideos: Bilder + Suno-Audio
+
+**Der Standardweg ist lokal:** Künstlerbilder importieren, Songaufnahme und Ausschnitt wählen, Vorlage gestalten und MP4 rendern. Drei Vorlagen, Bewegung, Lyrics und Visualizer stehen ohne Video-API bereit.
+
+**Optional: echte KI-Videoszenen mit Veo.** Unter Provider & Konten einen separaten Google-AI-Studio-Key, bestätigten USD-Kostenansatz und Budget verbinden. Im Video-Studio ein Startbild animieren lassen und die importierte Szene direkt im Musikvideo verwenden. Vor jedem Auftrag werden Bildübermittlung und Kosten freigegeben. Der Gemini-CLI-Login allein umfasst diese kostenpflichtige API nicht. [Ablauf, Einrichtung und Grenzen →](docs/VIDEO_PRODUCTION.md)
 
 ## Starten
 
@@ -91,7 +97,7 @@ Next.js / React ── validierte Backend-Aktionen ── PostgreSQL + privater 
                                                   │
                                                 Worker
                                       ┌───────────┼────────────┐
-                                   FFmpeg     SunoAPI.org   CLI-Runner
+                                   FFmpeg     Suno / Veo   CLI-Runner
                                                            Codex / Gemini
 ```
 
@@ -99,8 +105,9 @@ TypeScript, Next.js **16.3.5**, React **19.3.0**, PostgreSQL **16**, Drizzle **0
 
 ## Geprüft – mit klaren Grenzen
 
-- **38 Unit-/Integrationstests** bestanden; Typprüfung und Produktionsbuild erfolgreich.
+- **47 Unit-/Integrationstests** bestanden; Typprüfung und Produktionsbuild erfolgreich.
 - Vollständiger Playwright-Durchlauf mit **echter Codex-Textproduktion** und **drei tatsächlich gerenderten, decodierten und im Browser abgespielten Videos**.
+- Optionaler Veo-Weg im Browser getestet: Verbindung, Hilfe, Kostenfreigabe, MP4-Import und Übernahme in die Timeline. Zusätzlicher realer Audiotest prüft, dass Szenenton durch die Song-MP3 ersetzt wird.
 - Suno-Dashboard, Budgetfreigabe, verschlüsselte Verbindung und Auftrag getestet. Anbieterantworten dabei ausdrücklich simuliert; echte lokale Audioimporte separat geprüft.
 - Beide tatsächlichen CLI-Anmeldedialoge im Browser bis zum offiziellen Loginlink geprüft, einschließlich Abbruch und CSRF-Schutz. Kein persönlicher Login stellvertretend durchgeführt.
 - Desktop-/Smartphone-Screenshots, Worker-Wiederaufnahme und echter Backup/Restore dokumentiert.
@@ -125,7 +132,8 @@ Tests verwenden eine separate Datenbank. Der CLI-E2E-Test benötigt eine eingeri
 | Suno Platform | Separates Produkt; kein verifizierter Zugang. |
 | TikTok OAuth / Display | Implementiert; Developer-App, Scopes und Live-Verbindung fehlen. |
 | TikTok Direct Post | Keine Zulassung für ein privates internes Werkzeug versprochen. Freigegebener Export ist der produktive Veröffentlichungsweg. |
-| Bild-/Videogeneratoren | Kein externer Anbieter konfiguriert. Upload, KI-Storyboards und lokale Videoerstellung funktionieren. |
+| Google Veo (optional) | Bild-zu-Video-Adapter, Dashboard, Budgetfreigabe, Statusabruf und Import implementiert; Tests mit simuliertem Google. Kein Key, keine bezahlte Livegeneration. |
+| Bildgenerierung | Noch kein Adapter im Studio aktiviert. Bilder lassen sich importieren; Codex-Bildgenerierung benötigt einen eigenen Medienadapter. |
 
 ## Dokumentation
 

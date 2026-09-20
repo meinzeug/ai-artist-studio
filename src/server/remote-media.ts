@@ -23,7 +23,14 @@ export function publicAddress(ip: string) {
 export async function downloadAudio(
   value: string,
   signal?: AbortSignal,
+): Promise<Buffer> {
+  return downloadMedia(value, signal);
+}
+export async function downloadMedia(
+  value: string,
+  signal?: AbortSignal,
   redirects = 0,
+  options: { accept?: string; headers?: Record<string, string> } = {},
 ): Promise<Buffer> {
   const url = new URL(value);
   if (
@@ -33,11 +40,11 @@ export async function downloadAudio(
     (url.port && url.port !== "443")
   )
     throw new AppError(
-      "Audio-Download benötigt eine öffentliche HTTPS-Adresse.",
+      "Medien-Download benötigt eine öffentliche HTTPS-Adresse.",
     );
   const addresses = await lookup(url.hostname, { all: true });
   if (!addresses.length || addresses.some((a) => !publicAddress(a.address)))
-    throw new AppError("Private Audio-Zieladresse gesperrt.");
+    throw new AppError("Private Medien-Zieladresse gesperrt.");
   const chosen = addresses[0],
     max = 250 * 1024 * 1024;
   return new Promise((resolve, reject) => {
@@ -45,7 +52,11 @@ export async function downloadAudio(
       url,
       {
         agent: false,
-        headers: { Accept: "audio/*", "Accept-Encoding": "identity" },
+        headers: {
+          Accept: options.accept ?? "audio/*",
+          "Accept-Encoding": "identity",
+          ...options.headers,
+        },
         signal,
         lookup: ((_host: any, opts: any, cb: any) =>
           opts?.all
@@ -57,12 +68,12 @@ export async function downloadAudio(
           res.resume();
           req.setTimeout(0);
           if (!res.headers.location || redirects >= 3)
-            return reject(new AppError("Zu viele Audio-Weiterleitungen."));
-          downloadAudio(
-            new URL(res.headers.location, url).toString(),
-            signal,
-            redirects + 1,
-          ).then(resolve, reject);
+            return reject(new AppError("Zu viele Medien-Weiterleitungen."));
+          const target = new URL(res.headers.location, url);
+          downloadMedia(target.toString(), signal, redirects + 1, {
+            ...options,
+            headers: target.origin === url.origin ? options.headers : undefined,
+          }).then(resolve, reject);
           return;
         }
         if (
@@ -71,7 +82,7 @@ export async function downloadAudio(
         ) {
           res.destroy();
           reject(
-            new AppError("Audio-Download abgewiesen oder größer als 250 MB."),
+            new AppError("Medien-Download abgewiesen oder größer als 250 MB."),
           );
           return;
         }
@@ -86,7 +97,7 @@ export async function downloadAudio(
           parts.push(chunk);
         });
         res.on("error", () =>
-          reject(new AppError("Audio-Download unterbrochen.")),
+          reject(new AppError("Medien-Download unterbrochen.")),
         );
         res.on("end", () => resolve(Buffer.concat(parts)));
       },
@@ -95,7 +106,7 @@ export async function downloadAudio(
     req.on("error", () =>
       reject(
         new AppError(
-          "Audio-Download fehlgeschlagen. Statusabruf erneut starten.",
+          "Medien-Download fehlgeschlagen. Statusabruf erneut starten.",
         ),
       ),
     );

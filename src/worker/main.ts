@@ -7,6 +7,7 @@ import { recoverJobs } from "../server/jobs";
 import { runTask } from "./tasks";
 import { storage } from "../server/storage";
 import { queueMusicPolls, SunoJobError } from "../server/suno";
+import { queueVideoPolls, VideoJobError } from "../server/video-generation";
 const connection = new IORedis(
   process.env.REDIS_URL ?? "redis://127.0.0.1:57379",
   { maxRetriesPerRequest: null },
@@ -22,6 +23,7 @@ async function pump() {
   try {
     await recoverJobs();
     await queueMusicPolls();
+    await queueVideoPolls();
     for (const file of await query(
       "SELECT storage_key FROM stored_files_gc LIMIT 20",
     )) {
@@ -155,7 +157,7 @@ const worker = new Worker(
           "UPDATE workflows SET state=CASE WHEN EXISTS(SELECT 1 FROM jobs WHERE workflow_id=$1 AND state IN ('queued','running')) THEN 'running' WHEN $2='succeeded' AND EXISTS(SELECT 1 FROM jobs WHERE workflow_id=$1 AND kind='prepare_music_package') THEN 'waiting_for_input' ELSE $2 END WHERE id=$1",
           [job.workflow_id, state],
         );
-        if (job.kind === "suno_generate")
+        if (["suno_generate", "veo_generate"].includes(job.kind))
           await c.query(
             "UPDATE workflows SET state='waiting_for_provider' WHERE id=$1",
             [job.workflow_id],
@@ -168,7 +170,7 @@ const worker = new Worker(
         job.id,
       ]);
       const state =
-        e instanceof SunoJobError
+        e instanceof SunoJobError || e instanceof VideoJobError
           ? e.jobState
           : current?.cancelled_at
             ? "cancelled"

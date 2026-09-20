@@ -50,3 +50,25 @@ Nächster nutzerseitiger Schritt: http://127.0.0.1:3210 öffnen, eigenes Betreib
 - [x] Projektquellen und Dokumentation für GitHub übergeben; Geheimnisse und Laufzeitdaten durch .gitignore ausgeschlossen und Inhalte geprüft. Commit-/Remote-Nachweis: git log -1 und origin/main.
 
 Externe Abnahme offen: persönliche Server-Logins, echter SunoAPI-Key und genehmigte Credits; keine bezahlte Testproduktion ohne Nutzerfreigabe. Nächster nutzerseitiger Schritt: HTTPS-Studio mit separat übergebenem Einrichtungscode öffnen und Konten verbinden.
+
+## Erweiterung: FFmpeg als Standard, optionale KI-Videos (2026-09-20)
+
+1. Bestehende drei FFmpeg-Vorlagen als Hauptweg für Künstlerbilder + Suno-Audio hervorheben; Audiomapping und MP4-Ausgabe erneut prüfen.
+2. Optionalen Google-Veo-Adapter ergänzen: offizielle REST-Endpunkte, gesonderter API-Key, Dashboard-Verbindung mit Anleitung, manuell bestätigter USD-Tarif und atomare Tages-/Monatsreservierung. Kein bezahlter Liveauftrag ohne Freigabe.
+3. Persistente Szenenaufträge, genau ein Übermittlungsversuch, Statusabfrage/Wiederaufnahme, sicherer Download und Import in die vorhandene Timeline. Unklare Übermittlung verhindert erneute Generation.
+4. Unit-/Integration-/Browsertests mit ausdrücklich simuliertem Veo; echte FFmpeg-Dateien technisch prüfen, Desktop/Mobil dokumentieren.
+5. Dokumentation aktualisieren, geprüfte Änderung committen/pushen und auf dem bereits beauftragten Server installieren.
+
+Externer Blocker: kein Veo-API-Key und keine genehmigte kostenpflichtige Livegeneration. Das betrifft nur optionale KI-Szenen.
+
+### Abnahme der Video-Erweiterung
+
+- [x] FFmpeg-Hauptweg im Video-Studio und in der README sichtbar; alle drei lokalen Vorlagen erhalten.
+- [x] Veo-Startbildadapter mit Dashboard/Modal, gesondertem Key, expliziter Kostenfreigabe und atomaren USD-Grenzen.
+- [x] Persistente Aufträge, Statusabrufe, Wiederaufnahme ohne zweiten POST, private MP4 und Vorschaubilder, direkte Timeline-Übernahme.
+- [x] 47/47 Unit-/Integrationstests sowie 4/4 vollständige Browsertests bestanden. Eigenständiger MP3-/Veo-Browsertest nach Korrektur der Zeitfelder zusätzlich bestanden.
+- [x] Backup/Restore mit 43 Tabellen, elf Dateihashes und PostgreSQL-Neustart geprüft.
+- [x] Einrichtungs-/Betriebsdokumentation, Integrationsmatrix und Testnachweise aktualisiert.
+- [ ] Geprüfte Quellen committen/pushen und Server aktualisieren.
+
+Keine bezahlte Veo-Livegeneration; eigener Google-Key und ausdrückliche Auftragsfreigabe bleiben nötig.

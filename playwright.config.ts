@@ -33,7 +33,11 @@ export default defineConfig({
       STORAGE_ROOT: ".local/test-assets",
       QUEUE_NAME: "studio-test",
       NODE_OPTIONS:
-        "--import=" + process.cwd() + "/tests/mocks/suno-preload.mjs",
+        "--import=" +
+        process.cwd() +
+        "/tests/mocks/suno-preload.mjs --import=" +
+        process.cwd() +
+        "/tests/mocks/veo-preload.mjs",
     },
   },
 });

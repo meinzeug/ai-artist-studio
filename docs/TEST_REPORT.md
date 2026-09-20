@@ -77,3 +77,22 @@ Voraussetzung: eigener Testcluster, `.env` mit `TEST_DATABASE_URL`, laufender Ru
 [Suno-Verbindung](screenshots/suno-connect-desktop.png), [Suno-Anleitung mobil](screenshots/suno-guide-mobile.png), [KI-Konten](screenshots/cli-providers-desktop.png), [Google-Dialog mobil](screenshots/cli-login-mobile.png), [echte HTTPS-Ersteinrichtung](screenshots/server-setup-desktop.png). Screenshots der Loginanleitung enthalten keine gültigen Geräte-/OAuth-Codes.
 
 Aktueller lokaler Lauf: `.local/final-tests.log`, `.local/final-e2e.log`, `.local/final-typecheck.log`, `.local/final-build.log`, `.local/final-restore.log`, `.local/deployment-browser.log`. Maschinenlesbare Ergebnisse wurden ohne Secrets nach `docs/test-evidence/` übernommen. Server-Buildlog: `/var/log/artist-studio-build.log`.
+
+## Erweiterungsabnahme: FFmpeg-Standard und optionale Veo-Szenen (20.09.2026)
+
+- `npm test`: **47/47 bestanden**. Neun zusätzliche Veo-/Medientests prüfen verschlüsselte Verbindung ohne kostenpflichtigen Test, Berechtigungen, Schema, Kostenfreigabe, Not-Aus, gleichzeitige Budgetreservierung, Idempotenz, unklare POST-Antwort, Neustart/Wiederaufnahme, manuelle Statuszuordnung, Deduplizierung, Dateiprüfung und Fehlerrückmeldung. Nach abschließender Ergänzung der Coveranalyse: Veo-Tests **9/9 erneut bestanden**.
+- `npm run typecheck` und `npm run build`: **bestanden**. Keine neuen npm-Abhängigkeiten.
+- `npm run test:e2e`: **4/4 bestanden** (4,1 Minuten): vollständige Kernstrecke mit echtem Codex; Suno mit simuliertem Anbieter; optionaler Veo-Weg mit simuliertem Google; tatsächliche CLI-Loginlinks/Abbruch.
+- Der Veo-Browsertest verbindet einen absichtlich simulierten Google-Anbieter, prüft Fehler bei falschem Key, zeigt die Modal-Anleitung, verlangt Bildrechte/Kostenfreigabe und importiert eine echte synthetische MP4. Die Szene wird im Editor ausgewählt und in ein echtes vertikales Musikvideo gerendert. Keine bezahlte Google-Produktion.
+- Separater FFmpeg-Test: synthetische Videoszene mit **999-Hz-Ton** plus importierte synthetische **440-Hz-MP3**. Ausgabe tatsächlich dekodiert; 1080×1920, H.264/AAC, Laufzeit geprüft. Frequenzmessung belegt dominierende Songspur ohne beigemischten Szenenton.
+- Downloadtest: API-Key wird bei Redirect auf anderen Host entfernt; DNS-Adresse wird gepinnt. Keine Tests übertragen einen echten Google-Key.
+- Neue Desktop-/390px-Smartphone-Screenshots tatsächlich angesehen. Keine horizontalen Überläufe oder JavaScript-Fehler in der Browserabnahme.
+- `scripts/test-restore.ts`: **43 Tabellen identisch, elf Dateihashes verifiziert, echter PostgreSQL-Neustart bestanden**. Dies ist der Sicherungsstand des vollständigen 4-Test-Browserlaufs.
+
+Nachweise: `tests/veo.test.ts`, `tests/e2e/veo.spec.ts`, [Veo-Browserergebnis](test-evidence/veo-browser.json), [Restore](test-evidence/restore-evidence.json), [Desktop](screenshots/video-optional-desktop.png), [Mobil](screenshots/video-optional-mobile.png). Lokale Logs: `.local/veo-all-tests.log`, `.local/veo-tests.log`, `.local/veo-e2e.log`, `.local/veo-build.log`, `.local/veo-restore.log`.
+
+Nicht ausgeführt: echte kostenpflichtige Veo-Generation; kein Kundenschlüssel oder freigegebener Liveauftrag vorhanden. Kein Bildgenerierungsadapter neu aktiviert.
+
+Zusätzlicher eigenständiger Veo-Browsertest verwendet eine synthetische MP3 mit 3,030204 s Laufzeit. Er deckte einen vorhandenen HTML-`step`-Fehler auf: Audiolaufzeiten mit mehr Nachkommastellen blockierten „Projekt speichern“. Zeitfelder im Video-/Audioeditor akzeptieren jetzt beliebige gültige Sekundenwerte; serverseitige Grenzen bleiben aktiv. Der Test prüft ausdrücklich die Browservalidität beider Zeitfelder.
+
+Der eigenständig aus frischer Testdatenbank laufende Veo-/MP3-Browsertest wurde nach der Korrektur erneut ausgeführt: **1/1 bestanden (1,4 Minuten)**, inklusive automatisch erzeugtem Vorschaubild und realem FFmpeg-Rendering. Er ist separat mit `npm run test:e2e -- tests/e2e/veo.spec.ts` ausführbar und benötigt keinen CLI-Login.

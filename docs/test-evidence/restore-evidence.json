@@ -1,12 +1,12 @@
 {
-  "testedAt": "2026-09-20T15:33:29.782Z",
+  "testedAt": "2026-09-20T16:09:57.795Z",
   "passed": true,
-  "database": "artist_studio_restore_ad78a997dc",
-  "backup": ".local/restore-acceptance-1789918389668/backup",
-  "storage": ".local/restore-acceptance-1789918389668/assets",
-  "tableCount": 40,
-  "rowCount": 130,
-  "verifiedAssetHashes": 8,
+  "database": "artist_studio_restore_f15705e270",
+  "backup": ".local/restore-acceptance-1789920542301/backup",
+  "storage": ".local/restore-acceptance-1789920542301/assets",
+  "tableCount": 43,
+  "rowCount": 160,
+  "verifiedAssetHashes": 11,
   "databaseRestartVerified": true,
   "cliAuthIncluded": false
 }

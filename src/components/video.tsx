@@ -1,4 +1,5 @@
 "use client";
+import { VideoScenes } from "./veo";
 import { useState, useRef } from "react";
 import {
   Plus,
@@ -62,11 +63,29 @@ export function VideoStudio() {
       <SectionHead
         eyebrow="BRING DEINE MUSIK IN BEWEGUNG"
         title="Video-Studio."
-        description="Vom Songauszug zum fertigen vertikalen Video. Direkt in deinem Studio."
+        description="Künstlerbilder + Suno-Song → fertiges TikTok-MP4. Lokal gerendert, mit Bewegung und optionalen Lyrics."
       >
         <Badge label="1080 × 1920 · H.264 / AAC" />
       </SectionHead>
       <ArtistRequired>
+        <div className="panel video-workflow">
+          <div>
+            <small>DEIN STANDARD-WORKFLOW · LOKAL MIT FFMPEG</small>
+            <h2>Aus Bildern wird dein Musikvideo.</h2>
+            <p>
+              1. Künstlerbilder importieren · 2. Suno-Aufnahme und Songstelle
+              wählen · 3. Vorlage gestalten und MP4 rendern
+            </p>
+            <p className="muted">
+              Keine zusätzliche Video-API nötig. Alle Vorlagen verwenden die
+              gewählte Songaufnahme als Tonspur, auch bei eingefügten
+              Videoszenen.
+            </p>
+          </div>
+          <button onClick={() => nav("library")}>
+            Bilder & Audio importieren
+          </button>
+        </div>
         <div className="template-grid">
           {templates.map((t) => (
             <button
@@ -119,6 +138,9 @@ export function VideoStudio() {
             </button>
           ))}
         </div>
+        <VideoScenes
+          onUse={(id) => setEdit({ template: "scenes", seed_asset_id: id })}
+        />
         <div className="sub-heading">
           <h2>Deine Videoprojekte</h2>
           <span className="muted">{projects.length} Projekte</span>
@@ -228,7 +250,14 @@ function VideoEditor({
   const assets = data.assets.filter(
     (a: Row) => a.artist_id === artistId && ["image", "video"].includes(a.kind),
   );
-  const [songId, setSongId] = useState(project.song_id ?? songs[0]?.id ?? "");
+  const [songId, setSongId] = useState(
+    project.song_id ??
+      songs.find((s: Row) =>
+        data.audio_variants.some((v: Row) => v.song_id === s.id),
+      )?.id ??
+      songs[0]?.id ??
+      "",
+  );
   const variants = data.audio_variants.filter((v: Row) => v.song_id === songId);
   const [variantId, setVariantId] = useState(
     project.variant_id ?? variants[0]?.id ?? "",
@@ -246,7 +275,7 @@ function VideoEditor({
         (assets[0]
           ? [
               {
-                asset_id: assets[0].id,
+                asset_id: project.seed_asset_id ?? assets[0].id,
                 duration:
                   Number(variant?.clip_end ?? 15) -
                   Number(variant?.clip_start ?? 0),
@@ -378,7 +407,7 @@ function VideoEditor({
                   label="Start (s)"
                   type="number"
                   min="0"
-                  step=".1"
+                  step="any"
                   value={start}
                   onChange={(e) => setStart(Number(e.target.value))}
                 />
@@ -387,7 +416,7 @@ function VideoEditor({
                   type="number"
                   min=".1"
                   max={audio?.metadata.duration}
-                  step=".1"
+                  step="any"
                   value={end}
                   onChange={(e) => setEnd(Number(e.target.value))}
                 />
@@ -441,7 +470,7 @@ function VideoEditor({
                     <Input
                       label="Dauer (s)"
                       type="number"
-                      step=".1"
+                      step="any"
                       min=".5"
                       value={s.duration}
                       onChange={(e) =>
@@ -518,7 +547,7 @@ function VideoEditor({
                   <input
                     aria-label="Untertitel Start"
                     type="number"
-                    step=".1"
+                    step="any"
                     value={s.start}
                     onChange={(e) =>
                       setSubtitles(
@@ -531,7 +560,7 @@ function VideoEditor({
                   <input
                     aria-label="Untertitel Ende"
                     type="number"
-                    step=".1"
+                    step="any"
                     value={s.end}
                     onChange={(e) =>
                       setSubtitles(

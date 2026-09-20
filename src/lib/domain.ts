@@ -230,6 +230,8 @@ export const jobKinds = [
   "prepare_music_package",
   "suno_generate",
   "suno_sync",
+  "veo_generate",
+  "veo_sync",
 ] as const;
 export type JobKind = (typeof jobKinds)[number];
 export const statuses: Record<string, string> = {
