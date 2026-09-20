@@ -89,7 +89,7 @@ Keine bezahlte Veo-Livegeneration; eigener Google-Key und ausdrückliche Auftrag
 - [x] 55/55 Unit-/Integrationstests; gezielte 8/8 Bildtests nach Wiederaufnahme-Ergänzung. Typprüfung/Produktionsbuild bestanden.
 - [x] Vier vorhandene Browser-Szenarien bestanden; Bild-Szenario nach behobenem Aufklappfehler 1/1 bestanden. Echte Codex-PNG aus dem Dashboard, Desktop/Mobil dokumentiert.
 - [x] Aktuellen Bildbestand mit Migration 005 tatsächlich gesichert, wiederhergestellt und nach Datenbank-Neustart geprüft.
-- [ ] Geprüfte Änderung committen/pushen, Server sichern und Update mit Migration 005/Runner-Neustart deployen.
+- [x] Bildfeature gemeinsam mit der Automatik in `94d325e` gepusht und auf dem bestehenden Server installiert. Migration 005 und Runner-Neustart geprüft.
 
 ## Erweiterung: autonome Künstlerproduktion (Nutzerauftrag 2026-09-20)
 
@@ -113,4 +113,4 @@ Die Bildprovider-Erweiterung (`d7bb129`) und die neue Autonomie-Erweiterung geh�
 - [x] 68/68 Unit-/Integrationstests, nach zusätzlichem Suno-Versionsschutz 21/21 betroffene Tests erneut bestanden.
 - [x] 6/6 komplette Browser-Szenarien mit echten Codex-Texten/Bildern und MP4. Desktop/Mobil visuell geprüft; schwarzes Szenencover korrigiert.
 - [x] Finaler Build/Typprüfung und Restore (50 Tabellen, 288 Datensätze, 22 Dateihashes, echter DB-Neustart).
-- [ ] Gemeinsamen geprüften Code pushen, Server sichern, Migrationen 005/006 deployen und HTTPS/Anmeldung/Dienste prüfen.
+- [x] `94d325e` nach GitHub gepusht und auf artist.dorfspy.de installiert. Vorher Serverbackup, Migrationen 005/006, alle drei Dienste aktiv. HTTPS 200, ohne Anmeldung 401, authentifizierter State 200 und Quellhashes geprüft.

@@ -79,4 +79,16 @@ Eigene Bildproviderkarte unter **Jobs & Einstellungen → Provider & Konten**, i
 
 Additive Migration 006, keine neue npm-Abhängigkeit. Bestehende Artists werden nicht ungefragt aktiviert. Tagesplanung hält bei offenen Produktionsübergaben an und erzeugt keinen Nachholstapel. Vorhandene Auswertung/Katalog/Kommentare fließen in neue Songpläne ein. Ein Textmodell bewertet dabei keine gehörte Musik; Ausschnitte sind Anfang/Mitte/Ende und ohne erfundene Lyrics-Zeitstempel. [Bedienung und Grenzen](AUTOMATION.md).
 
-68 Unit-/Integrationstests und ein vollständiger neuer Browserlauf mit echten Codex-Texten/Referenzbildern sowie drei vollständig decodierten MP4 bestanden. Die abschließende Gesamtregression bestand alle 6 Browser-Szenarien. Backup/Restore: 50 Tabellen, 288 Datensätze und 22 Dateihashes identisch, echter PostgreSQL-Neustart bestanden. Serverinstallation wird im Deploymentnachweis ergänzt. Keine bezahlte Suno-/Gemini-/Veo-Generation und kein tatsächlicher TikTok-Post.
+68 Unit-/Integrationstests und ein vollständiger neuer Browserlauf mit echten Codex-Texten/Referenzbildern sowie drei vollständig decodierten MP4 bestanden. Die abschließende Gesamtregression bestand alle 6 Browser-Szenarien. Backup/Restore: 50 Tabellen, 288 Datensätze und 22 Dateihashes identisch, echter PostgreSQL-Neustart bestanden. Anwendungscode `94d325e` ist auf https://artist.dorfspy.de installiert. Migrationen 005/006 und alle drei Dienste geprüft. Keine bezahlte Suno-/Gemini-/Veo-Generation und kein tatsächlicher TikTok-Post.
+
+### Deployment der Bild-/Automatik-Erweiterung
+
+- Anwendungscode: **94d325e**, einschließlich Bildfeature **d7bb129**, auf GitHub und auf `dorfspy`.
+- Sicherung vor Update: `/var/lib/artist-studio/backups/automation-update-1789920350`.
+- Build als `artist-studio`; Web/Worker/Runner aktiv, Quellhashes identisch. Bestehender Produktionsbestand erhalten; kein Artist ungefragt automatisiert.
+- HTTPS-Health **200**, Daten ohne Session **401**, authentifizierter State mit allen vier neuen Datenbereichen **200**. Für diesen Lesetest wurde nur eine kurzlebige Session angelegt und anschließend entfernt.
+- Tatsächliche Server-Loginseite in Desktop/390px-Browser getestet; keine JS-Fehler oder horizontalen Überläufe. Falscher Einrichtungscode weiterhin **403**.
+- Beide CLI-Anmeldungen auf dem Server erkannt. Codex meldet native Bildfähigkeit; keine Produktionsgeneration beim Deployment ausgelöst. Suno-Verbindung fehlt weiterhin: eigenen SunoAPI.org-Key und Creditbudgets im Dashboard hinterlegen oder den fertigen manuellen Aufgabenweg verwenden.
+- Lokales Studio wieder gestartet: http://127.0.0.1:3210. Diagnose: PostgreSQL, Redis, Web, Runner und FFmpeg erreichbar.
+
+Nachweise: [Server](test-evidence/automation-deployment.json), [HTTPS-Browser](test-evidence/automation-deployment-browser.json), [Tests](test-evidence/automation-tests.json), [Restore](test-evidence/automation-restore.json). Keine CLI-Anmeldedateien auf den Server übertragen.

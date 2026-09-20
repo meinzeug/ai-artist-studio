@@ -8,12 +8,15 @@ page.on("pageerror", (e) => errors.push(e.message));
 try {
   const r = await page.goto(origin);
   if (r?.status() !== 200) throw new Error("Startseite nicht erreichbar");
-  await page
-    .getByRole("heading", { name: "Willkommen in deinem Studio." })
-    .waitFor();
-  await page.getByLabel("Einrichtungscode", { exact: false }).waitFor();
+  const before = await (await page.request.get(origin + "/api/auth")).json();
+  await page.getByLabel("E-Mail", { exact: true }).waitFor();
+  await page.getByLabel("Passwort", { exact: true }).waitFor();
+  if (before.needsSetup)
+    await page.getByLabel("Einrichtungscode", { exact: false }).waitFor();
   await page.screenshot({
-    path: "docs/screenshots/server-setup-desktop.png",
+    path: before.needsSetup
+      ? "docs/screenshots/server-setup-desktop.png"
+      : "docs/screenshots/server-login-desktop.png",
     fullPage: true,
   });
   await page.setViewportSize({ width: 390, height: 844 });
@@ -24,7 +27,9 @@ try {
   )
     throw new Error("Mobiler Überlauf");
   await page.screenshot({
-    path: "docs/screenshots/server-setup-mobile.png",
+    path: before.needsSetup
+      ? "docs/screenshots/server-setup-mobile.png"
+      : "docs/screenshots/server-login-mobile.png",
     fullPage: true,
   });
   const health = await page.request.get(origin + "/api/health");
@@ -42,10 +47,13 @@ try {
   });
   if (setup.status() !== 403) throw new Error("Einrichtung ungeschützt");
   const auth = await (await page.request.get(origin + "/api/auth")).json();
-  if (!auth.needsSetup) throw new Error("Test darf kein Konto anlegen");
+  if (auth.needsSetup !== before.needsSetup)
+    throw new Error("Test hat den Einrichtungsstatus geändert");
   if (errors.length) throw new Error(errors.join("; "));
   await writeFile(
-    "docs/test-evidence/deployment.json",
+    before.needsSetup
+      ? "docs/test-evidence/deployment.json"
+      : "docs/test-evidence/automation-deployment-browser.json",
     JSON.stringify(
       {
         testedAt: new Date().toISOString(),
@@ -54,7 +62,7 @@ try {
         health: health.status(),
         unauthenticatedState: state.status(),
         invalidSetupToken: setup.status(),
-        productionHasNoAccount: true,
+        productionHasNoAccount: before.needsSetup,
         desktopWidth: 1440,
         mobileWidth: 390,
         browserErrors: 0,

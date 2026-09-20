@@ -130,3 +130,9 @@ Gemini-Bild-API wurde mit simulierten Antworten geprüft. Keine kostenpflichtige
 Backup/Restore des getrennten Bild-Testbestands mit Migration 005: **46 Tabellen, 24 Datensätze, 1 echte generierte Bilddatei**, Tabelleninhalte/Dateihash identisch; PostgreSQL-Neustart bestanden. Dieser kleine Bestand ergänzt den vorherigen Restore der vollständigen Produktionsstrecke. Keine CLI-Anmeldedateien im Backup. [Restore-Nachweis](test-evidence/image-restore.json).
 
 Ansichten: [Provider mobil](screenshots/image-provider-mobile.png), [Generierung Desktop](screenshots/image-generate-desktop.png), [Ergebnis Desktop](screenshots/image-library-desktop.png), [Ergebnis mobil](screenshots/image-library-mobile.png).
+
+## Serverabnahme der Artist-Automatik
+
+`94d325e` mit Migrationen 005/006 auf dem vorhandenen Host installiert, nachdem ein konsistentes Backup erstellt wurde. Build ohne Root, drei aktive Dienste, identische Quellhashes, unveränderter Produktionsbestand. TLS-validierter Healthcheck 200, State ohne Session 401 und mit kurzlebiger anschließend entfernter Prüfsession 200; neue Automatik-Arrays vollständig vorhanden. Tatsächliche HTTPS-Loginseite auf Desktop und Smartphonebreite geprüft; ungültiger Setupcode 403, kein Konto angelegt, keine Browserfehler. Beide CLI-Konten angemeldet, Suno-Verbindung weiterhin nicht eingerichtet. Keine bezahlte Testproduktion und kein öffentlicher Post ausgelöst.
+
+Nachweise: [automation-deployment.json](test-evidence/automation-deployment.json), [automation-deployment-browser.json](test-evidence/automation-deployment-browser.json). Der wiederholbare Deployment-Browsertest unterstützt nun sowohl Erstinstallation als auch eine bereits eingerichtete Anwendung. Lokale Diagnose nach Wiederanlauf erfolgreich.

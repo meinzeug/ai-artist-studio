@@ -1,0 +1,125 @@
+{
+  "migrations": [
+    {
+      "name": "001_initial.sql",
+      "applied_at": "2026-09-20T13:23:35.181Z"
+    },
+    {
+      "name": "002_resilience.sql",
+      "applied_at": "2026-09-20T13:23:35.336Z"
+    },
+    {
+      "name": "003_suno_api.sql",
+      "applied_at": "2026-09-20T13:23:35.344Z"
+    },
+    {
+      "name": "004_video_generation.sql",
+      "applied_at": "2026-09-20T14:21:25.711Z"
+    },
+    {
+      "name": "005_image_generation.sql",
+      "applied_at": "2026-09-20T16:06:04.915Z"
+    },
+    {
+      "name": "006_artist_automation.sql",
+      "applied_at": "2026-09-20T16:06:04.936Z"
+    }
+  ],
+  "automation_tables": [
+    {
+      "tablename": "artist_automations"
+    },
+    {
+      "tablename": "automation_clips"
+    },
+    {
+      "tablename": "automation_runs"
+    },
+    {
+      "tablename": "manual_tasks"
+    }
+  ],
+  "counts": [
+    {
+      "artists": 1,
+      "assets": 2,
+      "automations": 0
+    }
+  ],
+  "music": [],
+  "authenticated_state": {
+    "status": 200,
+    "automation_arrays_present": true,
+    "artist_count": 1,
+    "asset_count": 2
+  },
+  "runner": {
+    "active": 0,
+    "providers": [
+      {
+        "provider": "codex",
+        "installed": true,
+        "authenticated": true,
+        "version": "codex-cli 0.154.0",
+        "capabilities": {
+          "structuredText": true,
+          "audioUnderstanding": false,
+          "imageGeneration": true,
+          "videoGeneration": false,
+          "musicGeneration": false,
+          "tools": false
+        }
+      },
+      {
+        "provider": "gemini",
+        "installed": true,
+        "authenticated": true,
+        "version": "0.60.0",
+        "capabilities": {
+          "structuredText": true,
+          "audioUnderstanding": false,
+          "imageGeneration": false,
+          "videoGeneration": false,
+          "musicGeneration": false,
+          "tools": false
+        }
+      }
+    ]
+  },
+  "services": {
+    "web": "active",
+    "worker": "active",
+    "runner": "active"
+  },
+  "hashes": {
+    "src/server/automation.ts": "7cd39d86a0d91f4c37774fd14a0756347381d7bd799f6af5a0230945b9a47c61",
+    "src/components/automation.tsx": "ecd70e8290b152fb790888a9b85383d4fc17c190636bd97b855ab42f53fd2266",
+    "src/server/image-generation.ts": "29126ba5359685ae402f123faecb8075c6de56af4e047112ba1400da772d9f97",
+    "src/runner/provider.ts": "2ec6cee22606ebeb9388eb702b5ae3cc6036dbc0d6a1cdd45f62bcaab4c695c5",
+    "migrations/006_artist_automation.sql": "ec969473f025ba6b61952ee54038206c95f2ad06910e1385bb9e7a77e73909f8"
+  },
+  "checked_at": "2026-09-20T18:07:13.915680+00:00",
+  "origin": "https://artist.dorfspy.de",
+  "release_commit": "94d325ee80646495815ec076f561603131857791",
+  "backup": "/var/lib/artist-studio/backups/automation-update-1789920350",
+  "source_hashes_match": true,
+  "https": {
+    "/api/health": {
+      "status": 200,
+      "tls_verified": true,
+      "response": {
+        "status": "ok"
+      }
+    },
+    "/api/state": {
+      "status": 401,
+      "tls_verified": true
+    },
+    "/": {
+      "status": 200,
+      "tls_verified": true
+    }
+  },
+  "local_cli_auth_copied": false,
+  "production_generations_started": false
+}

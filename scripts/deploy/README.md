@@ -14,3 +14,5 @@ Der hier geprüfte Host nutzt Ubuntu 24.04, Node 22, PostgreSQL 16, Redis, FFmpe
 Updates: Anwendung sichern, nur ihre Worker-/Web-Dienste stoppen, geprüfte Quellen/Build übertragen, `npm ci`, Migrationen mit geschützter Web-Umgebung, Dienste starten. Runner nur neu starten, wenn keine Anmeldung/Produktion läuft. Die Units starten automatisch nach Server-Neustart. Diagnose: `systemctl status artist-studio-{web,worker,runner}`, `journalctl -u artist-studio-worker --since today`, HTTPS `/api/health`.
 
 Diese Skripte sind auf den ausdrücklich beauftragten Host zugeschnitten. Ein Restore von Daten und Schlüsseln wird in `docs/OPERATIONS.md` beschrieben. CLI-Logins werden am Ziel neu verbunden.
+
+`npx tsx scripts/test-deployment.ts` prüft die tatsächliche HTTPS-Oberfläche auf Desktop/Smartphone, Loginpflicht und Einrichtungsschutz. Es erkennt, ob bereits ein Betreiberkonto existiert, und führt keine persönliche Anmeldung oder Produktionsaktion aus.

@@ -81,7 +81,9 @@ Unter **Charakter & Medien → Bild generieren** entstehen Porträts, Cover und 
 
 ### Eingerichteter Server
 
-**https://artist.dorfspy.de** — HTTPS und drei systemd-Dienste sind eingerichtet. Für das erste Betreiberkonto wird ein einmaliger, separat übergebener Einrichtungscode benötigt. Es gibt kein voreingestelltes Login-Passwort. Danach eigene KI-Konten und bei Bedarf SunoAPI.org verbinden.
+**https://artist.dorfspy.de** — Bild-KI und Artist-Automatik sind installiert, HTTPS und drei systemd-Dienste geprüft. Mit dem bestehenden Betreiberkonto anmelden und unter **Künstler → Artist erstellen** starten. Für bestehende Artists **Tägliche Automatik** aktivieren. Codex und Gemini sind auf diesem Server angemeldet; SunoAPI.org bei Bedarf im Dashboard verbinden.
+
+Bei einer frischen Installation schützt ein einmaliger Einrichtungscode die Anlage des Betreiberkontos. Es gibt kein voreingestelltes Login-Passwort.
 
 ### Lokal auf Ubuntu
 
