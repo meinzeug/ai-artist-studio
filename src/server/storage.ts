@@ -51,6 +51,7 @@ export async function probe(file: string) {
     streams: parsed.streams.map((s: any) => ({
       type: s.codec_type,
       codec: s.codec_name,
+      attached_pic: s.disposition?.attached_pic === 1,
       width: s.width,
       height: s.height,
       sample_rate: s.sample_rate,
@@ -100,15 +101,15 @@ export async function saveUpload(name: string, buffer: Buffer) {
       type.mime.startsWith("video/")
     ) {
       metadata = await probe(storage.path(key));
-      kind = metadata.streams.some((s: any) => s.type === "video")
-        ? "video"
-        : "audio";
-      if (
-        !metadata.streams.some(
-          (s: any) => s.type === "audio" || s.type === "video",
-        )
-      )
+      // ffprobe reports embedded album covers as video streams. Preserve
+      // their metadata, but only moving-image streams make this a video.
+      const hasVideo = metadata.streams.some(
+        (s: any) => s.type === "video" && !s.attached_pic,
+      );
+      const hasAudio = metadata.streams.some((s: any) => s.type === "audio");
+      if (!hasVideo && !hasAudio)
         throw new AppError("Keine Audio- oder Videospur vorhanden.");
+      kind = hasVideo ? "video" : "audio";
     }
     return {
       storage_key: key,

@@ -30,6 +30,8 @@ Die 14 deutschen Ansichten inklusive Aufgaben-Inbox, privater Dateispeicher, Tim
 
 ## Prüfergebnisse
 
+Aktuelle Uploadkorrektur: MP3-Dateien mit eingebettetem Cover werden als Audio übernommen; Original und Cover bleiben unverändert. 71 Unit-/Integrationstests sowie ein zusätzlicher gezielter Browserlauf von der manuellen Aufgabe bis zu drei realen MP4 bestanden. Siehe den aktuellen Abschnitt im [Testbericht](TEST_REPORT.md). Serverabnahme dieses Fixes folgt nach Installation.
+
 68 Unit-/Integrationstests, 6 vollständige Playwright-Szenarien, Typprüfung und Produktionsbuild bestanden. Die Kernstrecke wurde mit echter lokaler Codex-ChatGPT-Anmeldung und drei realen MP4-Dateien im Browser getestet. Suno-Dashboard und Produktionsfreigabe mit ausdrücklich simulierten Anbieterantworten bestanden. Beide echten CLI-Anmeldewege bis zum Loginlink und deren Abbruch wurden im Browser geprüft. Desktop/390px-Mobilansichten geprüft und Screenshots gespeichert.
 
 Serverprüfung: gültiges HTTPS, `/api/health` 200, `/api/state` ohne Session 401, Einrichtung ohne gültigen Code 403, beide CLIs erkannt und Loginlinks erzeugt. Keine öffentliche Musikveröffentlichung und keine kostenpflichtige Suno-Livegeneration ausgeführt.

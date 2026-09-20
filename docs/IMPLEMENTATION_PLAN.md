@@ -4,6 +4,8 @@ Stand: **2026-09-20**. Arbeit im bestehenden Projektverzeichnis, keine fremden �
 
 ## Phase 0: Bestand und Entscheidung
 
+Aktuelle Wartung (20.09.2026): Uploadfehler bei MP3 mit eingebettetem Cover reproduziert und korrigiert. Cover-Spuren bleiben Metadaten und ändern den Asset-Typ nicht zu Video. 71 Unit-/Integrationstests, Typprüfung, Build und gezielter Browserlauf von manueller Musikaufgabe bis drei echten MP4 bestanden. Serverinstallation und Übernahme der betroffenen Nutzerdatei folgen nach Commit; Nachweis im Testbericht ergänzen.
+
 - Ausgang: Git `main`, Commit `8bf8730`, sauberer Arbeitsbaum, nur leere README. Keine brauchbare bestehende Anwendung.
 - Vorhanden: Node 22.23.1, npm 10.9.8, PostgreSQL 16.15, FFmpeg 6.1.1, Codex CLI 0.154.0 mit ChatGPT-Login, Gemini CLI 0.60.0 ohne Runner-Login.
 - Docker fehlt. Redis wurde ohne Root lokal extrahiert (7.0.15). Fremde PostgreSQL-/Webdienste wurden nicht verwendet.

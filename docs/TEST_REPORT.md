@@ -2,6 +2,17 @@
 
 Abnahme: **2026-09-20**, Linux/Ubuntu, Node 22.23.1, PostgreSQL 16.15, Redis 7.0.15, FFmpeg 6.1.1, Google Chrome 153.0.8010.47. Produktiv- und Testdaten sind getrennt. Es wurde keine echte öffentliche Veröffentlichung und kein zusätzlicher kostenpflichtiger Medien-API-Auftrag ausgeführt. Native Codex-Text-/Bildtests nutzen das bestehende ChatGPT-Kontingent.
 
+## Fehlerkorrektur: MP3 mit eingebettetem Cover (2026-09-20)
+
+- Ursache mit der vom Betreiber bereitgestellten MP3 reproduziert: ffprobe meldet das JPEG-Cover als Videospur mit `disposition.attached_pic=1`. Die bisherige Erkennung klassifizierte deshalb die komplette Aufnahme als Video. Aufgabe, Song und Auftrag waren korrekt zugeordnet.
+- Der Import berücksichtigt jetzt die Cover-Disposition. Originalbytes, Cover und Dateihash bleiben erhalten. Echte Videospuren bleiben Video; ein falscher Dateiname oder Browser-MIME-Typ umgeht diese Prüfung nicht. Fehlermeldungen unterscheiden Dateityp, Auftragszuordnung und bereits geschlossene Aufgaben.
+- `npm run typecheck`, `npm run build` und **71/71 Unit-/Integrationstests** bestanden, einschließlich drei neuer Tests mit tatsächlich erzeugter MP3 samt Cover, MP3 ohne Cover und MP4 mit irreführendem Dateinamen.
+- `npm run test:e2e -- tests/e2e/covered-audio.spec.ts`: **1/1 bestanden, 50 Sekunden**. Synthetische MP3 mit Cover über die tatsächliche Aufgabenoberfläche hochgeladen; Song-/Lyrics-/Auftragsbezug und unveränderten Downloadhash geprüft. Automatik beendet die Musikaufgabe und rendert drei MP4 (1080×1920, H.264/AAC, yuv420p, ca. drei Sekunden), alle vollständig mit FFmpeg dekodiert. Falsche Datei, falscher Auftrag und erneuter Import in die abgeschlossene Aufgabe abgewiesen.
+- Desktop und 390px-Mobilansicht tatsächlich angesehen; kein horizontaler Überlauf und keine JavaScript-Fehler. Der erste Browserlauf wurde wegen eines zu genauen Testselektors beim Aufgabenzähler beendet; nach Anpassung des Selektors und begrenzten Aktionszeitlimits bestand der vollständige gezielte Lauf.
+- Original-MP3 zusätzlich lokal geprüft: Audio, eingebettetes Cover erhalten, 188,784 Sekunden, byteidentische Speicherung. Die Nutzerdatei ist **nicht** im Repository. Keine externe Generierung im Regressionstest. Die übrigen sechs CLI-/Provider-Browserszenarien wurden für diesen Uploadfix nicht erneut ausgeführt; deren letzte Abnahme steht unten.
+
+Nachweise: [Browserergebnis](test-evidence/covered-audio-e2e.json), [Desktop](screenshots/covered-audio-desktop.png), [Mobil](screenshots/covered-audio-mobile.png), `tests/storage.test.ts`, `tests/e2e/covered-audio.spec.ts`. Lokale Logs: `.local/covered-audio-tests.log`, `.local/covered-audio-build.log`, `.local/covered-audio-e2e.log`.
+
 ## Aktuelle Erweiterung: Künstlerautomatik
 
 - **68/68 Unit-/Integrationstests** bestanden; nach zusätzlicher Bindung der Suno-Verbindung vor dem Versand **21/21 Automatik-/Suno-Tests** erneut bestanden.

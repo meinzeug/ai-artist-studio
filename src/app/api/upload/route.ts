@@ -82,16 +82,22 @@ export async function POST(request: Request) {
         if (
           !task ||
           task.kind !== "produce_music" ||
-          task.state !== "open" ||
-          task.stage !== "music" ||
           task.artist_id !== artistId ||
           task.song_id !== songId ||
-          task.music_order_id !== form.get("order_id") ||
-          saved.kind !== "audio"
+          task.music_order_id !== form.get("order_id")
         )
           throw new AppError(
-            "Die Audiodatei passt nicht zu dieser offenen Produktionsaufgabe.",
+            "Song und Produktionsauftrag passen nicht zu dieser Aufgabe. Bitte lade die Aufgaben neu.",
             409,
+          );
+        if (task.state !== "open" || task.stage !== "music")
+          throw new AppError(
+            "Diese Produktionsaufgabe wartet nicht mehr auf eine Audiodatei. Bitte lade die Aufgaben neu.",
+            409,
+          );
+        if (saved.kind !== "audio")
+          throw new AppError(
+            "Bitte lade eine Audiodatei (MP3, WAV, FLAC oder OGG) hoch. Die ausgewählte Datei ist keine reine Audioaufnahme.",
           );
       }
       await c.query(

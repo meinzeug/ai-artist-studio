@@ -1,0 +1,35 @@
+{
+  "checked_at": "2026-09-20T18:40:19.916Z",
+  "synthetic_audio": true,
+  "external_generation": false,
+  "embedded_cover": true,
+  "original_hash_unchanged": true,
+  "task_completed": true,
+  "invalid_video_rejected": true,
+  "invalid_order_rejected": true,
+  "completed_task_rejected": true,
+  "videos": [
+    {
+      "template": "character",
+      "duration": 3.033333,
+      "width": 1080,
+      "height": 1920,
+      "decoded": true
+    },
+    {
+      "template": "scenes",
+      "duration": 3,
+      "width": 1080,
+      "height": 1920,
+      "decoded": true
+    },
+    {
+      "template": "visualizer",
+      "duration": 3.033333,
+      "width": 1080,
+      "height": 1920,
+      "decoded": true
+    }
+  ],
+  "browser_errors": []
+}
