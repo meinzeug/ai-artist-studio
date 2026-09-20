@@ -32,6 +32,42 @@ export async function GET(
         `${order.production_number}\n\n${order.package.title}\n\nLYRICS\n${order.package.lyrics}\n\nSTIL\n${order.package.style_prompt}\n\nNEGATIVVORGABEN (nur soweit unterstützt)\n${order.package.negative_prompt}\n\nAUSSPRACHE\n${order.package.pronunciation}\n\nNOTIZEN\n${order.package.notes}\n\n${order.package.note}`,
         { name: "produktion.txt" },
       );
+    } else if (kind === "delivery") {
+      const post = await own(user.id, "posts", object);
+      const asset = await own(user.id, "assets", post.asset_id);
+      if (asset.kind !== "video" || asset.rights_status === "disputed")
+        throw new AppError("Video fehlt oder ist als streitig gesperrt.");
+      name = "TIKTOK-ENTWURF-" + post.id.slice(0, 8);
+      archive.file(storage.path(asset.storage_key), { name: "video.mp4" });
+      if (post.cover_id) {
+        const cover = await own(user.id, "assets", post.cover_id);
+        archive.file(storage.path(cover.storage_key), {
+          name: "cover." + cover.storage_key.split(".").at(-1),
+        });
+      }
+      archive.append(post.caption + "\n\n" + post.hashtags, {
+        name: "caption.txt",
+      });
+      archive.append(
+        JSON.stringify(
+          {
+            post_id: post.id,
+            version: post.version,
+            sha256: asset.sha256,
+            status:
+              "Entwurf zur eigenen Prüfung, keine Veröffentlichungsfreigabe",
+            is_aigc: post.is_aigc,
+          },
+          null,
+          2,
+        ),
+        { name: "entwurf.json" },
+      );
+      archive.append(
+        "# Vor der manuellen Veröffentlichung\n\n- [ ] Video und Ton vollständig ansehen/anhören\n- [ ] Bild-, Musik- und gegebenenfalls Stimmrechte prüfen\n- [ ] KI-Kennzeichnung in TikTok prüfen/aktivieren\n- [ ] Kommerzielle Inhalte korrekt kennzeichnen\n- [ ] Caption, Konto, Privatsphäre und Interaktionen prüfen\n- [ ] Selbst in TikTok veröffentlichen\n- [ ] Link und Zeitpunkt unter Manuelle Aufgaben eintragen\n\nDieses Paket ist ein Produktionsentwurf. Es enthält keine automatische Rechtefreigabe. Das Studio veröffentlicht nicht selbst.",
+        { name: "checkliste.md" },
+      );
+      await audit(user.id, "post.draft_downloaded", object);
     } else if (kind === "post") {
       const post = await own(user.id, "posts", object);
       const { snapshot } = await activeApproval(object);
@@ -89,6 +125,9 @@ export async function GET(
         "video_projects",
         "video_generations",
         "image_generations",
+        "artist_automations",
+        "automation_runs",
+        "manual_tasks",
         "campaigns",
         "posts",
         "comments",
@@ -99,6 +138,8 @@ export async function GET(
           object,
         ]);
       const related: Record<string, string> = {
+        automation_clips:
+          "automation_clips x JOIN automation_runs s ON s.id=x.run_id",
         lyrics_versions: "lyrics_versions x JOIN songs s ON s.id=x.song_id",
         music_orders: "music_orders x JOIN songs s ON s.id=x.song_id",
         audio_variants: "audio_variants x JOIN songs s ON s.id=x.song_id",

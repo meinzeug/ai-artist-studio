@@ -86,6 +86,10 @@ export async function runTask(
   progress: (n: number) => Promise<void>,
 ) {
   const input = job.input;
+  if (job.kind === "auto_identity" || job.kind === "auto_song") {
+    const { runAutomaticText } = await import("./automatic-text");
+    return runAutomaticText(job, signal);
+  }
   if (job.kind === "image_generate") {
     const { runImageJob } = await import("../server/image-generation");
     return runImageJob(job, signal);

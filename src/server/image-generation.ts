@@ -185,6 +185,12 @@ export async function imageCommand(
   if (action === "image_generate") {
     const v = imageRequest.parse(d);
     const artist = await ownArtist(user, v.artist_id);
+    const automatic = await one(
+      "SELECT reference_asset_id FROM artist_automations WHERE artist_id=$1 AND user_id=$2",
+      [artist.id, user],
+    );
+    if (automatic?.reference_asset_id)
+      v.reference_asset_id = automatic.reference_asset_id;
     const reference = v.reference_asset_id
       ? await own(user, "assets", v.reference_asset_id)
       : null;

@@ -24,6 +24,7 @@ import {
   type Row,
   Preview,
 } from "./ui";
+import { CreateAutomaticArtist, AutomationSettings } from "./automation";
 const identityLabels: Record<string, string> = {
   aliases: "Alternative Namen",
   handles: "Handle-Vorschläge (Verfügbarkeit ungeprüft)",
@@ -53,6 +54,8 @@ export function Artists() {
   const { data, act, setArtistId, nav } = useStudio();
   const [edit, setEdit] = useState<Row | null>(null),
     [concepts, setConcepts] = useState(false),
+    [automatic, setAutomatic] = useState(false),
+    [automationSettings, setAutomationSettings] = useState<Row | null>(null),
     [history, setHistory] = useState<Row | null>(null);
   const conceptJobs = data.jobs.filter(
     (j: Row) => j.kind === "artist_concepts" && j.state === "succeeded",
@@ -68,9 +71,13 @@ export function Artists() {
           <Sparkles size={16} />
           Konzepte entwickeln
         </button>
-        <button className="primary" onClick={() => setEdit({})}>
+        <button onClick={() => setEdit({})}>
           <Plus size={16} />
           Künstler anlegen
+        </button>
+        <button className="primary" onClick={() => setAutomatic(true)}>
+          <Sparkles size={16} />
+          Artist erstellen
         </button>
       </SectionHead>
       {data.artists.length ? (
@@ -130,7 +137,13 @@ export function Artists() {
                       className="primary"
                       onClick={() => {
                         setArtistId(a.id);
-                        nav("ideas");
+                        nav(
+                          data.artist_automations.some(
+                            (p: Row) => p.artist_id === a.id,
+                          )
+                            ? "tasks"
+                            : "ideas",
+                        );
                       }}
                     >
                       Studio öffnen
@@ -144,6 +157,9 @@ export function Artists() {
                       <PenLine size={16} />
                     </button>
                     <button onClick={() => setHistory(a)}>Versionen</button>
+                    <button onClick={() => setAutomationSettings(a)}>
+                      Tägliche Automatik
+                    </button>
                   </div>
                 </div>
               </article>
@@ -153,9 +169,18 @@ export function Artists() {
       ) : (
         <Empty
           title="Dein erster Künstler beginnt hier"
-          body="Starte mit deiner eigenen Idee oder lass mehrere eigenständige Konzepte entwickeln. Namen und Handles bleiben ungeprüfte Vorschläge."
-          action="Künstler anlegen"
-          onClick={() => setEdit({})}
+          body="Die KI entwickelt Charakter, Bio und Porträt und produziert anschließend täglich Songs und Videos. Deine Wünsche sind optional. Namen und Handles bleiben ungeprüfte Vorschläge."
+          action="Artist erstellen"
+          onClick={() => setAutomatic(true)}
+        />
+      )}
+      {automatic && (
+        <CreateAutomaticArtist onClose={() => setAutomatic(false)} />
+      )}
+      {automationSettings && (
+        <AutomationSettings
+          artist={automationSettings}
+          onClose={() => setAutomationSettings(null)}
         />
       )}
       {edit && (

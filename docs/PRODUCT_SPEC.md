@@ -7,7 +7,7 @@ AI Artist Studio ist eine private, deutsche Produktionszentrale für virtuelle M
 - Neue Identität erzeugt eine Version. Songs behalten ihren Identitätsstand; KI-Jobs erhalten einen Snapshot.
 - Lyrics sind append-only Versionen. Geschützte Passagen dürfen weder KI noch normales Speichern entfernen; explizites Entsperren wird protokolliert.
 - Audiooriginal bleibt unverändert. Videoausgaben sind abgeleitete Assets; Renderings speichern Eingaben und Hashes.
-- Kein Beitrag wird extern versendet. Export benötigt Rechtefreigabe und gültigen Snapshot. Ein manueller Veröffentlichungsnachweis ist ausdrücklich unbestätigt durch die Plattform.
+- Kein Beitrag wird extern versendet. Ein Freigabeexport benötigt Rechtefreigabe und gültigen Snapshot; Produktionsentwürfe können zuvor mit klarer Prüfliste heruntergeladen werden. Ein manueller Veröffentlichungsnachweis ist ausdrücklich unbestätigt durch die Plattform.
 - Leere Kennzahlen bleiben null. Auswertung verwendet jüngste kumulative Werte, gleiche Messzeitpunkte für Raten und gewichtete Nenner.
 - Fehlende Provider sind sichtbar. Weder Trends noch Medienverständnis oder Kostenfreiheit werden vorgetäuscht.
 
@@ -19,7 +19,7 @@ AI Artist Studio ist eine private, deutsche Produktionszentrale für virtuelle M
 | 2 | Linux, Deutsch, Berlin, privater Login, Bestand erhalten | Auth, CSS, Temporal, lokales Setup | Bestandsaufnahme; Setup-/Browsertest |
 | 3 | Dokumentation und tatsächliche Zugänge unterscheiden | INTEGRATION_MATRIX.md | Quellenprüfung 2026-09-20 |
 | 4 | TS/Next/React, PostgreSQL, Redis/BullMQ, FFmpeg, Worker/Runner | src/server, src/worker, src/runner, Compose | Build, Typprüfung, DB- und Rendertests |
-| 5 | 13 Bereiche, Leer-/Fehlerzustände, Einrichtung | components/studio.tsx, settings.tsx | Desktop-/Mobil-Browser und Screenshots |
+| 5 | 14 Bereiche inklusive Aufgaben-Inbox, Leer-/Fehlerzustände, Einrichtung | components/studio.tsx, settings.tsx | Desktop-/Mobil-Browser und Screenshots |
 | 6 | Character Bible mit getrennten Identitätsfeldern, KI-Konzepte, Versionen | artists.tsx, identity_versions | Künstler anlegen/bearbeiten/Reload; Konflikttest |
 | 7 | Getrennte visuelle/musikalische Referenzen, Vorschlag/Freigabe | library.tsx, artist_references | Referenz-Commands; keine Gesicht/Stimmgarantie |
 | 8 | Ideen, Katalogähnlichkeit, Status/Feedback/Kombination | artists.tsx, tasks.ts | Live-Ideen; Ähnlichkeitstest; Quellen ohne aktuelle Recherche leer |
@@ -54,3 +54,18 @@ Einzelbetreiber, mehrere Künstler und Konten sind der Betriebsumfang. Das Rolle
 ## Ergänzung 2026-09-20: Produktionsweg für Musikvideos
 
 Verbindlicher Standard: importierte Künstlerbilder und Suno-MP3 werden lokal mit FFmpeg zu TikTok-MP4 zusammengesetzt (`src/components/video.tsx`, `src/server/media.ts`, Kern-E2E). Echte KI-Video-Szenen sind ein optionaler Zusatz (`src/providers/veo.ts`, `src/server/video-generation.ts`, `src/components/veo.tsx`), mit gesonderter API-Verbindung, Budget und Zustimmung. Nachweis: `tests/veo.test.ts` (inklusive tatsächlicher Audiofrequenzprüfung) und `tests/e2e/veo.spec.ts` (simulierter Google-Anbieter, reale Medien). Kein Veo-Liveerfolg behauptet.
+
+## Ergänzung: autonome tägliche Artist-Produktion
+
+| Nutzeranforderung | Implementierung | Nachweis |
+|---|---|---|
+| Ein Knopf, optionale Vorgaben, Charakter/Bio/Porträt durch KI | `CreateAutomaticArtist`, `auto_create`, `auto_identity`, Bildprovider | `zzz-automation.spec.ts`: echte Codex-Identität und echtes Porträt |
+| Hauptporträt in allen späteren Bildaufträgen | `artist_automations.reference_asset_id`, erzwungene Backend-Zuordnung | `automation.test.ts`: Client ohne Referenz wird korrigiert; Browserlauf mit echtem Referenzbild |
+| Täglich Song entwickeln und produzieren | `tickAutomation`, `auto_song`, versionierte Suno-Budgetfreigabe | Tages-/DST-/Ausfall-/Doppel-/Pause-/Not-Aus-Tests; Suno-Reservierung ohne externe Zahlung |
+| Manuelle Aufgaben statt verstreuter Formulare | `manual_tasks`, eigene Navigationsseite, Paket/Copy/Upload | vollständiger Browserlauf mit zugeordnetem MP3-Import und automatischer Fortsetzung |
+| Automatisch drei MP4 + Beschreibungen | persistente `automation_clips`, FFmpeg-Projekte/Renderings/Posts | drei echte 1080×1920-H.264/AAC-Dateien, vollständige Dekodierung |
+| Video herunterladen, TikTok selbst veröffentlichen | `delivery`-ZIP, `PublishTask`, `auto_publish` | echtes ZIP, Versionskonflikt, manueller Nachweis; kein externer TikTok-Post |
+| Datenbasierte nächste Idee | Katalog, Kommentare, Insights, `summarizeMetrics`, gespeicherte `data_basis` | Unit-/Integrationstest prüft tatsächliche Messwerte, fehlende Werte und Quellen-IDs |
+| Neustart ohne doppelten kostenpflichtigen Auftrag | dauerhafte Stufen, deterministische Jobschlüssel, vorhandene External-State-Sperren | wiederholte Schedulerläufe, offene Übergaben, unklarer Suno-Zustand, alte Recoverytests |
+
+Bestehende Artists werden nur auf ausdrücklichen Start hin automatisiert. Automatische Bildreferenzfreigabe bedeutet ausschließlich visuelle Referenzwahl, keine Rechtsfreigabe. Veo bleibt ein optionaler separat beauftragter Zusatz. Bedienung: [AUTOMATION.md](AUTOMATION.md).

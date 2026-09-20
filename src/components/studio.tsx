@@ -26,6 +26,7 @@ import {
   ArrowRight,
   X,
   OctagonPause,
+  ListTodo,
 } from "lucide-react";
 import {
   StudioContext,
@@ -42,9 +43,11 @@ import { VideoStudio } from "./video";
 import { Publishing, Campaigns } from "./publishing";
 import { Community, Analytics, Director } from "./intelligence";
 import { Settings } from "./settings";
+import { ManualTasks, AutomationOverview } from "./automation";
 const navigation = [
   ["overview", "Übersicht", LayoutDashboard],
   ["artists", "Künstler", Users],
+  ["tasks", "Manuelle Aufgaben", ListTodo],
   ["ideas", "Ideen & Recherche", Lightbulb],
   ["lyrics", "Songs & Lyrics", NotebookPen],
   ["music", "Musikproduktion", Disc3],
@@ -308,6 +311,7 @@ export default function Studio() {
   ).length;
   const components: Record<string, React.ReactNode> = {
     artists: <Artists />,
+    tasks: <ManualTasks />,
     ideas: <Ideas />,
     lyrics: <Lyrics />,
     music: <MusicProduction />,
@@ -363,12 +367,12 @@ export default function Studio() {
           <nav>
             {navigation.map(([key, label, Icon], i) => (
               <div key={key}>
-                {i === 7 && (
+                {key === "campaigns" && (
                   <div className="nav-caption second">
                     VERÖFFENTLICHEN & LERNEN
                   </div>
                 )}
-                {i === 12 && <div className="nav-separator" />}
+                {key === "settings" && <div className="nav-separator" />}
                 <button
                   className={page === key ? "active" : ""}
                   onClick={() => nav(key)}
@@ -377,6 +381,16 @@ export default function Studio() {
                   <span>{label}</span>
                   {key === "publishing" && pending > 0 && <b>{pending}</b>}
                   {key === "settings" && active > 0 && <b>{active}</b>}
+                  {key === "tasks" &&
+                    data.manual_tasks.some((t: Row) => t.state === "open") && (
+                      <b>
+                        {
+                          data.manual_tasks.filter(
+                            (t: Row) => t.state === "open",
+                          ).length
+                        }
+                      </b>
+                    )}
                 </button>
               </div>
             ))}
@@ -420,11 +434,17 @@ export default function Studio() {
             <div className="top-actions">
               <span className="mode-indicator">
                 <span />
-                {data.settings.mode === "assisted"
-                  ? "Assistierter Betrieb"
-                  : data.settings.mode === "production"
-                    ? "Produktionsautomatik"
-                    : "Veröffentlichungsprüfung"}
+                {data.settings.emergency_stop
+                  ? "Not-Aus aktiv"
+                  : data.artist_automations.some(
+                        (p: Row) => p.artist_id === artistId && p.enabled,
+                      )
+                    ? "Künstlerautomatik aktiv"
+                    : data.settings.mode === "assisted"
+                      ? "Assistierter Betrieb"
+                      : data.settings.mode === "production"
+                        ? "Produktionsautomatik"
+                        : "Veröffentlichungsprüfung"}
               </span>
               <select
                 aria-label="Aktiver Künstler"
@@ -529,6 +549,7 @@ function Overview({
           KI-Director öffnen
         </button>
       </SectionHead>
+      <AutomationOverview />
       <SunoConnectionCard />
       <div className="studio-hero">
         <div className="hero-copy">

@@ -1,0 +1,31 @@
+{
+  "checked_at": "2026-09-20T18:03:11.421957+00:00",
+  "unit_integration": {
+    "passed": 68,
+    "failed": 0,
+    "skipped": 0
+  },
+  "after_suno_version_guard": {
+    "passed": 21,
+    "failed": 0
+  },
+  "playwright": {
+    "passed": 6,
+    "failed": 0,
+    "duration_minutes": 10.7,
+    "live_codex_text": true,
+    "live_codex_images": true,
+    "suno_api": "mocked",
+    "veo_api": "mocked",
+    "tiktok_public_post": false
+  },
+  "typecheck": true,
+  "build": true,
+  "restore": {
+    "tables": 50,
+    "rows": 288,
+    "verified_assets": 22,
+    "database_restart": true
+  },
+  "production_tests_use_test_database_only": true
+}

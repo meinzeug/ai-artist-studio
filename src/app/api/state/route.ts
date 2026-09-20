@@ -18,6 +18,9 @@ export async function GET(request: Request) {
       "video_projects",
       "video_generations",
       "image_generations",
+      "artist_automations",
+      "automation_runs",
+      "manual_tasks",
       "campaigns",
       "posts",
       "comments",
@@ -37,6 +40,8 @@ export async function GET(request: Request) {
       }),
     );
     const relational: Record<string, string> = {
+      automation_clips:
+        "automation_clips x JOIN automation_runs r ON r.id=x.run_id JOIN artists a ON a.id=r.artist_id",
       identity_versions:
         "identity_versions x JOIN artists a ON a.id=x.artist_id",
       lyrics_versions:
@@ -63,7 +68,7 @@ export async function GET(request: Request) {
     await Promise.all(
       Object.entries(relational).map(async ([name, from]) => {
         state[name] = await query(
-          `SELECT x.* FROM ${from} WHERE a.user_id=$1 ORDER BY x.created_at DESC`,
+          `SELECT x.* FROM ${from} WHERE a.user_id=$1 ORDER BY ${name === "automation_clips" ? "x.position" : "x.created_at"} DESC`,
           [user.id],
         );
       }),

@@ -90,3 +90,27 @@ Keine bezahlte Veo-Livegeneration; eigener Google-Key und ausdrückliche Auftrag
 - [x] Vier vorhandene Browser-Szenarien bestanden; Bild-Szenario nach behobenem Aufklappfehler 1/1 bestanden. Echte Codex-PNG aus dem Dashboard, Desktop/Mobil dokumentiert.
 - [x] Aktuellen Bildbestand mit Migration 005 tatsächlich gesichert, wiederhergestellt und nach Datenbank-Neustart geprüft.
 - [ ] Geprüfte Änderung committen/pushen, Server sichern und Update mit Migration 005/Runner-Neustart deployen.
+
+## Erweiterung: autonome Künstlerproduktion (Nutzerauftrag 2026-09-20)
+
+Die Bildprovider-Erweiterung (`d7bb129`) und die neue Autonomie-Erweiterung gehören zur gemeinsamen Lieferung:
+
+1. Ein-Klick-Künstleranlage mit optionalen Vorgaben; KI entwickelt Name, Character Bible, Bio und initiales Hauptporträt.
+2. Dauerhafte Automatik pro Künstler, täglicher Kalender in Europe/Berlin, kein doppelter Tag und kein ungeprüftes Aufholen verpasster Tage. Pausieren/Not-Aus/Budgets bleiben wirksam.
+3. Songidee, Lyrics, Stilprompt, Szenenidee und drei Beiträge autonom planen; SunoAPI bei ausdrücklich freigegebenen vorhandenen Credits, sonst konkrete Suno-Aufgabe.
+4. Eigene Seite „Manuelle Aufgaben“ mit direkt zugeordnetem Audioimport, Verbindungs-/Fehleraufgaben und fertigen MP4/Caption/Veröffentlichungsnachweisen.
+5. Hauptporträt automatisch als feste Referenz für spätere Bilder, drei lokale FFmpeg-MP4 erstellen, öffentliche Aktionen weiterhin manuell.
+6. Fehlende Zugänge/Budgets/unklare externe Zustände dürfen keine verdeckten Wiederholungen auslösen. Persistente Stufen/Idempotenz und Wiederaufnahme testen.
+7. Echte Browserstrecke einschließlich automatischer Künstlerentwicklung, Portrait, manuellem Suno-Import und fertigen Videos prüfen; anschließend beide Änderungen pushen und gemeinsam deployen.
+
+### Abnahme der Automatik
+
+- [x] Migration 006, persistente Tagesplanung, Pausieren/Not-Aus, Versions- und Idempotenzprüfungen.
+- [x] Vollständige Artist-/Song-KI, festes Hauptporträt, Suno-API innerhalb bestätigter Grenzen beziehungsweise manuelle Aufgabe.
+- [x] Direkter Audioimport mit automatischer Fortsetzung, drei FFmpeg-Projekte/MP4, Captions und Aufgaben-Inbox.
+- [x] Entwurfspaket, manuelle Betreiberprüfung und versionierter Veröffentlichungsnachweis.
+- [x] Datenbezug tatsächlicher Kennzahlen/Erkenntnisse im nächsten Songplan.
+- [x] 68/68 Unit-/Integrationstests, nach zusätzlichem Suno-Versionsschutz 21/21 betroffene Tests erneut bestanden.
+- [x] 6/6 komplette Browser-Szenarien mit echten Codex-Texten/Bildern und MP4. Desktop/Mobil visuell geprüft; schwarzes Szenencover korrigiert.
+- [x] Finaler Build/Typprüfung und Restore (50 Tabellen, 288 Datensätze, 22 Dateihashes, echter DB-Neustart).
+- [ ] Gemeinsamen geprüften Code pushen, Server sichern, Migrationen 005/006 deployen und HTTPS/Anmeldung/Dienste prüfen.

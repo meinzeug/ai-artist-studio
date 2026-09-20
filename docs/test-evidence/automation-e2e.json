@@ -1,0 +1,45 @@
+{
+  "checked_at": "2026-09-20T18:00:58.682Z",
+  "live_codex_identity": true,
+  "live_codex_lyrics": true,
+  "live_codex_portrait": true,
+  "live_codex_reference_scene": true,
+  "suno_generation_live": false,
+  "manual_audio_import": true,
+  "synthetic_test_audio": true,
+  "automatic_resumption": true,
+  "real_renders": [
+    {
+      "template": "character",
+      "width": 1080,
+      "height": 1920,
+      "video": "h264",
+      "audio": "aac",
+      "duration": 6.033333,
+      "decoded": true
+    },
+    {
+      "template": "scenes",
+      "width": 1080,
+      "height": 1920,
+      "video": "h264",
+      "audio": "aac",
+      "duration": 6.066667,
+      "decoded": true
+    },
+    {
+      "template": "visualizer",
+      "width": 1080,
+      "height": 1920,
+      "video": "h264",
+      "audio": "aac",
+      "duration": 6.033333,
+      "decoded": true
+    }
+  ],
+  "manual_tasks": 3,
+  "public_post_performed": false,
+  "manual_evidence_saved": true,
+  "paused_after_test": true,
+  "browser_errors": []
+}

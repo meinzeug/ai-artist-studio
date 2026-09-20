@@ -230,6 +230,8 @@ export const jobKinds = [
   "prepare_music_package",
   "suno_generate",
   "suno_sync",
+  "auto_identity",
+  "auto_song",
   "image_generate",
   "veo_generate",
   "veo_sync",

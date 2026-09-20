@@ -52,6 +52,10 @@ export async function command(userId: string, raw: unknown): Promise<any> {
     .parse(raw);
   const d = envelope.data,
     key = envelope.key ?? randomUUID();
+  if (envelope.action.startsWith("auto_")) {
+    const { automationCommand } = await import("./automation");
+    return automationCommand(userId, envelope.action, d, key);
+  }
   if (envelope.action.startsWith("image_")) {
     const { imageCommand } = await import("./image-generation");
     return imageCommand(userId, envelope.action, d, key);
@@ -887,7 +891,10 @@ export async function command(userId: string, raw: unknown): Promise<any> {
       return { id: eid };
     }
     case "queue_ai": {
-      if (typeof d.kind === "string" && /^(suno_|veo_|image_)/.test(d.kind))
+      if (
+        typeof d.kind === "string" &&
+        /^(suno_|veo_|image_|auto_)/.test(d.kind)
+      )
         throw new AppError(
           "Externe Produktion benötigt den eigenen Freigabeweg.",
         );

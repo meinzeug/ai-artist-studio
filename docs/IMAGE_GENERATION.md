@@ -45,3 +45,9 @@ Schlüssel werden AES-GCM-verschlüsselt gespeichert und weder an den Browser no
 - Erfolgreich übernommene Bilder bleiben bei einem Worker-Neustart erhalten. Wird die Antwort vor dem Import verloren, bieten diese synchronen Bildwege keine verlässliche externe Auftragsabfrage. Das Studio stellt dies als unklar dar; eine erneute Generierung erfordert einen neuen bewusst freigegebenen Auftrag.
 - Maximal vier Bildantworten, insgesamt begrenzte Antwortgröße; die erste Datei wird inhaltlich erkannt und mit Pixellimit dekodiert. Referenzen werden per Hash geprüft und auf höchstens 1536 Pixel Kantenlänge als PNG-Ableitung übertragen, Originale bleiben unverändert.
 - Erfolgreiche Bilder werden auch dann sicher übernommen, wenn der Nutzer unmittelbar nach der externen Antwort abbricht. Das ist keine neue externe Aktion; bereits entstandene Inhalte werden nicht als ungeschehen dargestellt.
+
+## Verwendung in der Artist-Automatik
+
+**Artist erstellen** erlaubt ausdrücklich die automatische Entwicklung samt Porträt und täglichen Szenen. Wenn bisher keine Bildverbindung gewählt wurde, wird die vorhandene Codex-Anmeldung verwendet; fehlt sie, entsteht eine Einrichtungsaufgabe. Eine bezahlte API wird dabei nicht ausgewählt. Bereits gewählte Provider und Budgets werden als Version bestätigt.
+
+Das erste Porträt wird als feste visuelle Referenz gespeichert. Nachfolgende Bildaufträge dieses Artists übernehmen es verbindlich, auch in der Bibliothek. Die Referenzauswahl ist dann entsprechend beschriftet und gesperrt. Rechte starten weiterhin ungeklärt; visuelle Referenzwahl ist keine Rechtsfreigabe. Beide tatsächlichen Bilder – Hauptporträt und Folgeszene mit Referenz – wurden in der automatischen Browserstrecke live mit Codex erzeugt. [Gesamtablauf](AUTOMATION.md).

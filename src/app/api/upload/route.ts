@@ -73,6 +73,27 @@ export async function POST(request: Request) {
         .string()
         .max(2000)
         .parse(form.get("origin") || "Manueller Import");
+      if (form.get("manual_task_id")) {
+        const task = await one(
+          "SELECT t.*,r.song_id,r.music_order_id,r.stage FROM manual_tasks t JOIN automation_runs r ON r.id=t.run_id WHERE t.id=$1 AND t.user_id=$2 FOR UPDATE OF t",
+          [z.uuid().parse(form.get("manual_task_id")), user.id],
+          c,
+        );
+        if (
+          !task ||
+          task.kind !== "produce_music" ||
+          task.state !== "open" ||
+          task.stage !== "music" ||
+          task.artist_id !== artistId ||
+          task.song_id !== songId ||
+          task.music_order_id !== form.get("order_id") ||
+          saved.kind !== "audio"
+        )
+          throw new AppError(
+            "Die Audiodatei passt nicht zu dieser offenen Produktionsaufgabe.",
+            409,
+          );
+      }
       await c.query(
         "INSERT INTO assets(id,artist_id,song_id,kind,name,storage_key,mime,bytes,sha256,metadata,origin) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)",
         [

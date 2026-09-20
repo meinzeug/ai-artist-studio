@@ -9,6 +9,7 @@ Lies docs/IMPLEMENTATION_PLAN.md, docs/ARCHITECTURE.md und docs/HANDOVER.md vor 
 - Sichere spawn-Aufrufe, kein shell:true, keine YOLO-Flags. Originaldateien unverändert.
 - Tests: npm run typecheck, npm test, npm run test:e2e, npm run build. Neue Tests müssen echte Risiken prüfen.
 - Fortschritt und verbleibende Einschränkungen ehrlich dauerhaft dokumentieren.
+- Künstlerautomatik: `auto_*` nur über den dedizierten Freigabeweg; feste Hauptporträt-Referenz und Provider-Versionen erhalten. Bei unklarem externem Zustand nie erneut generieren. Manuelle Audioimporte müssen denselben Lauf fortsetzen.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

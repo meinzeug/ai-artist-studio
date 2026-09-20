@@ -105,3 +105,9 @@ Sicherungen enthalten die verschlüsselte Verbindung sowie Szenenaufträge/Reser
 Migration `005_image_generation.sql` ist additiv. Vor dem Update wie üblich Daten und Assets sichern. Neue Runner-Bildfunktion erfordert einen Neustart von **Web, Worker und Runner**, nachdem laufende Jobs/Anmeldungen beendet sind. Auth-Verzeichnisse unverändert beibehalten; keine lokalen Accountdateien auf den Server kopieren. Keine neue npm-Abhängigkeit und kein neues Systempaket.
 
 Im Dashboard unter Provider & Konten die Bild-KI ausdrücklich wählen. Codex nutzt die bestehende Runner-Anmeldung. Für Gemini ist ein eigener Bild-API-Key nötig; unabhängig vom Veo-Key. [Schrittfolge und Fehlerbehandlung](IMAGE_GENERATION.md). Bestehende Künstler und Bilder bleiben erhalten. Der Standard führt ohne eingerichteten Bildprovider weiterhin zum manuellen Import.
+
+## Künstlerautomatik (Migration 006)
+
+Nach Backup und Migration Web/Worker/Runner gemeinsam aktualisieren. Kein neuer Systemdienst, kein Cronjob und keine neue Abhängigkeit nötig. Der Worker erledigt Tagesplanung und Wiederaufnahme anhand der Datenbank. Bestehende Artists bleiben zunächst unverändert; unter „Tägliche Automatik“ ausdrücklich aktivieren. Neue „Artist erstellen“-Aufträge starten den vollständigen Ablauf. Vor Wartungen Automatik pausieren beziehungsweise Not-Aus aktivieren und laufende Jobs auslaufen lassen. Nicht die Queue alleine löschen: PostgreSQL hält den Produktionsfortschritt.
+
+Standard 09:00 Europe/Berlin, pro Artist einstellbar. Ausfalltage erzeugen keinen Nachholstapel. Referenzbild, Providerfreigaben, Tagesläufe, Clipprojekte und Aufgaben werden regulär gesichert/exportiert. Nach einem Restore unbekannte externe Aufträge klären; niemals manuell einen zweiten Auftrag als „Retry“ erzwingen. [Bedienung und Grenzen](AUTOMATION.md).

@@ -272,6 +272,7 @@ export async function renderVideo(
 export async function videoCover(file: string, signal?: AbortSignal) {
   const temp = await mkdtemp(path.join(tmpdir(), "studio-cover-"));
   try {
+    const info = await probe(file);
     const target = path.join(temp, "cover.jpg");
     const result = await runProcess(
       "ffmpeg",
@@ -280,6 +281,8 @@ export async function videoCover(file: string, signal?: AbortSignal) {
         "error",
         "-threads",
         "2",
+        "-ss",
+        String(Math.min(0.5, info.duration / 5)),
         "-i",
         file,
         "-frames:v",

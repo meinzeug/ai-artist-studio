@@ -26,3 +26,9 @@ Alle Zeilen wurden am **2026-09-20** geprüft. Suno-Rechte werden anhand konkret
 ## Erweiterung auf Wunsch des Betreibers
 
 SunoAPI.org wurde nach ausdrücklichem Verweis auf dessen Dokumentation integriert. Die ursprüngliche Sperre für die separate **Suno Platform** bleibt bestehen. Prüfdatum für alle neuen Funktionen: **2026-09-20**. [Suno-Einrichtung](SUNO_API_SETUP.md), [CLI-Anmeldung](CLI_LOGIN.md). Eine erfolgreiche simulierte Anbieterantwort wird nicht als Live-Abnahme gewertet.
+
+## Artist-Automatik: Integrationsnachweis vom 2026-09-20
+
+Die täglichen Abläufe ergänzen keine neuen externen Endpunkte. Codex-/Gemini-Text, ausgewählter Bildprovider, SunoAPI.org und lokale FFmpeg-Jobs bleiben getrennte Schritte mit den oben angegebenen Zugängen. Die einmalige Automatikbestätigung bindet die aktuelle Provider-/Budgetversion; geänderte Verbindung benötigt erneute Bestätigung. Bei fehlender Bildauswahl darf nur der vorhandene Codex-Account genutzt werden. Nicht eingerichtet bedeutet weiterhin nicht live getestet.
+
+Lokal tatsächlich geprüft: automatische Codex-Character-Bible, Lyrics, Hauptporträt und ein weiteres Bild mit übergebener Porträtreferenz; anschließend automatisches FFmpeg-Rendering nach manuellem Testaudioimport. Suno-API-Automatik mit Budget und genau einem Job in isolierten Integrationstests geprüft, **kein bezahlter Liveauftrag**. Auf `dorfspy` wurden beide CLI-Anmeldungen erneut erkannt; Suno-Verbindung fehlt dort weiterhin. TikTok-Veröffentlichung bleibt manuell. [Ablauf und Grenzen](AUTOMATION.md), [Testnachweis](test-evidence/automation-e2e.json).

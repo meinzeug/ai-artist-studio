@@ -26,11 +26,11 @@ SunoAPI.org ist der vom Betreiber ausdrücklich gewählte Drittanbieter, mit eig
 
 Künstler/Character Bible → echte KI-Ideen → Lyrics mit Versionen/geschützten Zeilen → Suno-Paket bzw. freigegebener API-Auftrag → Audioimport mit Varianten/Rechten/Analyse → drei echte lokale FFmpeg-Videoformate → Snapshotfreigabe → TikTok-ZIP → manueller Veröffentlichungsnachweis → Kennzahlen und begründete Folgeidee.
 
-Die 13 deutschen Ansichten, privater Dateispeicher, Timeline/Untertitel/Crop, Communityimport, Director-Aktionen, Budgets, Not-Aus und persistente Jobs sind implementiert. SunoAPI-Aufträge werden nur einmal gesendet; unklare Antworten benötigen Statusklärung. Fertige Dateien werden automatisch überprüft und dedupliziert zugeordnet. Der manuelle Suno-Weg bleibt vollständig nutzbar.
+Die 14 deutschen Ansichten inklusive Aufgaben-Inbox, privater Dateispeicher, Timeline/Untertitel/Crop, Communityimport, Director-Aktionen, Budgets, Not-Aus und persistente Jobs sind implementiert. SunoAPI-Aufträge werden nur einmal gesendet; unklare Antworten benötigen Statusklärung. Fertige Dateien werden automatisch überprüft und dedupliziert zugeordnet. Der manuelle Suno-Weg bleibt vollständig nutzbar.
 
 ## Prüfergebnisse
 
-47 Unit-/Integrationstests, Typprüfung und Produktionsbuild bestanden. Die Kernstrecke wurde mit echter lokaler Codex-ChatGPT-Anmeldung und drei realen MP4-Dateien im Browser getestet. Suno-Dashboard und Produktionsfreigabe mit ausdrücklich simulierten Anbieterantworten bestanden. Beide echten CLI-Anmeldewege bis zum Loginlink und deren Abbruch wurden im Browser geprüft. Desktop/390px-Mobilansichten geprüft und Screenshots gespeichert.
+68 Unit-/Integrationstests, 6 vollständige Playwright-Szenarien, Typprüfung und Produktionsbuild bestanden. Die Kernstrecke wurde mit echter lokaler Codex-ChatGPT-Anmeldung und drei realen MP4-Dateien im Browser getestet. Suno-Dashboard und Produktionsfreigabe mit ausdrücklich simulierten Anbieterantworten bestanden. Beide echten CLI-Anmeldewege bis zum Loginlink und deren Abbruch wurden im Browser geprüft. Desktop/390px-Mobilansichten geprüft und Screenshots gespeichert.
 
 Serverprüfung: gültiges HTTPS, `/api/health` 200, `/api/state` ohne Session 401, Einrichtung ohne gültigen Code 403, beide CLIs erkannt und Loginlinks erzeugt. Keine öffentliche Musikveröffentlichung und keine kostenpflichtige Suno-Livegeneration ausgeführt.
 
@@ -72,3 +72,11 @@ Anwendungscode `45d62b3` auf **https://artist.dorfspy.de** installiert; Build al
 ## Erweiterung: Bildprovider auswählen
 
 Eigene Bildproviderkarte unter **Jobs & Einstellungen → Provider & Konten**, inklusive Einrichtungsmodal und ChatGPT-Anmeldung. Bilder lassen sich unter **Charakter & Medien** erzeugen, optional mit Künstlerreferenz, Identitätsversion und Songzuordnung. Codex-Bildfunktion mit CLI 0.154.0 im isolierten Runner live erfolgreich (echte PNG, kein API-Key). Gemini-Bild-API separat mit verschlüsseltem Key und bestätigten USD-Ansätzen implementiert. Keine bezahlte Gemini-Bildgeneration. Anleitung: [IMAGE_GENERATION.md](IMAGE_GENERATION.md). Additive Migration 005; kein neues npm-Paket.
+
+## Neu: Artist-Automatik und Manuelle Aufgaben
+
+**Künstler → Artist erstellen** startet Character Bible, Bio, Hauptporträt und erste Songproduktion. Weitere Läufe täglich, Standard 09:00 Europe/Berlin. Optionale Vorgaben, Pause/Uhrzeit und Budgetfreigaben pro Artist. Das Hauptporträt wird für spätere Bilder im Backend als Referenz erzwungen. SunoAPI.org produziert bei bestätigter Verbindung/Budget; sonst erscheinen fertiges Paket und Audio-Upload auf der neuen Seite **Manuelle Aufgaben**. Nach dem Upload laufen referenzbasierte Bildproduktion und drei FFmpeg-Renderings selbständig weiter. Die Aufgaben liefern MP4, Beschreibungen, ZIP und manuellen Veröffentlichungsnachweis.
+
+Additive Migration 006, keine neue npm-Abhängigkeit. Bestehende Artists werden nicht ungefragt aktiviert. Tagesplanung hält bei offenen Produktionsübergaben an und erzeugt keinen Nachholstapel. Vorhandene Auswertung/Katalog/Kommentare fließen in neue Songpläne ein. Ein Textmodell bewertet dabei keine gehörte Musik; Ausschnitte sind Anfang/Mitte/Ende und ohne erfundene Lyrics-Zeitstempel. [Bedienung und Grenzen](AUTOMATION.md).
+
+68 Unit-/Integrationstests und ein vollständiger neuer Browserlauf mit echten Codex-Texten/Referenzbildern sowie drei vollständig decodierten MP4 bestanden. Die abschließende Gesamtregression bestand alle 6 Browser-Szenarien. Backup/Restore: 50 Tabellen, 288 Datensätze und 22 Dateihashes identisch, echter PostgreSQL-Neustart bestanden. Serverinstallation wird im Deploymentnachweis ergänzt. Keine bezahlte Suno-/Gemini-/Veo-Generation und kein tatsächlicher TikTok-Post.

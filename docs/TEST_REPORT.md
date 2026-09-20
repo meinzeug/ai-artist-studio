@@ -1,8 +1,18 @@
 # Testbericht
 
-Abnahme: **2026-09-20**, Linux/Ubuntu, Node 22.23.1, PostgreSQL 16.15, Redis 7.0.15, FFmpeg 6.1.1, Google Chrome 153.0.8010.47. Produktiv- und Testdaten sind getrennt. Es wurde keine echte öffentliche Veröffentlichung und keine kostenpflichtige Mediengeneration ausgeführt.
+Abnahme: **2026-09-20**, Linux/Ubuntu, Node 22.23.1, PostgreSQL 16.15, Redis 7.0.15, FFmpeg 6.1.1, Google Chrome 153.0.8010.47. Produktiv- und Testdaten sind getrennt. Es wurde keine echte öffentliche Veröffentlichung und kein zusätzlicher kostenpflichtiger Medien-API-Auftrag ausgeführt. Native Codex-Text-/Bildtests nutzen das bestehende ChatGPT-Kontingent.
 
-## Tatsächlich bestanden
+## Aktuelle Erweiterung: Künstlerautomatik
+
+- **68/68 Unit-/Integrationstests** bestanden; nach zusätzlicher Bindung der Suno-Verbindung vor dem Versand **21/21 Automatik-/Suno-Tests** erneut bestanden.
+- Typprüfung und Produktionsbuild bestanden.
+- Neuer isolierter Playwright-Autonomielauf **1/1 bestanden** (6,4 Minuten): echte Codex-Character-Bible, Hauptporträt, Lyrics und Bildszene mit tatsächlich übergebener Referenz; synthetische 6-Sekunden-MP3 über die manuelle Aufgabe importiert; drei FFmpeg-Videos ohne weitere Produktionsklicks; Downloadpaket und manueller Veröffentlichungsnachweis.
+- Alle drei MP4: 1080×1920, H.264/AAC, yuv420p, etwa 6 Sekunden; tatsächlich durch ffprobe und vollständige FFmpeg-Dekodierung geprüft. Keine echte Suno-Erzeugung und kein realer TikTok-Upload.
+- Neue Tests: einmalige Artist-Anlage bei gleichzeitigen Klicks; Tages-/DST-Planung und kein Nachholstapel; Pause/Not-Aus; Versionsbindung an Budget/Provider; strukturierte Ergebnisse und Identitätskonflikte; feste Porträtreferenz; Datenbezug der nächsten Songidee; kein Neuauftrag bei unklarem Suno-Zustand.
+- Desktop/390px-Mobil geprüft: [Erstellung](screenshots/automation-create-desktop.png), [Erstellung mobil](screenshots/automation-create-mobile.png), [Suno-Aufgabe](screenshots/automation-suno-task-desktop.png), [fertige Videos](screenshots/automation-videos-desktop.png), [Videos mobil](screenshots/automation-videos-mobile.png). Der gefundene schwarze Startframe im Szenencover wurde durch Auswahl eines späteren Videoframes korrigiert.
+- Nachweis: [automation-e2e.json](test-evidence/automation-e2e.json). Abschließende Gesamtregression: **6/6 Playwright-Szenarien bestanden (10,7 Minuten)**. Erneuter Backup/Restore: **50 Tabellen / 288 Datensätze identisch, 22 Dateihashes geprüft, PostgreSQL-Neustart bestanden**. Nachweise: [Gesamttests](test-evidence/automation-tests.json), [Restore](test-evidence/automation-restore.json). Der zusätzliche Suno-Versionsschutz wurde separat mit den 21 Automatik-/Suno-Tests geprüft; finaler Build/Typprüfung erfolgreich.
+
+## Ursprüngliche Kernabnahme
 
 | Prüfung | Ergebnis / Nachweis |
 |---|---|

@@ -237,7 +237,7 @@ export async function sunoCommand(
         user,
         order.artist_id,
         "suno_generate",
-        { order_id: oid },
+        { order_id: oid, connection_version: connection.version },
         oid,
         c,
       );
@@ -368,6 +368,14 @@ export async function runSunoJob(
       );
     let submitted = false;
     try {
+      if (
+        job.input.connection_version != null &&
+        job.input.connection_version !== connection.version
+      )
+        throw new SunoApiError(
+          "Suno-Verbindung seit Freigabe geändert. Kein neuer Auftrag gesendet; Verbindung und Produktion erneut prüfen.",
+          true,
+        );
       const credits = await client.credits(signal);
       await query(
         "UPDATE music_connections SET remaining_credits=$2,checked_at=now() WHERE user_id=$1",
@@ -396,6 +404,16 @@ export async function runSunoJob(
         if (settings?.emergency_stop || current?.cancelled_at || signal.aborted)
           throw new SunoApiError(
             "Übermittlung angehalten. Es wurde kein Musikauftrag gesendet.",
+            true,
+          );
+        const currentConnection = await one(
+          "SELECT version FROM music_connections WHERE user_id=$1",
+          [job.user_id],
+          c,
+        );
+        if (currentConnection?.version !== connection.version)
+          throw new SunoApiError(
+            "Suno-Verbindung während der Prüfung geändert. Kein Auftrag gesendet.",
             true,
           );
         const row = await one(

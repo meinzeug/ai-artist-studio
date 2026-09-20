@@ -583,6 +583,9 @@ function GenerateImage({ onClose }: { onClose: () => void }) {
       r.type === "portrait" &&
       r.state === "approved",
   );
+  const fixedReference = data.artist_automations?.find(
+    (p: Row) => p.artist_id === artistId,
+  )?.reference_asset_id;
   const { run, pending, error } = useImageAction();
   const cost =
     connection.provider === "gemini_api"
@@ -611,7 +614,7 @@ function GenerateImage({ onClose }: { onClose: () => void }) {
                 name: v.name,
                 prompt: v.prompt,
                 aspect_ratio: v.aspect_ratio,
-                reference_asset_id: v.reference || null,
+                reference_asset_id: fixedReference || v.reference || null,
                 song_id: v.song || null,
                 connection_version: connection.version,
                 approved_cost_usd: cost,
@@ -654,8 +657,13 @@ function GenerateImage({ onClose }: { onClose: () => void }) {
         </Select>
         <Select
           name="reference"
-          label="Bildreferenz (optional)"
-          defaultValue={reference?.asset_id ?? ""}
+          label={
+            fixedReference
+              ? "Festes Hauptporträt der Künstlerautomatik"
+              : "Bildreferenz (optional)"
+          }
+          disabled={!!fixedReference}
+          defaultValue={fixedReference ?? reference?.asset_id ?? ""}
         >
           <option value="">Ohne Referenz</option>
           {data.assets

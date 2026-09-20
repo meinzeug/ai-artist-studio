@@ -4,15 +4,23 @@
 
 ### Dein Künstler. Dein Sound. Dein Studio.
 
-Ein selbst gehostetes Produktionsstudio für virtuelle Musikkünstler — von der ersten Songidee bis zum fertigen TikTok-Paket.
+Dein selbst gehostetes Studio entwickelt virtuelle Musikkünstler und produziert täglich Songs und fertige TikTok-Videos. Du übernimmst nur notwendige Übergaben.
 
 **Deutsch · Ohne lokale GPU · ChatGPT- und Google-Login · Private Medien**
 
-[Studio öffnen](https://artist.dorfspy.de) · [Installation](docs/OPERATIONS.md) · [Suno verbinden](docs/SUNO_API_SETUP.md) · [KI-Konten verbinden](docs/CLI_LOGIN.md) · [Musikvideos erstellen](docs/VIDEO_PRODUCTION.md)
+[Studio öffnen](https://artist.dorfspy.de) · [Artist-Automatik](docs/AUTOMATION.md) · [Installation](docs/OPERATIONS.md) · [Suno verbinden](docs/SUNO_API_SETUP.md) · [KI-Konten verbinden](docs/CLI_LOGIN.md) · [Musikvideos erstellen](docs/VIDEO_PRODUCTION.md)
 
 </div>
 
 ![AI Artist Studio – tatsächliche Desktopansicht mit gekennzeichneten Testdaten](docs/screenshots/overview-desktop.png)
+
+## Artist erstellen. Die KI übernimmt.
+
+**Künstler → Artist erstellen**: Name, Musikstil, Aussehen und weitere Wünsche sind optional. Die KI entwickelt Character Bible und Bio, erzeugt das Hauptporträt und startet die erste Songproduktion.
+
+Danach entsteht täglich ein neuer Song mit Lyrics, Musikstil, einer referenzbasierten Bildszene und **drei fertigen MP4 samt Beschreibung**. SunoAPI.org kann die Musik innerhalb deiner bestätigten Creditgrenzen erzeugen. Ohne API bekommst du unter **Manuelle Aufgaben** ein fertiges Suno-Paket; nach dem MP3-Upload läuft die Videoproduktion automatisch weiter.
+
+Die fertigen Videos stehen dort als MP4 oder ZIP bereit. Du prüfst sie, lädst sie bei TikTok hoch und trägst den Veröffentlichungslink ein. Produktionszeit, Pause und Budgets sind pro Artist einstellbar. Das Hauptporträt bleibt die feste Bildreferenz; perfekte Gesichtsgleichheit ist nicht garantiert. [Ablauf, Voraussetzungen und Fehlerbehandlung →](docs/AUTOMATION.md)
 
 ## Ein durchgängiger Produktionsweg
 
@@ -30,6 +38,7 @@ flowchart LR
 
 | Bereich | Was du damit machen kannst |
 |---|---|
+| **Automatik & Aufgaben** | KI entwickelt den Artist, plant täglich eine Produktion, übernimmt Suno/FFmpeg und liefert MP4 + Caption. Eigene Inbox für Audioimport, fehlende Zugänge und Veröffentlichungsnachweise. |
 | **Künstler** | Mehrere virtuelle Künstler führen, Character Bible versionieren, visuelle und musikalische Referenzen freigeben. |
 | **Songwriting** | Echte KI-Ideen und Lyrics erstellen, Passagen gezielt überarbeiten, menschliche Zeilen schützen und Versionen vergleichen. |
 | **Suno** | SunoAPI.org im Dashboard verbinden, Guthaben prüfen, Produktion freigeben und fertige Aufnahmen automatisch importieren. Alternativ vollständiges Produktionspaket und manueller Import. |
@@ -64,7 +73,7 @@ Unter **Charakter & Medien → Bild generieren** entstehen Porträts, Cover und 
 
 ### Musikvideos: Bilder + Suno-Audio
 
-**Der Standardweg ist lokal:** Künstlerbilder importieren, Songaufnahme und Ausschnitt wählen, Vorlage gestalten und MP4 rendern. Drei Vorlagen, Bewegung, Lyrics und Visualizer stehen ohne Video-API bereit.
+**Der Standardweg ist lokal:** Die Artist-Automatik kombiniert Referenzbilder und Songaufnahme zu drei MP4. Im Video-Studio lassen sich die Projekte zusätzlich selbst gestalten. Drei Vorlagen, Bewegung, Lyrics und Visualizer stehen ohne Video-API bereit.
 
 **Optional: echte KI-Videoszenen mit Veo.** Unter Provider & Konten einen separaten Google-AI-Studio-Key, bestätigten USD-Kostenansatz und Budget verbinden. Im Video-Studio ein Startbild animieren lassen und die importierte Szene direkt im Musikvideo verwenden. Vor jedem Auftrag werden Bildübermittlung und Kosten freigegeben. Der Gemini-CLI-Login allein umfasst diese kostenpflichtige API nicht. [Ablauf, Einrichtung und Grenzen →](docs/VIDEO_PRODUCTION.md)
 
@@ -111,8 +120,9 @@ TypeScript, Next.js **16.3.5**, React **19.3.0**, PostgreSQL **16**, Drizzle **0
 
 ## Geprüft – mit klaren Grenzen
 
-- **55 Unit-/Integrationstests** bestanden; Typprüfung und Produktionsbuild erfolgreich.
-- Vollständiger Playwright-Durchlauf mit **echter Codex-Textproduktion** und **drei tatsächlich gerenderten, decodierten und im Browser abgespielten Videos**.
+- **68 Unit-/Integrationstests** bestanden; Typprüfung und Produktionsbuild erfolgreich.
+- **6/6 Playwright-Szenarien** bestanden, mit **echter Codex-Textproduktion** und **drei tatsächlich gerenderten, decodierten und im Browser abgespielten Videos**.
+- Autonome Artist-Erstellung inklusive echtem Porträt, Referenzszene, Suno-Aufgabe, automatischen MP4 und Veröffentlichungsnachweis im Browser bestanden. Restore mit 50 Tabellen und 22 Dateien geprüft.
 - Bild-KI im Browser eingerichtet; **echte Codex-PNG ohne API-Key** erzeugt, heruntergeladen und auf Desktop/Smartphone geprüft. Gemini-Bild-API separat mit simulierten Antworten getestet.
 - Optionaler Veo-Weg im Browser getestet: Verbindung, Hilfe, Kostenfreigabe, MP4-Import und Übernahme in die Timeline. Zusätzlicher realer Audiotest prüft, dass Szenenton durch die Song-MP3 ersetzt wird.
 - Suno-Dashboard, Budgetfreigabe, verschlüsselte Verbindung und Auftrag getestet. Anbieterantworten dabei ausdrücklich simuliert; echte lokale Audioimporte separat geprüft.

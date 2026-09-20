@@ -3358,3 +3358,150 @@ tr:last-child td {
   .image-order { flex-wrap: wrap; }
   .image-order > .actions { width: 100%; }
 }
+
+/* Automatic production and the human handoff inbox. */
+.automation-overview,
+.automatic-artist-heading {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+}
+.automation-overview {
+  margin-bottom: 22px;
+  border-color: #b5ed9040;
+  background: linear-gradient(120deg, #b5ed900b, transparent);
+}
+.automation-budget {
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #ffffff04;
+  display: grid;
+  gap: 9px;
+}
+.automation-budget p {
+  margin: 0;
+}
+.automation-budget small {
+  display: block;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.automation-steps {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0;
+}
+.automation-steps span {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 7px 11px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.automation-steps span.current {
+  color: #d6fdb6;
+  background: #b5ed901a;
+  border-color: #b5ed9070;
+}
+.automatic-artist {
+  margin-bottom: 22px;
+}
+.automatic-avatar {
+  width: 64px;
+  height: 80px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.automatic-artist-heading > div:first-of-type {
+  flex: 1;
+  min-width: 0;
+}
+.automatic-artist-heading h2 {
+  margin: 5px 0;
+}
+.automatic-artist-heading small {
+  line-height: 1.6;
+}
+.manual-task-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  align-items: start;
+}
+.manual-task {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.manual-task .panel-heading {
+  align-items: flex-start;
+}
+.delivery-preview {
+  display: flex;
+  justify-content: center;
+  background: #090b0f;
+  border-radius: 14px;
+  margin: 18px 0;
+  overflow: hidden;
+}
+.delivery-preview video {
+  display: block;
+  height: 380px;
+  max-width: 100%;
+  object-fit: contain;
+}
+.manual-task .field {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0;
+}
+.task-upload {
+  margin-top: 22px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+.music-package-fields {
+  margin: 18px 0;
+  display: grid;
+  gap: 12px;
+}
+.preserve-lines {
+  white-space: pre-wrap;
+  max-height: 300px;
+  overflow: auto;
+}
+@media (max-width: 900px) {
+  .manual-task-grid {
+    grid-template-columns: 1fr;
+  }
+  .automatic-artist-heading {
+    flex-wrap: wrap;
+  }
+  .automatic-artist-heading .actions {
+    width: 100%;
+  }
+}
+@media (max-width: 600px) {
+  .automation-overview {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .automation-steps {
+    gap: 5px;
+  }
+  .automation-steps span {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+  .manual-task .actions > * {
+    flex: 1 1 150px;
+    justify-content: center;
+  }
+  .delivery-preview video {
+    height: 330px;
+  }
+}

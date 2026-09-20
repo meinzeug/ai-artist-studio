@@ -32,3 +32,11 @@ SunoAPI: `music_connections` enthält AES-GCM-verschlüsselte Schlüssel und Cre
 ## Bildprovider
 
 Migration 005 ergänzt `image_connections`, `image_generations` und `image_reservations`. Die Auswahl ist unabhängig von `settings.provider` (Text). Eigene typisierte Aktionen `image_configure`, `image_generate`, `image_resolve` prüfen Besitz, Freigabe, Versionssnapshot, Not-Aus und atomare Budgets. `queue_ai` kann diese Prüfungen nicht umgehen. Der Worker nutzt entweder den isolierten Runner `/image` oder den festen offiziellen Google-Endpunkt. Einmalige Übermittlung, keine automatische Wiederholung bei unklarem Zustand, wiederanlaufende fachliche Zustandsprüfung. Assets bleiben unverändert und privat. Details: [Bildproduktion](IMAGE_GENERATION.md).
+
+## Dauerhafte Künstlerautomatik
+
+Migration 006 ergänzt `artist_automations` (Zeitplan, Hauptreferenz, freigegebene Provider-Versionen), `automation_runs` (Stufe/Tag/Job-/Song-/Auftragsbezug), `automation_clips` (drei konkrete Projekte und Posts) und `manual_tasks` (menschliche Übergaben). Der Worker prüft fällige Tage und setzt Stufen fort; ein PostgreSQL-Advisory-Lock verhindert parallele Schedulerläufe. Eindeutige Tages-/Erstellungsschlüssel und ein partieller Index sichern höchstens einen aktiven Lauf pro Artist.
+
+`auto_identity` und `auto_song` sind begrenzte strukturierte Textaufträge im vorhandenen CLI-Runner. Bestehende Artist-Snapshots, Katalog und tatsächlich gespeicherte Erkenntnisse/Kennzahlen liefern Kontext. Laufende Produktionen überschreiben keine menschlich geänderte Identität. Der Hauptporträtbezug wird im Backend für spätere Bildaufträge erzwungen. Musik-/Bild-/Renderaufträge nutzen die bestehenden separaten Adapter und Budgetreservierungen. Manuelle Audioimporte schließen an denselben Lauf an; fertige Videos erzeugen drei private Beitragsentwürfe mit Aufgaben.
+
+`delivery` exportiert einen klar bezeichneten Entwurf ohne Freigabebehauptung. `auto_publish` dokumentiert nach expliziter Betreiberprüfung die eigene manuelle Veröffentlichung und bindet einen aktuellen Snapshot. Es gibt keinen neuen externen Posting-Endpunkt. Ablauf und Grenzen: [AUTOMATION.md](AUTOMATION.md).

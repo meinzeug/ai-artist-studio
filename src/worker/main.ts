@@ -8,6 +8,7 @@ import { runTask } from "./tasks";
 import { storage } from "../server/storage";
 import { queueMusicPolls, SunoJobError } from "../server/suno";
 import { queueVideoPolls, VideoJobError } from "../server/video-generation";
+import { tickAutomation } from "../server/automation";
 import { recoverImageJobs, ImageJobError } from "../server/image-generation";
 const connection = new IORedis(
   process.env.REDIS_URL ?? "redis://127.0.0.1:57379",
@@ -26,6 +27,7 @@ async function pump() {
     await recoverImageJobs();
     await queueMusicPolls();
     await queueVideoPolls();
+    await tickAutomation();
     for (const file of await query(
       "SELECT storage_key FROM stored_files_gc LIMIT 20",
     )) {
