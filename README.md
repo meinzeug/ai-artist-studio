@@ -122,8 +122,9 @@ TypeScript, Next.js **16.3.5**, React **19.3.0**, PostgreSQL **16**, Drizzle **0
 
 ## Geprüft – mit klaren Grenzen
 
-- **68 Unit-/Integrationstests** bestanden; Typprüfung und Produktionsbuild erfolgreich.
-- **6/6 Playwright-Szenarien** bestanden, mit **echter Codex-Textproduktion** und **drei tatsächlich gerenderten, decodierten und im Browser abgespielten Videos**.
+- **71 Unit-/Integrationstests** bestanden; Typprüfung und Produktionsbuild erfolgreich.
+- Letzte vollständige Browserabnahme: **6/6 Playwright-Szenarien**, mit **echter Codex-Textproduktion** und **drei tatsächlich gerenderten, decodierten und im Browser abgespielten Videos**.
+- Zusätzlicher Upload-Regressionslauf: **1/1 bestanden**. MP3 mit eingebettetem Cover über die manuellen Aufgaben übernommen, Original unverändert erhalten und automatisch drei echte MP4 erzeugt. Falsche Dateitypen und Auftragszuordnungen bleiben gesperrt.
 - Autonome Artist-Erstellung inklusive echtem Porträt, Referenzszene, Suno-Aufgabe, automatischen MP4 und Veröffentlichungsnachweis im Browser bestanden. Restore mit 50 Tabellen und 22 Dateien geprüft.
 - Bild-KI im Browser eingerichtet; **echte Codex-PNG ohne API-Key** erzeugt, heruntergeladen und auf Desktop/Smartphone geprüft. Gemini-Bild-API separat mit simulierten Antworten getestet.
 - Optionaler Veo-Weg im Browser getestet: Verbindung, Hilfe, Kostenfreigabe, MP4-Import und Übernahme in die Timeline. Zusätzlicher realer Audiotest prüft, dass Szenenton durch die Song-MP3 ersetzt wird.

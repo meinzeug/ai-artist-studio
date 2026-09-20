@@ -1,0 +1,161 @@
+{
+  "checked_at": "2026-09-20T18:46:35.248861+00:00",
+  "release_commit": "1d6e3fc",
+  "origin": "https://artist.dorfspy.de",
+  "unit_integration_tests": {
+    "passed": 71,
+    "failed": 0
+  },
+  "targeted_browser_tests": {
+    "passed": 1,
+    "failed": 0,
+    "full_suite_rerun": false
+  },
+  "typecheck": "passed",
+  "local_build": "passed",
+  "server_build": "passed",
+  "https_health": 200,
+  "unauthenticated_state": 401,
+  "backup": "/var/lib/artist-studio/backups/automation-update-1789922540",
+  "source_hashes_match": true,
+  "source_hashes": {
+    "src/server/storage.ts": "f729b2f834c37da8aa39c3dbcca9535997648a5c70aa06b731cfb6f2e4855add",
+    "src/app/api/upload/route.ts": "61652492a70f36c041bdefcea9daf1dd208cfb766812215730a9c3be9fbc249c"
+  },
+  "real_audio_import": {
+    "status": 200,
+    "kind": "audio",
+    "mime": "audio/mpeg",
+    "duration": 188.784,
+    "embedded_cover": true,
+    "original_hash_verified": true,
+    "linked_to_intended_order": true
+  },
+  "temporary_session_removed": true,
+  "temporary_upload_copy_removed": true,
+  "public_post_sent": false,
+  "production": {
+    "run": {
+      "stage": "delivery",
+      "state": "ready",
+      "error": null
+    },
+    "tasks": [
+      {
+        "kind": "produce_music",
+        "state": "done"
+      },
+      {
+        "kind": "publish_video",
+        "state": "open"
+      },
+      {
+        "kind": "publish_video",
+        "state": "open"
+      },
+      {
+        "kind": "publish_video",
+        "state": "open"
+      }
+    ],
+    "jobs": [
+      {
+        "kind": "render_video",
+        "state": "succeeded",
+        "progress": 100,
+        "error": null
+      },
+      {
+        "kind": "render_video",
+        "state": "succeeded",
+        "progress": 100,
+        "error": null
+      },
+      {
+        "kind": "render_video",
+        "state": "succeeded",
+        "progress": 100,
+        "error": null
+      }
+    ],
+    "videos": [
+      {
+        "template": "character",
+        "status": "waiting_for_approval",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "codec_type": "video",
+              "width": 1080,
+              "height": 1920,
+              "pix_fmt": "yuv420p"
+            },
+            {
+              "codec_name": "aac",
+              "codec_type": "audio"
+            }
+          ],
+          "format": {
+            "duration": "30.000000"
+          }
+        },
+        "hash_verified": true
+      },
+      {
+        "template": "scenes",
+        "status": "waiting_for_approval",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "codec_type": "video",
+              "width": 1080,
+              "height": 1920,
+              "pix_fmt": "yuv420p"
+            },
+            {
+              "codec_name": "aac",
+              "codec_type": "audio"
+            }
+          ],
+          "format": {
+            "duration": "30.000000"
+          }
+        },
+        "hash_verified": true
+      },
+      {
+        "template": "visualizer",
+        "status": "waiting_for_approval",
+        "probe": {
+          "programs": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "codec_type": "video",
+              "width": 1080,
+              "height": 1920,
+              "pix_fmt": "yuv420p"
+            },
+            {
+              "codec_name": "aac",
+              "codec_type": "audio"
+            }
+          ],
+          "format": {
+            "duration": "30.000000"
+          }
+        },
+        "hash_verified": true
+      }
+    ],
+    "services": {
+      "web": "active",
+      "worker": "active",
+      "runner": "active"
+    }
+  }
+}

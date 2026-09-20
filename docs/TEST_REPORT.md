@@ -13,6 +13,10 @@ Abnahme: **2026-09-20**, Linux/Ubuntu, Node 22.23.1, PostgreSQL 16.15, Redis 7.0
 
 Nachweise: [Browserergebnis](test-evidence/covered-audio-e2e.json), [Desktop](screenshots/covered-audio-desktop.png), [Mobil](screenshots/covered-audio-mobile.png), `tests/storage.test.ts`, `tests/e2e/covered-audio.spec.ts`. Lokale Logs: `.local/covered-audio-tests.log`, `.local/covered-audio-build.log`, `.local/covered-audio-e2e.log`.
 
+**Serverabnahme:** Fix `1d6e3fc` nach Backup `/var/lib/artist-studio/backups/automation-update-1789922540` installiert; Produktionsbuild als Dienstbenutzer erfolgreich. HTTPS-Health 200, Web/Worker/Runner aktiv, beide geänderten Quellhashes identisch mit Git. Bereitgestellte Original-MP3 über die authentifizierte Uploadroute im vorhandenen Produktionsauftrag übernommen (HTTP 200, Audio/MPEG, 188,784 Sekunden, Cover erhalten). Originalhash und Song-/Auftragsbezug erfolgreich geprüft; die bisher offene Musikaufgabe ist `done`, der bestehende Lauf wurde automatisch fortgesetzt. Kurzlebige Prüfsession und temporäre Übertragungskopie anschließend entfernt. Keine Rechtefreigabe oder öffentliche Veröffentlichung stellvertretend vorgenommen.
+
+**Reale Folgeproduktion abgeschlossen:** Die vorhandene Automatik hat das Bildmaterial erzeugt und alle drei Videos erfolgreich gerendert; Lauf `delivery/ready`. Drei offene Veröffentlichungsaufgaben mit Beschreibungen und Downloads vorhanden. Die tatsächlichen Serverdateien wurden mit ffprobe und SHA-256 geprüft: alle 30 Sekunden, 1080×1920, H.264/AAC, yuv420p. Beiträge bleiben `waiting_for_approval`. Die vollständige Dekodierung wurde im synthetischen Regressionstest geprüft; auf dem Server wurden die erzeugten Originalproduktionen zusätzlich geprobt. [Deployment- und Produktionsnachweis](test-evidence/covered-audio-deployment.json).
+
 ## Aktuelle Erweiterung: Künstlerautomatik
 
 - **68/68 Unit-/Integrationstests** bestanden; nach zusätzlicher Bindung der Suno-Verbindung vor dem Versand **21/21 Automatik-/Suno-Tests** erneut bestanden.
