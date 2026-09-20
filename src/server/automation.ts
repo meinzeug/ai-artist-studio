@@ -13,6 +13,8 @@ import {
   automaticClipRange,
 } from "../lib/automation";
 import { artistSchema, timelineSchema } from "../lib/domain";
+import { createMusicVideo } from "./music-video";
+import { sceneCount } from "../lib/music-video";
 
 export function automationKey(run: string, step: string, attempt = 1) {
   const hex = createHash("sha256")
@@ -153,6 +155,16 @@ export async function automationCommand(
         "INSERT INTO automation_runs(id,user_id,artist_id,local_day) VALUES($1,$2,$3,$4)",
         [runId, user, id, localProductionDay(new Date(), settings.timezone)],
       );
+      const full = z.boolean().parse(d.full_music_video ?? true),
+        count = sceneCount.parse(d.video_scene_count ?? 8);
+      await c.query(
+        "UPDATE artist_automations SET full_music_video=$2,video_scene_count=$3 WHERE artist_id=$1",
+        [id, full, count],
+      );
+      await c.query(
+        "UPDATE automation_runs SET full_music_video=$2,video_scene_count=$3 WHERE id=$1",
+        [runId, full, count],
+      );
       await audit(
         user,
         "automation.artist_created",
@@ -221,6 +233,18 @@ export async function automationCommand(
         ],
       );
       // New automations preserve an existing artist and approved portrait.
+      await c.query(
+        "UPDATE artist_automations SET full_music_video=$2,video_scene_count=$3 WHERE artist_id=$1",
+        [
+          artist.id,
+          z
+            .boolean()
+            .parse(d.full_music_video ?? existing?.full_music_video ?? true),
+          sceneCount.parse(
+            d.video_scene_count ?? existing?.video_scene_count ?? 8,
+          ),
+        ],
+      );
       if (!existing) {
         const ref = await one(
           "SELECT asset_id FROM artist_references WHERE artist_id=$1 AND type='portrait' AND state='approved' ORDER BY created_at DESC LIMIT 1",
@@ -612,6 +636,41 @@ async function advanceRun(run: any) {
     run.artist_id,
   ]))!;
   if (!policy.enabled || artist.archived) return;
+  if (run.stage === "music_video") {
+    let full = await one(
+      "SELECT * FROM music_video_productions WHERE run_id=$1",
+      [run.id],
+    );
+    if (!full) {
+      const connection = await imageConnection(run.user_id);
+      if (connection?.version !== policy.approved_image_version)
+        throw new AppError(
+          "Bildprovider/Budget geändert. Automatik-Einstellungen erneut bestätigen.",
+        );
+      full = await createMusicVideo(run.user_id, {
+        run_id: run.id,
+        scene_count: run.video_scene_count,
+        approved: true,
+        connection_version: connection?.version ?? null,
+        approved_cost_usd:
+          connection?.provider === "gemini_api"
+            ? Number(connection.estimated_cost_usd) * run.video_scene_count
+            : null,
+      });
+    }
+    if (full.state === "ready") {
+      const first = (await one(
+        "SELECT asset_id FROM music_video_scenes WHERE production_id=$1 ORDER BY position LIMIT 1",
+        [full.id],
+      ))!;
+      await query("UPDATE automation_runs SET scene_asset_id=$2 WHERE id=$1", [
+        run.id,
+        first.asset_id,
+      ]);
+      await advance(run, "video");
+    }
+    return;
+  }
   if (run.stage === "identity") {
     if (run.identity_ready) {
       await advance(run, "portrait");
@@ -766,7 +825,7 @@ async function advanceRun(run: any) {
         "UPDATE audio_variants SET is_master=true,notes=notes || ' Automatisch für die Videoproduktion ausgewählt; keine KI-Hörbewertung.' WHERE id=$1 AND NOT EXISTS(SELECT 1 FROM audio_variants WHERE song_id=$2 AND is_master)",
         [variant.id, run.song_id],
       );
-      await advance(run, "artwork");
+      await advance(run, run.full_music_video ? "music_video" : "artwork");
       return;
     }
     const order = (await one("SELECT * FROM music_orders WHERE id=$1", [
@@ -1047,6 +1106,15 @@ export async function tickAutomation(now = new Date()) {
           "UPDATE artist_automations SET next_run_at=$2 WHERE artist_id=$1",
           [p.artist_id, nextProductionTime(now, p.timezone, p.daily_time)],
         );
+        await c.query(
+          "UPDATE automation_runs SET full_music_video=$2,video_scene_count=$3 WHERE artist_id=$1 AND local_day=$4 AND stage IN ('song','portrait') AND song_id IS NULL",
+          [
+            p.artist_id,
+            latest.full_music_video,
+            latest.video_scene_count,
+            localProductionDay(now, p.timezone),
+          ],
+        );
       });
     const runs = await query(
       "SELECT r.* FROM automation_runs r JOIN artist_automations p ON p.artist_id=r.artist_id JOIN settings s ON s.user_id=r.user_id WHERE p.enabled AND NOT s.emergency_stop AND r.state IN ('running','waiting_for_input') ORDER BY r.created_at LIMIT 20",
@@ -1056,6 +1124,7 @@ export async function tickAutomation(now = new Date()) {
       if (
         run.state === "waiting_for_input" &&
         run.stage !== "music" &&
+        run.stage !== "music_video" &&
         !run.job_id &&
         !run.image_generation_id
       )

@@ -117,6 +117,7 @@ test("Artist-Erstellung ist bei gleichzeitigen Klicks idempotent und verlangt Bu
   const key = randomUUID(),
     data = {
       brief: {},
+      full_music_video: false,
       approved: true,
       image_version: null,
       music_version: null,

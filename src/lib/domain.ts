@@ -67,8 +67,8 @@ export const ideaSchema = z.object({
 });
 export const subtitleSchema = z
   .object({
-    start: z.number().min(0).max(600),
-    end: z.number().positive().max(600),
+    start: z.number().min(0).max(1200),
+    end: z.number().positive().max(1200),
     text: z.string().max(300),
   })
   .refine((x) => x.end > x.start, "Ende muss nach Start liegen.");
@@ -80,16 +80,21 @@ export const timelineSchema = z
       .array(
         z.object({
           asset_id: id,
-          duration: z.number().min(0.5).max(180),
+          duration: z.number().min(0.5).max(1200),
           crop_x: z.number().min(0).max(1).default(0.5),
           crop_y: z.number().min(0).max(1).default(0.5),
           motion: z.boolean().default(true),
+          camera: z
+            .enum(["push_in", "pull_out", "pan_left", "pan_right"])
+            .default("push_in"),
+          zoom_base: z.number().min(1).max(1.5).default(1.02),
         }),
       )
       .min(1)
-      .max(12),
+      .max(64),
     subtitles: z.array(subtitleSchema).max(100).default([]),
     title: short.default(""),
+    title_duration: z.number().min(0).max(1200).nullable().default(null),
     font_size: z.number().int().min(28).max(96).default(56),
     text_y: z.number().min(0.15).max(0.8).default(0.65),
     color: z
@@ -98,11 +103,11 @@ export const timelineSchema = z
       .default("#ffffff"),
     fps: z.enum(["24", "25", "30"]).default("30"),
     quality: z.enum(["preview", "standard", "high"]).default("standard"),
-    transition: z.enum(["fade", "cut"]).default("fade"),
+    transition: z.enum(["fade", "cut", "dissolve"]).default("fade"),
   })
   .refine(
-    (x) => x.end > x.start && x.end - x.start <= 180,
-    "Ausschnitt muss zwischen 0 und 180 Sekunden lang sein.",
+    (x) => x.end > x.start && x.end - x.start <= 1200,
+    "Ausschnitt muss zwischen 0 und 1200 Sekunden lang sein.",
   );
 export function resolveLocalTime(
   local: string,
@@ -232,6 +237,7 @@ export const jobKinds = [
   "suno_sync",
   "auto_identity",
   "auto_song",
+  "music_video_storyboard",
   "image_generate",
   "veo_generate",
   "veo_sync",

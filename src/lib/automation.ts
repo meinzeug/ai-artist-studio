@@ -34,7 +34,8 @@ export const automationStageNames: Record<string, string> = {
   song: "Songidee & Lyrics",
   music: "Musik produzieren",
   artwork: "Videoszene gestalten",
-  video: "Drei MP4 rendern",
+  music_video: "Vollständiges Musikvideo",
+  video: "Drei Kurzclips rendern",
   delivery: "Bereit für TikTok",
 };
 export function localProductionDay(now = new Date(), zone = "Europe/Berlin") {

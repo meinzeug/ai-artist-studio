@@ -52,6 +52,10 @@ export async function command(userId: string, raw: unknown): Promise<any> {
     .parse(raw);
   const d = envelope.data,
     key = envelope.key ?? randomUUID();
+  if (envelope.action.startsWith("music_video_")) {
+    const { musicVideoCommand } = await import("./music-video");
+    return musicVideoCommand(userId, envelope.action, d);
+  }
   if (envelope.action.startsWith("auto_")) {
     const { automationCommand } = await import("./automation");
     return automationCommand(userId, envelope.action, d, key);
@@ -480,7 +484,7 @@ export async function command(userId: string, raw: unknown): Promise<any> {
         variant_id: variant.id,
         name: short.min(1).parse(d.name),
         template: z
-          .enum(["character", "scenes", "visualizer"])
+          .enum(["character", "scenes", "visualizer", "music_video"])
           .parse(d.template),
         timeline: json(timeline),
       };
@@ -893,7 +897,7 @@ export async function command(userId: string, raw: unknown): Promise<any> {
     case "queue_ai": {
       if (
         typeof d.kind === "string" &&
-        /^(suno_|veo_|image_|auto_)/.test(d.kind)
+        /^(suno_|veo_|image_|auto_|music_video_)/.test(d.kind)
       )
         throw new AppError(
           "Externe Produktion benötigt den eigenen Freigabeweg.",

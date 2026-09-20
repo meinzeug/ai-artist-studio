@@ -66,6 +66,11 @@ test("Artist autonom erstellen → echte Codex-Identität/Referenzbilder → man
       .fill(
         "Dies ist ein isolierter Softwaretest. Eigene kreative Testtexte, keine realen Künstler kopieren. Themen: Aufbruch und Neugier.",
       );
+    // This scenario retains the three-short-clips path; full-song coverage has
+    // its own browser test and must not multiply live image quota use here.
+    await page
+      .getByLabel("Vollständiges Musikvideo automatisch produzieren")
+      .uncheck();
     await page.screenshot({
       path: "docs/screenshots/automation-create-desktop.png",
       fullPage: false,

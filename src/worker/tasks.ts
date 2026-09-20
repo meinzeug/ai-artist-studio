@@ -86,6 +86,11 @@ export async function runTask(
   progress: (n: number) => Promise<void>,
 ) {
   const input = job.input;
+  if (job.kind === "music_video_storyboard") {
+    const { runMusicVideoStoryboard } =
+      await import("./music-video-storyboard");
+    return runMusicVideoStoryboard(job, signal);
+  }
   if (job.kind === "auto_identity" || job.kind === "auto_song") {
     const { runAutomaticText } = await import("./automatic-text");
     return runAutomaticText(job, signal);

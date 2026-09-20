@@ -3505,3 +3505,17 @@ tr:last-child td {
     height: 330px;
   }
 }
+
+/* Full-song production and lyric-driven visual storyboard. */
+.full-music-videos { margin: 28px 0; }
+.full-video-card { margin: 18px 0; border-color: #72513f; }
+.music-storyboard-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; margin: 18px 0; }
+.music-storyboard-scene { min-width: 0; border: 1px solid var(--border,#333); border-radius: 12px; overflow: hidden; padding: 12px; }
+.music-storyboard-scene img, .scene-placeholder { width: 100%; aspect-ratio: 9/12; object-fit: cover; border-radius: 7px; margin-bottom: 10px; }
+.scene-placeholder { display:flex; flex-direction:column; gap:12px; justify-content:center; align-items:center; background:#202126; color:#aaa; }
+.music-storyboard-scene h4 { margin: 6px 0; }
+.music-storyboard-scene blockquote { margin: 8px 0; padding-left:10px; border-left:2px solid #ff875d; font-size: .85rem; color:#b9b3aa; }
+.music-storyboard-scene details p { font-size:.8rem; overflow-wrap:anywhere; }
+.storyboard-details { margin:20px 0; }
+.full-video-card .video-preview { max-height:560px; }
+@media(max-width:600px){.music-storyboard-grid{grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px;}.music-storyboard-scene{padding:8px;}.full-video-card>.panel-heading{align-items:flex-start;flex-wrap:wrap;}}

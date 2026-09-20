@@ -11,6 +11,8 @@ Lies docs/IMPLEMENTATION_PLAN.md, docs/ARCHITECTURE.md und docs/HANDOVER.md vor 
 - Fortschritt und verbleibende Einschränkungen ehrlich dauerhaft dokumentieren.
 - Künstlerautomatik: `auto_*` nur über den dedizierten Freigabeweg; feste Hauptporträt-Referenz und Provider-Versionen erhalten. Bei unklarem externem Zustand nie erneut generieren. Manuelle Audioimporte müssen denselben Lauf fortsetzen.
 
+- Vollständige Musikvideos: Lyrics-/Audio-/Porträtsnapshot erhalten, einzelne Szenen wiederaufnehmen, keine unklaren Bildaufträge erneut senden und keine Budgetgrenzen für eine Vollversion erhöhen. Details: docs/FULL_MUSIC_VIDEOS.md.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know

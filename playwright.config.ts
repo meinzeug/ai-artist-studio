@@ -37,7 +37,9 @@ export default defineConfig({
         process.cwd() +
         "/tests/mocks/suno-preload.mjs --import=" +
         process.cwd() +
-        "/tests/mocks/veo-preload.mjs",
+        "/tests/mocks/veo-preload.mjs --import=" +
+        process.cwd() +
+        "/tests/mocks/music-video-preload.mjs",
     },
   },
 });

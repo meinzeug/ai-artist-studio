@@ -1,5 +1,6 @@
 "use client";
 import { VideoScenes } from "./veo";
+import { FullMusicVideos } from "./music-videos";
 import { useState, useRef } from "react";
 import {
   Plus,
@@ -68,6 +69,7 @@ export function VideoStudio() {
         <Badge label="1080 × 1920 · H.264 / AAC" />
       </SectionHead>
       <ArtistRequired>
+        <FullMusicVideos />
         <div className="panel video-workflow">
           <div>
             <small>DEIN STANDARD-WORKFLOW · LOKAL MIT FFMPEG</small>
@@ -156,8 +158,11 @@ export function VideoStudio() {
                   <div className="panel-heading">
                     <div>
                       <small>
-                        {templates.find((t) => t.id === p.template)?.name} · v
-                        {p.version}
+                        {p.template === "music_video"
+                          ? "Vollständiges Musikvideo"
+                          : templates.find((t) => t.id === p.template)
+                              ?.name}{" "}
+                        · v{p.version}
                       </small>
                       <h3>{p.name}</h3>
                     </div>
@@ -248,7 +253,11 @@ function VideoEditor({
   const { data, artistId, act, nav } = useStudio();
   const songs = data.songs.filter((s: Row) => s.artist_id === artistId);
   const assets = data.assets.filter(
-    (a: Row) => a.artist_id === artistId && ["image", "video"].includes(a.kind),
+    (a: Row) =>
+      a.artist_id === artistId &&
+      (project.template === "music_video"
+        ? a.kind === "image"
+        : ["image", "video"].includes(a.kind)),
   );
   const [songId, setSongId] = useState(
     project.song_id ??
@@ -345,14 +354,14 @@ function VideoEditor({
                   timeline: {
                     start,
                     end,
-                    scenes:
-                      project.template === "scenes"
-                        ? scenes
-                        : scenes
-                            .slice(0, 1)
-                            .map((s) => ({ ...s, duration: end - start })),
+                    scenes: ["scenes", "music_video"].includes(project.template)
+                      ? scenes
+                      : scenes
+                          .slice(0, 1)
+                          .map((s) => ({ ...s, duration: end - start })),
                     subtitles,
                     title,
+                    title_duration: project.timeline?.title_duration ?? null,
                     font_size: fontSize,
                     text_y: y,
                     color,
@@ -466,7 +475,7 @@ function VideoEditor({
                       </option>
                     ))}
                   </Select>
-                  {project.template === "scenes" && (
+                  {["scenes", "music_video"].includes(project.template) && (
                     <Input
                       label="Dauer (s)"
                       type="number"
@@ -512,7 +521,7 @@ function VideoEditor({
                   </label>
                 </div>
               ))}
-              {project.template === "scenes" && (
+              {["scenes", "music_video"].includes(project.template) && (
                 <button
                   type="button"
                   onClick={() =>
@@ -651,6 +660,9 @@ function VideoEditor({
                   name="transition"
                   defaultValue={project.timeline?.transition ?? "fade"}
                 >
+                  {project.template === "music_video" && (
+                    <option value="dissolve">Weiche Überblendung</option>
+                  )}
                   <option value="fade">Sanfte Ein-/Ausblendung</option>
                   <option value="cut">Harter Schnitt</option>
                 </Select>

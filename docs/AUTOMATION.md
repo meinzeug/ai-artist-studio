@@ -1,5 +1,9 @@
 # Dein Artist produziert selbständig
 
+## Vollständiges Musikvideo und zusätzliche Kurzclips
+
+Neue Artist-Produktionen erstellen standardmäßig ein Musikvideo für die gesamte Aufnahme mit eigenem Lyrics-Storyboard und acht neuen referenzbasierten Bildmotiven. Anzahl und Aktivierung stehen in den Automatik-Einstellungen. Bereits vorhandene Songs erhalten ihre Vollversion über **Manuelle Aufgaben → Vollständige Musikvideos → Vollständiges Musikvideo erstellen**. Die bestehenden drei 30-Sekunden-Videos sind zusätzliche Kurzformate. [Ablauf, Kontingent und Wiederaufnahme](FULL_MUSIC_VIDEOS.md).
+
 ## Einmal einrichten
 
 1. Unter **Jobs & Einstellungen → Provider & Konten** ChatGPT/Codex oder Gemini/Google für Texte verbinden. Die Anmeldung gilt auf dem Runner-Rechner. Die vorhandenen Login-Dialoge und Verbindungstests bleiben nutzbar.
@@ -41,7 +45,7 @@ Bei einer Zeitumstellung wird eine nicht existierende Startzeit um die DST-Lück
 
 Ein ZIP aus „Manuelle Aufgaben“ ist ein **Produktionsentwurf**, keine automatische Veröffentlichungsfreigabe. Es enthält MP4, Caption, Cover (falls vorhanden), Dateihash und Prüfliste. Die spätere Betreiberbestätigung bindet Inhalt/Hash/Konto/Kennzeichnungen in einen Freigabesnapshot und speichert einen ausdrücklich **manuell, nicht extern verifizierten** Veröffentlichungsnachweis. Änderungen zwischen Vorschau und Bestätigung werden abgewiesen.
 
-Die Automatik hört keine Aufnahme: Anfang, Mitte und Ende sind geometrisch bestimmte, maximal 30 Sekunden lange Ausschnitte. Texte sind redaktionelle Einblendungen; es werden keine erfundenen wortgenauen Lyrics-Zeitstempel angelegt. Die erste verfügbare Aufnahme wird vorläufig gewählt, ohne behauptete Hörbewertung. Diese Entscheidungen können im Musik-/Video-Studio überarbeitet werden.
+Die Automatik hört keine Aufnahme: Bei den zusätzlichen Kurzclips sind Anfang, Mitte und Ende geometrisch bestimmte, maximal 30 Sekunden lange Ausschnitte. Die neue Vollversion deckt die gesamte Aufnahme ab und gestaltet Motive nach den Lyrics; der Titel erscheint dort nur vier Sekunden. Es werden keine erfundenen wortgenauen Lyrics-Zeitstempel angelegt. Die erste verfügbare Aufnahme wird vorläufig gewählt, ohne behauptete Hörbewertung. Diese Entscheidungen können im Musik-/Video-Studio überarbeitet werden.
 
 Veo bleibt eine optionale, separat freizugebende Erweiterung im Video-Studio. Die tägliche Automatik verwendet Bild + Aufnahme + FFmpeg und startet keine ungefragte kostenpflichtige Videogeneration.
 

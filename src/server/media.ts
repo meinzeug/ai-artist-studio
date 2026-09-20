@@ -26,7 +26,7 @@ export function makeAss(timeline: any) {
   return (
     `[Script Info]\nScriptType: v4.00+\nPlayResX: 1080\nPlayResY: 1920\nWrapStyle: 0\n[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\nStyle: Default,DejaVu Sans,${t.font_size},${color},&H000000FF,&H00101018,&H90000000,-1,0,0,0,100,100,0,0,1,3,1,2,90,160,${margin},1\nStyle: Title,DejaVu Sans,48,&H00FFFFFF,&H000000FF,&H00101018,&H90000000,-1,0,0,0,100,100,0,0,1,2,1,8,90,160,230,1\n[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n` +
     (t.title
-      ? `Dialogue: 0,0:00:00.00,${assTime(t.end - t.start)},Title,,0,0,0,,${assText(t.title)}\n`
+      ? `Dialogue: 0,0:00:00.00,${assTime(Math.min(t.title_duration ?? t.end - t.start, t.end - t.start))},Title,,0,0,0,,${assText(t.title)}\n`
       : "") +
     t.subtitles
       .map(
@@ -97,6 +97,10 @@ export async function renderVideo(
   onProgress: (n: number) => Promise<void>,
   signal?: AbortSignal,
 ) {
+  if (project.template === "music_video") {
+    const { renderFullMusicVideo } = await import("./music-video-render");
+    return renderFullMusicVideo(project, assets, audio, onProgress, signal);
+  }
   const t = timelineSchema.parse(project.timeline);
   const duration = t.end - t.start,
     fps = Number(t.fps);

@@ -29,6 +29,7 @@ import {
 import { automationStageNames } from "@/lib/automation";
 import { imageProviders } from "@/lib/image-generation";
 import { resolveLocalTime } from "@/lib/domain";
+import { FullMusicVideos } from "./music-videos";
 function useAutomaticAction() {
   const { reload, toast } = useStudio(),
     lock = useRef(false);
@@ -75,8 +76,9 @@ function BudgetPreview({
       <strong>Was die Automatik übernimmt</strong>
       <p>
         Einmal: Charakter, Bio und Hauptporträt. Danach täglich: eine
-        Songproduktion, ein Bild mit Porträtreferenz und drei fertige MP4 mit
-        Beschreibung.
+        Songproduktion, ein vollständiges Musikvideo mit mehreren KI-Bildszenen
+        und zusätzlich drei Kurzclips mit Beschreibung. Bildmotive verwenden das
+        feste Künstlerporträt als Referenz.
       </p>
       <small>
         Bild-KI:{" "}
@@ -151,6 +153,8 @@ export function CreateAutomaticArtist({ onClose }: { onClose: () => void }) {
               approved: true,
               image_version: providers.image?.version ?? null,
               music_version: providers.music?.version ?? null,
+              full_music_video: v.full_music_video === "on",
+              video_scene_count: Number(v.video_scene_count),
             },
             key,
           );
@@ -187,6 +191,18 @@ export function CreateAutomaticArtist({ onClose }: { onClose: () => void }) {
             />
           </div>
         </details>
+        <label className="checkbox">
+          <input name="full_music_video" type="checkbox" defaultChecked />
+          Vollständiges Musikvideo automatisch produzieren
+        </label>
+        <Input
+          name="video_scene_count"
+          type="number"
+          min={4}
+          max={24}
+          defaultValue={8}
+          label="Neue Bildmotive pro Musikvideo"
+        />
         <BudgetPreview image={providers.image} music={providers.music} />
         <p className="muted">
           Mit „Artist erstellen & Automatik starten“ gibst du diese internen
@@ -240,6 +256,8 @@ export function AutomationSettings({
               approved: true,
               image_version: snapshot.image?.version ?? null,
               music_version: snapshot.music?.version ?? null,
+              full_music_video: v.full_music_video === "on",
+              video_scene_count: Number(v.video_scene_count),
             })
           )
             onClose();
@@ -272,6 +290,22 @@ export function AutomationSettings({
             Suno immer als manuelle Aufgabe vorbereiten
           </option>
         </Select>
+        <label className="checkbox">
+          <input
+            name="full_music_video"
+            type="checkbox"
+            defaultChecked={p?.full_music_video ?? true}
+          />
+          Vollständiges Musikvideo automatisch produzieren
+        </label>
+        <Input
+          name="video_scene_count"
+          type="number"
+          min={4}
+          max={24}
+          defaultValue={p?.video_scene_count ?? 8}
+          label="Neue Bildmotive pro Musikvideo"
+        />
         <BudgetPreview image={snapshot.image} music={snapshot.music} />
         <p className="muted">
           Speichern bestätigt die hier angezeigten aktuellen Provider und
@@ -333,7 +367,9 @@ export function ManualTasks() {
   );
   const tasks = (data.manual_tasks ?? []).filter(
     (t: Row) =>
-      (all || t.artist_id === artistId) && (completed || t.state === "open"),
+      (all || t.artist_id === artistId) &&
+      (completed || t.state === "open") &&
+      !["publish_full_music_video", "music_video_help"].includes(t.task_key),
   );
   return (
     <>
@@ -458,6 +494,10 @@ export function ManualTasks() {
           onClick={() => nav("artists")}
         />
       )}
+      <FullMusicVideos
+        runs={runs}
+        renderDelivery={(task) => <PublishTask task={task} />}
+      />
       {tasks.length ? (
         <div className="manual-task-grid">
           {tasks.map((t: Row) => {
@@ -513,7 +553,11 @@ export function ManualTasks() {
           })}
         </div>
       ) : (
-        policies.length > 0 && (
+        policies.length > 0 &&
+        !(data.music_video_productions ?? []).some(
+          (p: Row) =>
+            (all || p.artist_id === artistId) && p.state !== "cancelled",
+        ) && (
           <Empty
             title="Hier musst du gerade nichts tun"
             body="Die KI führt ihre Produktionsschritte aus. Wenn ein Song in Suno erzeugt werden muss oder Videos bereit sind, erscheinen die Aufgaben hier."

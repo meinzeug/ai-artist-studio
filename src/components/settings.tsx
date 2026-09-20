@@ -35,6 +35,7 @@ import {
 const kindNames: Record<string, string> = {
   auto_identity: "Artist autonom entwickeln",
   auto_song: "Tägliche Songproduktion planen",
+  music_video_storyboard: "Musikvideo-Storyboard entwickeln",
   health_check: "Verbindungstest",
   artist_concepts: "Künstlerkonzepte",
   create_song_ideas: "Songideen",

@@ -2,6 +2,15 @@
 
 Stand: **2026-09-20**. Arbeit im bestehenden Projektverzeichnis, keine fremden Änderungen überschrieben.
 
+## Aktueller Auftrag: vollständiges Musikvideo
+
+- Bisherige Ausgabe nachvollzogen: drei 30-Sekunden-Teaser, ein Hauptporträt/eine Songszene, dauerhafte redaktionelle Texte. Das erfüllt den neuen Anspruch an ein vollständiges Musikvideo nicht.
+- Vollständige Aufnahme als Hauptausgabe; persistentes KI-Storyboard anhand der zugeordneten Lyrics und Künstleridentität, acht neue referenzbasierte Szenenbilder standardmäßig (konfigurierbar), unterschiedliche Einstellungen und Kamerabewegungen.
+- Eigene wiederaufnehmbare Szenenaufträge, vorhandene Provider-/Tages-/Monatsbudgets unverändert respektieren. Bereits erzeugte Bilder wiederverwenden, unklare externe Zustände nicht erneut senden.
+- Ressourcenbegrenztes FFmpeg-Rendering mit echten Überblendungen, voller Songlänge, Titel nur kurz am Anfang, keine erfundenen Karaoke-Zeitstempel. Zusätzliche Kurzformate bleiben verfügbar.
+- Dashboard: Vollversion deutlich von Kurzclips trennen, Storyboard/Bildfortschritt, Fortsetzen/Import bei Blockern und Vollversion für bestehende Produktionen starten.
+- Schema-/Workflow-/Medientests und echter Browserlauf; danach Commit, Push, gesichertes Deployment und vollständige Neu-Produktion des bereits importierten Songs auf dem Server.
+
 ## Phase 0: Bestand und Entscheidung
 
 Aktuelle Wartung (20.09.2026): Uploadfehler bei MP3 mit eingebettetem Cover reproduziert und korrigiert. Cover-Spuren bleiben Metadaten und ändern den Asset-Typ nicht zu Video. 71 Unit-/Integrationstests, Typprüfung, Build und gezielter Browserlauf von manueller Musikaufgabe bis drei echten MP4 bestanden. Fix `1d6e3fc` auf GitHub und Server installiert; die betroffene Nutzerdatei wurde über die geschützte Uploadroute erfolgreich übernommen. Musikaufgabe abgeschlossen, vorhandene Automatik fortgesetzt. Nachweis im Testbericht.

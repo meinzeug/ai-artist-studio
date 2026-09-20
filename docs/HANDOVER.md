@@ -24,6 +24,8 @@ SunoAPI.org ist der vom Betreiber ausdrücklich gewählte Drittanbieter, mit eig
 
 ## Funktionierende Produktionsstrecke
 
+**Neue Vollversion:** Lyrics-Storyboard → standardmäßig acht neue KI-Bildmotive mit festem Hauptporträt → Kamerabewegungen, mehrere Einstellungen und echte Überblendungen → vollständiger Song als MP4. Bei neuen Artists vorausgewählt; für bestehende Songs unter Manuelle Aufgaben oder Video-Studio startbar. Einzelne Szenen bleiben bei Unterbrechungen erhalten. Der Titel erscheint nur kurz am Anfang. Zusatz-Kurzclips bleiben separat verfügbar. Migration 007, keine neue Bibliothek. 79 Unit-/Integrationstests und zwei gezielte Browser-Szenarien bestanden. [Bedienung und technische Grenzen](FULL_MUSIC_VIDEOS.md).
+
 Künstler/Character Bible → echte KI-Ideen → Lyrics mit Versionen/geschützten Zeilen → Suno-Paket bzw. freigegebener API-Auftrag → Audioimport mit Varianten/Rechten/Analyse → drei echte lokale FFmpeg-Videoformate → Snapshotfreigabe → TikTok-ZIP → manueller Veröffentlichungsnachweis → Kennzahlen und begründete Folgeidee.
 
 Die 14 deutschen Ansichten inklusive Aufgaben-Inbox, privater Dateispeicher, Timeline/Untertitel/Crop, Communityimport, Director-Aktionen, Budgets, Not-Aus und persistente Jobs sind implementiert. SunoAPI-Aufträge werden nur einmal gesendet; unklare Antworten benötigen Statusklärung. Fertige Dateien werden automatisch überprüft und dedupliziert zugeordnet. Der manuelle Suno-Weg bleibt vollständig nutzbar.

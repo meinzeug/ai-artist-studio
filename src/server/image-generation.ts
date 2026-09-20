@@ -83,6 +83,13 @@ export async function imageCommand(
   d: Record<string, any>,
   key: string,
   transport: typeof fetch = fetch,
+  identitySnapshot?: {
+    name: string;
+    version: number;
+    visual: string;
+    negative_visual: string;
+    color: string;
+  },
 ) {
   if (action === "image_configure") {
     const v = z
@@ -273,7 +280,9 @@ export async function imageCommand(
         "UPDATE jobs SET side_effect='external',max_attempts=1 WHERE id=$1",
         [job.id],
       );
-      const identity = {
+      // Internal production snapshots are supplied by the music-video service,
+      // never from the public command payload.
+      const identity = identitySnapshot ?? {
         name: artist.name,
         version: artist.version,
         visual: artist.identity?.visual ?? "",

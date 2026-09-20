@@ -2,6 +2,16 @@
 
 Abnahme: **2026-09-20**, Linux/Ubuntu, Node 22.23.1, PostgreSQL 16.15, Redis 7.0.15, FFmpeg 6.1.1, Google Chrome 153.0.8010.47. Produktiv- und Testdaten sind getrennt. Es wurde keine echte öffentliche Veröffentlichung und kein zusätzlicher kostenpflichtiger Medien-API-Auftrag ausgeführt. Native Codex-Text-/Bildtests nutzen das bestehende ChatGPT-Kontingent.
 
+## Vollständiges Musikvideo mit Lyrics-Storyboard (2026-09-20)
+
+- **79/79 Unit-/Integrationstests** bestanden. Typprüfung und Produktionsbuild erfolgreich. Neue Tests: volle Zeitverteilung bei 188,784 Sekunden, echte Lyrics-Bezüge, unterschiedliche Motive, Bestätigung und numerische Kostenprüfung, Besitzschutz, konkurrierender Start, persistentes Storyboard, manuelle Szenenübergabe, geschützte Referenz, Wiederaufnahme und Budgetstopp ohne neuen unklaren Bildauftrag, Not-Aus und Übergang der Künstlerautomatik zur Vollversion.
+- Tatsächlich gerenderter Film aus vier synthetischen Motiven und einer 36,4-Sekunden-Testaufnahme: H.264/AAC, 1080×1920, volle Dauer, vollständige Dekodierung erfolgreich. Pixelmessung mitten in der Überblendung bestätigt Mischung der Nachbarbilder statt Schwarzblende.
+- `npm run test:e2e -- tests/e2e/music-video.spec.ts tests/e2e/covered-audio.spec.ts`: **2/2 bestanden (1,9 Minuten)**. Bisheriger MP3-Cover-Import bis drei Kurzclips weiterhin funktionierend; neuer Vollvideo-Dialog, strukturiertes Storyboard, einzelne Bildzuordnung, Fortsetzung und echter MP4-Download mit 34,27 Sekunden bestanden. Storyboard-Antwort explizit simuliert, Motive/Testton synthetisch. Keine kostenpflichtige Testgeneration.
+- Desktop und 390px-Mobilansicht geprüft. Ein widersprüchlicher Leerzustand unter der fertigen Vollversion wurde entfernt. Finaler gezielter Browserlauf nach der Korrektur: **1/1 bestanden (55 Sekunden)**. Der Test wartet nun auf die bestätigte Fortsetzung, bevor er den Produktionsstatus prüft; dadurch wird ein alter Pausenhinweis nicht als neuer Fehler gewertet. Kein erneuter Gesamtlauf der sechs älteren CLI-/Provider-Browserszenarien behauptet.
+- Gefundene Entwicklungsfehler: Datenbank-Constraint für die neue Videovorlage erweitert; Provider-Testfixture um das erforderliche Modellfeld ergänzt. Beide Fehler vor Deployment korrigiert. Renderer verarbeitet höchstens zwei Bildquellen gleichzeitig; noch kein separater Lasttest mit 20-Minuten-Filmen.
+
+Nachweise: `tests/music-video.test.ts`, `tests/e2e/music-video.spec.ts`, [Browserdaten](test-evidence/full-music-video-browser.json), [Storyboard](screenshots/full-music-video-storyboard.png), [Desktop](screenshots/full-music-video-desktop.png), [Mobil](screenshots/full-music-video-mobile.png). Lokale Logs `.local/full-video-final-tests.log`, `.local/full-video-final-build.log`, `.local/full-video-e2e.log` und `.local/full-video-final-e2e.log`.
+
 ## Fehlerkorrektur: MP3 mit eingebettetem Cover (2026-09-20)
 
 - Ursache mit der vom Betreiber bereitgestellten MP3 reproduziert: ffprobe meldet das JPEG-Cover als Videospur mit `disposition.attached_pic=1`. Die bisherige Erkennung klassifizierte deshalb die komplette Aufnahme als Video. Aufgabe, Song und Auftrag waren korrekt zugeordnet.
