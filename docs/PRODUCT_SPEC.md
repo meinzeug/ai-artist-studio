@@ -69,3 +69,15 @@ Verbindlicher Standard: importierte Künstlerbilder und Suno-MP3 werden lokal mi
 | Neustart ohne doppelten kostenpflichtigen Auftrag | dauerhafte Stufen, deterministische Jobschlüssel, vorhandene External-State-Sperren | wiederholte Schedulerläufe, offene Übergaben, unklarer Suno-Zustand, alte Recoverytests |
 
 Bestehende Artists werden nur auf ausdrücklichen Start hin automatisiert. Automatische Bildreferenzfreigabe bedeutet ausschließlich visuelle Referenzwahl, keine Rechtsfreigabe. Veo bleibt ein optionaler separat beauftragter Zusatz. Bedienung: [AUTOMATION.md](AUTOMATION.md).
+
+## Ergänzung: vollständiges Musikvideo statt ausschließlich Kurzclips
+
+| Nutzeranforderung | Implementierung | Nachweis |
+|---|---|---|
+| Ganze Suno-Aufnahme als Hauptvideo | `fullMusicVideoTimeline`, Vorlage `music_video`, tatsächliche ffprobe-Laufzeit | `music-video.test.ts`: 188,784 Sekunden Zeitverteilung; echte Voll-Renderings; Browser-MP4 |
+| Viele Bilder passend zu Lyrics und Artist | schema-validiertes Storyboard, 4–24 neue Motive, feste Porträt-/Identitätsversion | echte Lyrics-Auszüge, unterschiedliche Motive, Referenz-/Eigentümerprüfungen |
+| Bildgeschichte mit Bewegung und Schnitt | zwei Einstellungen für längere Motive, Kamerafahrten, echte Überblendungen, kurzzeitiger Titel | echte FFmpeg-Dekodierung, Übergangspixeltest, gespeicherte Renderparameter |
+| Vollversion automatisch und für bestehende Songs | tägliche Automatik, eigener Dialog unter Manuelle Aufgaben/Video-Studio | Übergang nach Audioimport und tatsächlicher Browser-Download |
+| Fertige Szenen behalten; Grenzen respektieren | dauerhafte Szenenaufträge, Budgetstopp, geschützte Fortsetzung und manueller Bildimport | konkurrierender Start, unbekannter Anbieterzustand, Budget und Wiederaufnahme getestet |
+
+Details und konkrete Serverabnahme: [Vollständige Musikvideos](FULL_MUSIC_VIDEOS.md), [Testbericht](TEST_REPORT.md).

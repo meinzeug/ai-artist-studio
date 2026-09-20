@@ -1,0 +1,74 @@
+{
+  "checkedAt": "2026-09-20T19:49:42.822898+00:00",
+  "origin": "https://artist.dorfspy.de",
+  "implementationCommit": "5f03a3b",
+  "productionState": "ready",
+  "audioSource": "existing operator-provided full recording, no synthetic audio",
+  "sourceDuration": 188.784,
+  "storyboard": "live Codex CLI with existing ChatGPT account",
+  "images": 8,
+  "uniqueImageHashes": 8,
+  "allImagesGeneratedLive": true,
+  "sameReferenceAssetAndHash": true,
+  "shots": 16,
+  "titleSeconds": 4,
+  "automaticLyricsSubtitles": false,
+  "transition": "dissolve",
+  "probe": {
+    "programs": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1080,
+        "height": 1920,
+        "pix_fmt": "yuv420p",
+        "r_frame_rate": "30/1"
+      },
+      {
+        "codec_name": "aac",
+        "codec_type": "audio",
+        "sample_rate": "48000",
+        "r_frame_rate": "0/0"
+      }
+    ],
+    "format": {
+      "duration": "188.800000",
+      "size": "117014640"
+    }
+  },
+  "fullDecodeVerified": true,
+  "downloadHashVerified": true,
+  "imageBudget": {
+    "provider": "codex",
+    "daily_limit": 10,
+    "monthly_limit": 100
+  },
+  "imageReservationsConsumed": 8,
+  "budgetIncreased": false,
+  "postState": "waiting_for_approval",
+  "publicPostSent": false,
+  "services": {
+    "web": "active",
+    "worker": "active",
+    "runner": "active"
+  },
+  "browser": {
+    "testedAt": "2026-09-20T19:49:14.206Z",
+    "origin": "https://artist.dorfspy.de",
+    "productionState": "ready",
+    "desktopWidth": 1440,
+    "mobileWidth": 390,
+    "browserErrors": 0,
+    "player": {
+      "duration": 188.8,
+      "currentTime": 1.009838,
+      "videoWidth": 1080,
+      "videoHeight": 1920,
+      "paused": false,
+      "error": null
+    },
+    "downloadHashVerified": true
+  },
+  "privateMediaIncludedInRepository": false
+}

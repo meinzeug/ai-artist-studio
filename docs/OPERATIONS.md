@@ -111,3 +111,11 @@ Im Dashboard unter Provider & Konten die Bild-KI ausdrücklich wählen. Codex nu
 Nach Backup und Migration Web/Worker/Runner gemeinsam aktualisieren. Kein neuer Systemdienst, kein Cronjob und keine neue Abhängigkeit nötig. Der Worker erledigt Tagesplanung und Wiederaufnahme anhand der Datenbank. Bestehende Artists bleiben zunächst unverändert; unter „Tägliche Automatik“ ausdrücklich aktivieren. Neue „Artist erstellen“-Aufträge starten den vollständigen Ablauf. Vor Wartungen Automatik pausieren beziehungsweise Not-Aus aktivieren und laufende Jobs auslaufen lassen. Nicht die Queue alleine löschen: PostgreSQL hält den Produktionsfortschritt.
 
 Standard 09:00 Europe/Berlin, pro Artist einstellbar. Ausfalltage erzeugen keinen Nachholstapel. Referenzbild, Providerfreigaben, Tagesläufe, Clipprojekte und Aufgaben werden regulär gesichert/exportiert. Nach einem Restore unbekannte externe Aufträge klären; niemals manuell einen zweiten Auftrag als „Retry“ erzwingen. [Bedienung und Grenzen](AUTOMATION.md).
+
+## Vollständige Musikvideos (Migration 007)
+
+Nach Sicherung und Ende laufender Provideraufträge Migration 007 und den aktualisierten Web-/Worker-Code installieren. Die Migration erweitert die erlaubten Videovorlagen und ergänzt zwei relationale Tabellen. Kein neuer Dienst, Paket oder API-Key. Bereits aktive Künstler behalten zunächst ihre bisherige Einstellung; die Vollversion wird gezielt in der Automatik eingeschaltet.
+
+Der Renderer begrenzt sich auf zwei Bildquellen gleichzeitig; Bildaufträge laufen einzeln innerhalb der bisherigen Grenzen. Fortschritt, fertige Szenen und unveränderliche Referenzen werden in PostgreSQL gesichert. Bei Budget-/Providerblockern unter „Vollständige Musikvideos“ fortsetzen, nachdem die Ursache behoben wurde. Bereits unklar übermittelte Bildaufträge zuerst klären. Einen laufenden externen Auftrag nicht durch Löschen von Queue-/Datenbankeinträgen wiederholen.
+
+Restore nach Migration 007 mit 52 Tabellen, 64 Datensätzen, sieben Dateihashes und echtem DB-Neustart bestanden; dieser Test verwendet ausschließlich eine separate synthetische Testproduktion. [Nachweis](test-evidence/full-music-video-restore.json).

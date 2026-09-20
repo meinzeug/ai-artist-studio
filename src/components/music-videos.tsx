@@ -2,6 +2,7 @@
 import { useState, type ReactNode } from "react";
 import { Film, Sparkles, Download, Image as ImageIcon } from "lucide-react";
 import { useStudio, Modal, Preview, Badge, type Row } from "./ui";
+import { statuses } from "@/lib/domain";
 const stageNames: Record<string, string> = {
   planning: "Storyboard entsteht",
   images: "Szenenbilder entstehen",
@@ -58,7 +59,7 @@ export function FullMusicVideos({
               <div>
                 <small>
                   {p
-                    ? `${Math.floor(p.snapshot.duration / 60)}:${String(Math.round(p.snapshot.duration % 60)).padStart(2, "0")} Minuten · ${p.scene_count} Bildmotive · ganzer Song`
+                    ? `${Math.floor(Math.round(p.snapshot.duration) / 60)}:${String(Math.round(p.snapshot.duration) % 60).padStart(2, "0")} Minuten · ${p.scene_count} Bildmotive · ganzer Song`
                     : "Vollversion aus der vorhandenen Aufnahme"}
                 </small>
                 <h3>{song?.title}</h3>
@@ -165,9 +166,12 @@ export function FullMusicVideos({
                                 <ImageIcon />
                                 <span>
                                   {generation
-                                    ? generation.state === "running"
+                                    ? ["running", "submitting"].includes(
+                                        generation.state,
+                                      )
                                       ? "Bild wird generiert"
-                                      : generation.state
+                                      : (statuses[generation.state] ??
+                                        "Status wird geprüft")
                                     : "Geplant"}
                                 </span>
                               </div>

@@ -11,6 +11,14 @@ Stand: **2026-09-20**. Arbeit im bestehenden Projektverzeichnis, keine fremden �
 - Dashboard: Vollversion deutlich von Kurzclips trennen, Storyboard/Bildfortschritt, Fortsetzen/Import bei Blockern und Vollversion für bestehende Produktionen starten.
 - Schema-/Workflow-/Medientests und echter Browserlauf; danach Commit, Push, gesichertes Deployment und vollständige Neu-Produktion des bereits importierten Songs auf dem Server.
 
+### Abnahme der Vollversion
+
+- [x] Migration 007, dauerhaftes Storyboard/Szenenaufträge, volle Zeitverteilung, Referenz- und Budgetschutz, manuelle Wiederaufnahme, zusätzlicher Downloadbereich.
+- [x] 79 Unit-/Integrationstests, zwei gezielte Browser-Szenarien, abschließender Vollvideo-Browserlauf, Typprüfung und Build bestanden.
+- [x] Echter Restore einschließlich der beiden neuen Tabellen: 52 Tabellen, 64 Datensätze, sieben Dateihashes und PostgreSQL-Neustart.
+- [x] Kernänderung `5f03a3b` committed/gepusht und nach Backup auf dorfspy installiert.
+- [x] Tatsächlicher Song über vorhandenen Codex-Account neu produziert: acht Referenzbilder, 16 Einstellungen, 188,8 Sekunden MP4; kompletter HTTPS-Download, Browserwiedergabe und Dekodierung bestanden. Tägliche Vollversion aktiviert, Budget unverändert, Veröffentlichung manuell.
+
 ## Phase 0: Bestand und Entscheidung
 
 Aktuelle Wartung (20.09.2026): Uploadfehler bei MP3 mit eingebettetem Cover reproduziert und korrigiert. Cover-Spuren bleiben Metadaten und ändern den Asset-Typ nicht zu Video. 71 Unit-/Integrationstests, Typprüfung, Build und gezielter Browserlauf von manueller Musikaufgabe bis drei echten MP4 bestanden. Fix `1d6e3fc` auf GitHub und Server installiert; die betroffene Nutzerdatei wurde über die geschützte Uploadroute erfolgreich übernommen. Musikaufgabe abgeschlossen, vorhandene Automatik fortgesetzt. Nachweis im Testbericht.
