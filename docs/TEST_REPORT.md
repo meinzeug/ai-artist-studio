@@ -96,3 +96,9 @@ Nicht ausgeführt: echte kostenpflichtige Veo-Generation; kein Kundenschlüssel 
 Zusätzlicher eigenständiger Veo-Browsertest verwendet eine synthetische MP3 mit 3,030204 s Laufzeit. Er deckte einen vorhandenen HTML-`step`-Fehler auf: Audiolaufzeiten mit mehr Nachkommastellen blockierten „Projekt speichern“. Zeitfelder im Video-/Audioeditor akzeptieren jetzt beliebige gültige Sekundenwerte; serverseitige Grenzen bleiben aktiv. Der Test prüft ausdrücklich die Browservalidität beider Zeitfelder.
 
 Der eigenständig aus frischer Testdatenbank laufende Veo-/MP3-Browsertest wurde nach der Korrektur erneut ausgeführt: **1/1 bestanden (1,4 Minuten)**, inklusive automatisch erzeugtem Vorschaubild und realem FFmpeg-Rendering. Er ist separat mit `npm run test:e2e -- tests/e2e/veo.spec.ts` ausführbar und benötigt keinen CLI-Login.
+
+### Installierter Stand
+
+Abschließender eigenständiger MP3-/Veo-Browserlauf: **1/1 bestanden (38,3 s)**. Szenenvorschaubild und fertiges MP4 sind sichtbar. Screenshots deaktivieren CSS-Übergänge während der Aufnahme; eine gesonderte Browserprüfung bestätigt die vollständig ausgeblendete mobile Seitenleiste. Kein dauerhafter Layoutfehler.
+
+Server-Update (`45d62b3`): Datenbackup erstellt, Build als `artist-studio` bestanden, Migration 004 ausgeführt. HTTPS `/api/health` **200**, `/api/state` ohne Session **401**, alle drei systemd-Dienste **active**. SHA-256 von Szenen-Backend, Videooberfläche und Migration stimmt mit dem Repository überein. Keine Provider-Credentials übertragen oder paid Generierung ausgelöst. [Deploymentnachweis](test-evidence/video-deployment.json).

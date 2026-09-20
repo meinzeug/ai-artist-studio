@@ -33,5 +33,7 @@
   },
   "desktop": true,
   "mobile": true,
-  "javascriptErrors": []
+  "javascriptErrors": [],
+  "mobileSidebarHidden": true,
+  "screenshotAnimationsDisabled": true
 }

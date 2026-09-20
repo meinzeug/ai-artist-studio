@@ -6,7 +6,7 @@ Stand **2026-09-20**. Implementierung im bestehenden Repository `/home/dennis/ai
 
 **https://artist.dorfspy.de** — produktiver Server `91.99.217.84`, Zugriff über Caddy/HTTPS. Hetzner-DNS A-Eintrag angelegt, Let’s-Encrypt-Zertifikat erfolgreich ausgestellt. Web, Worker und Runner laufen als eigene automatisch startende systemd-Dienste; die vorher vorhandene Anwendung bleibt in Betrieb.
 
-Die Produktionsdatenbank enthält noch kein Betreiberkonto und keine Testkünstler. Die erste Registrierung erfordert einen einmaligen Einrichtungscode. Der Code wurde ausschließlich lokal unter `.local/server-einrichtung.txt` (0600, gitignoriert) bereitgestellt und liegt serverseitig in der geschützten `/etc/artist-studio/web.env`. Danach eigene E-Mail und eigenes Passwort wählen. Weitere Registrierungen werden abgewiesen.
+Die erste Registrierung erfordert einen einmaligen Einrichtungscode. Der Code wurde ausschließlich lokal unter `.local/server-einrichtung.txt` (0600, gitignoriert) bereitgestellt und liegt serverseitig in der geschützten `/etc/artist-studio/web.env`. Danach eigene E-Mail und eigenes Passwort wählen. Weitere Registrierungen werden abgewiesen.
 
 Lokaler Start bleibt möglich: `npm run services:start`, `npm run db:migrate`, `npm run build`, `npm run studio:start` → http://127.0.0.1:3210. Stop: `npm run studio:stop`. [Betrieb](OPERATIONS.md), [Server-Provisionierung](../scripts/deploy/README.md).
 
@@ -18,7 +18,7 @@ Unter **Einstellungen → Provider & Konten**:
 - **Google verbinden:** tatsächliche interaktive Gemini-Anmeldung, offizieller Google-Link und Codefeld, anschließend Live-Texttest.
 - **Suno API verbinden:** eigener SunoAPI.org-Key, Guthabentest ohne Musikproduktion, verschlüsselte Speicherung, Modell und bestätigte Creditgrenzen. Anleitung als Modal direkt im Dashboard.
 
-Auf dem Server sind beide CLIs installiert und bis zum offiziellen Loginlink getestet. **Persönliche Konten sind dort noch nicht angemeldet.** Es wurden keine lokalen Authdateien auf den Server kopiert. Der Suno-Schlüssel fehlt ebenfalls noch. Callbackadresse `https://artist.dorfspy.de/api/suno/callback` wird bei HTTPS vorausgefüllt.
+Auf dem Server sind beide CLIs installiert und bis zum offiziellen Loginlink getestet. **Den aktuellen persönlichen Anmeldestatus zeigt das Dashboard.** Es wurden keine lokalen Authdateien auf den Server kopiert. Suno-Schlüssel werden ausschließlich vom Betreiber im Dashboard hinterlegt. Callbackadresse `https://artist.dorfspy.de/api/suno/callback` wird bei HTTPS vorausgefüllt.
 
 SunoAPI.org ist der vom Betreiber ausdrücklich gewählte Drittanbieter, mit eigenem Konto/Abrechnung. Er ist von der separaten offiziellen Suno Platform zu unterscheiden. [Suno-Anleitung](SUNO_API_SETUP.md), [CLI-Anleitung](CLI_LOGIN.md).
 
@@ -64,3 +64,7 @@ Historische Kernabnahme umfasst tatsächlichen Worker-SIGKILL/Wiederaufnahme sow
 ## Ergänzung: lokale Musikvideos und optionale KI-Szenen
 
 Das Video-Studio führt ausdrücklich durch **Künstlerbilder + Suno-MP3 → lokale FFmpeg-MP4**. Ein zusätzlicher aufklappbarer Bereich unterstützt Veo-Szenen mit Startbild, separater Verbindung und Kostenfreigabe. Fertige Szenen lassen sich direkt in die vorhandene Timeline übernehmen; ausschließlich die gewählte Songaufnahme wird als Tonspur exportiert. Einrichtung und Fehlerbehandlung: [VIDEO_PRODUCTION.md](VIDEO_PRODUCTION.md). Keine zusätzliche Bibliothek oder globale CLI-Konfiguration erforderlich; additive Migration `004_video_generation.sql`.
+
+### Video-Update auf dem Server
+
+Anwendungscode `45d62b3` auf **https://artist.dorfspy.de** installiert; Build als unprivilegierter Benutzer `artist-studio`, additive Migration 004 erfolgreich. Backup vor Update: `/var/lib/artist-studio/backups/video-update-1789914069`. Web/Worker/Runner aktiv, HTTPS-Health 200 und State ohne Session 401. Quellhashes zwischen Repository und Server stimmen überein. Lokales Studio ebenfalls wieder unter http://127.0.0.1:3210 gestartet. Kein kostenpflichtiger Veo-Liveauftrag ausgeführt.

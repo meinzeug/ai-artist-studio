@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-09-20T16:22:44.271674+00:00",
+  "url": "https://artist.dorfspy.de",
+  "application_commit": "45d62b3",
+  "build_user": "artist-studio",
+  "build_passed": true,
+  "migration": "004_video_generation.sql",
+  "backup": "/var/lib/artist-studio/backups/video-update-1789914069",
+  "https_health_status": 200,
+  "unauthenticated_state_status": 401,
+  "services": {
+    "web": "active",
+    "worker": "active",
+    "runner": "active"
+  },
+  "source_hashes_match": true,
+  "paid_veo_generation_executed": false
+}

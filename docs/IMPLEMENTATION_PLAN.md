@@ -69,6 +69,6 @@ Externer Blocker: kein Veo-API-Key und keine genehmigte kostenpflichtige Livegen
 - [x] 47/47 Unit-/Integrationstests sowie 4/4 vollständige Browsertests bestanden. Eigenständiger MP3-/Veo-Browsertest nach Korrektur der Zeitfelder zusätzlich bestanden.
 - [x] Backup/Restore mit 43 Tabellen, elf Dateihashes und PostgreSQL-Neustart geprüft.
 - [x] Einrichtungs-/Betriebsdokumentation, Integrationsmatrix und Testnachweise aktualisiert.
-- [ ] Geprüfte Quellen committen/pushen und Server aktualisieren.
+- [x] Geprüfte Quellen committed/gepusht (`45d62b3`) und auf dem bestehenden Server installiert. HTTPS/Health, Loginpflicht, Dienste und Quellhashes geprüft.
 
 Keine bezahlte Veo-Livegeneration; eigener Google-Key und ausdrückliche Auftragsfreigabe bleiben nötig.

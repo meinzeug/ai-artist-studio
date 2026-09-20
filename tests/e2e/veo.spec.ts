@@ -158,6 +158,7 @@ test("FFmpeg-Hauptweg und optionale Veo-Szene: verbinden, freigeben, importieren
     await page.screenshot({
       path: "docs/screenshots/veo-guide-desktop.png",
       fullPage: true,
+      animations: "disabled",
     });
     await page.getByRole("button", { name: "Schließen", exact: true }).click();
     await page
@@ -207,11 +208,13 @@ test("FFmpeg-Hauptweg und optionale Veo-Szene: verbinden, freigeben, importieren
     await page.screenshot({
       path: "docs/screenshots/veo-approval-desktop.png",
       fullPage: true,
+      animations: "disabled",
     });
     await page.setViewportSize({ width: 390, height: 844 });
     await page.screenshot({
       path: "docs/screenshots/veo-approval-mobile.png",
       fullPage: true,
+      animations: "disabled",
     });
     expect(
       await page
@@ -288,11 +291,13 @@ test("FFmpeg-Hauptweg und optionale Veo-Szene: verbinden, freigeben, importieren
     await page.screenshot({
       path: "docs/screenshots/video-optional-desktop.png",
       fullPage: true,
+      animations: "disabled",
     });
     await page.setViewportSize({ width: 390, height: 844 });
     await page.screenshot({
       path: "docs/screenshots/video-optional-mobile.png",
       fullPage: true,
+      animations: "disabled",
     });
     expect(
       await page.evaluate(
