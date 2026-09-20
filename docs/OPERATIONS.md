@@ -99,3 +99,9 @@ Serverbackup: Web und Worker stoppen, DB weiterlaufen lassen; `scripts/backup.ts
 Migration `004_video_generation.sql` vor Start des aktualisierten Workers/Webs ausführen. Keine zusätzliche CLI, GPU oder npm-Abhängigkeit. Google-Key ausschließlich im Dashboard konfigurieren; verschlüsselt in `video_connections`, niemals in Runner-Env oder KI-Prompts. API-Projekt und Abrechnung separat einrichten. Tages-/Monatsbudgets mit bestätigtem USD-Kostenansatz beginnen standardmäßig bei 0. [Einrichtung und Wiederaufnahme](VIDEO_PRODUCTION.md).
 
 Sicherungen enthalten die verschlüsselte Verbindung sowie Szenenaufträge/Reservierungen in den drei neuen Tabellen. Der vorhandene außerhalb der DB verwahrte `TOKEN_ENCRYPTION_KEY` ist beim Restore weiter erforderlich. Unklare externe Operationen nach Wiederherstellung abfragen, niemals blind erneut generieren.
+
+## Bildprovider-Update
+
+Migration `005_image_generation.sql` ist additiv. Vor dem Update wie üblich Daten und Assets sichern. Neue Runner-Bildfunktion erfordert einen Neustart von **Web, Worker und Runner**, nachdem laufende Jobs/Anmeldungen beendet sind. Auth-Verzeichnisse unverändert beibehalten; keine lokalen Accountdateien auf den Server kopieren. Keine neue npm-Abhängigkeit und kein neues Systempaket.
+
+Im Dashboard unter Provider & Konten die Bild-KI ausdrücklich wählen. Codex nutzt die bestehende Runner-Anmeldung. Für Gemini ist ein eigener Bild-API-Key nötig; unabhängig vom Veo-Key. [Schrittfolge und Fehlerbehandlung](IMAGE_GENERATION.md). Bestehende Künstler und Bilder bleiben erhalten. Der Standard führt ohne eingerichteten Bildprovider weiterhin zum manuellen Import.

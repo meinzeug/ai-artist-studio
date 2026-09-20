@@ -4,6 +4,7 @@ import http from "node:http";
 import { timingSafeEqual } from "node:crypto";
 import { CliProvider, classifyError } from "./provider";
 import { z } from "zod";
+import { imageResult } from "../lib/image-generation";
 import {
   startLogin,
   loginStatus,
@@ -64,7 +65,8 @@ const server = http.createServer(async (req, res) => {
     let raw = "";
     for await (const chunk of req) {
       raw += chunk;
-      if (raw.length > 200000) throw new Error("Eingabe zu groß.");
+      if (raw.length > (req.url === "/image" ? 6_000_000 : 200000))
+        throw new Error("Eingabe zu groß.");
     }
     const data = JSON.parse(raw);
     if (req.method !== "POST") throw new Error("POST erforderlich.");
@@ -95,7 +97,7 @@ const server = http.createServer(async (req, res) => {
       res.end(JSON.stringify(result));
       return;
     }
-    if (req.url !== "/cancel" && req.url !== "/run")
+    if (req.url !== "/cancel" && req.url !== "/run" && req.url !== "/image")
       throw new Error("Unbekannte Runner-Funktion.");
     if (req.url === "/cancel") {
       active.get(z.string().uuid().parse(data.id))?.abort();
@@ -105,9 +107,14 @@ const server = http.createServer(async (req, res) => {
     const input = z
       .object({
         id: z.string().uuid(),
-        provider: z.enum(["codex", "gemini"]),
+        provider: z.enum(["codex", "gemini"]).default("codex"),
+        reference: z
+          .string()
+          .max(5_500_000)
+          .regex(/^[A-Za-z0-9+/]+={0,2}$/)
+          .optional(),
         prompt: z.string().max(150000),
-        schema: z.record(z.string(), z.unknown()),
+        schema: z.record(z.string(), z.unknown()).default({}),
       })
       .parse(data);
     if (active.size >= 1 || loginBusy()) {
@@ -118,11 +125,21 @@ const server = http.createServer(async (req, res) => {
     const controller = new AbortController();
     active.set(input.id, controller);
     try {
-      const result = await new CliProvider(input.provider).runStructuredTask(
-        input.prompt,
-        input.schema,
-        controller.signal,
-      );
+      const result =
+        req.url === "/image"
+          ? await new CliProvider("codex").runImageTask(
+              input.prompt,
+              input.reference
+                ? Buffer.from(input.reference, "base64")
+                : undefined,
+              controller.signal,
+            )
+          : await new CliProvider(input.provider).runStructuredTask(
+              input.prompt,
+              input.schema,
+              controller.signal,
+            );
+      if (req.url === "/image") imageResult.parse(result.result);
       res.end(JSON.stringify(result));
     } finally {
       active.delete(input.id);

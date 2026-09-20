@@ -1,4 +1,5 @@
 "use client";
+import { ImageGenerationPanel } from "./images";
 import { useState } from "react";
 import {
   Upload,
@@ -54,6 +55,7 @@ export function Library() {
         </button>
       </SectionHead>
       <ArtistRequired>
+        <ImageGenerationPanel onSelect={setDetail} />
         <div className="toolbar">
           <div className="tabs">
             {[
@@ -143,9 +145,9 @@ export function Library() {
         )}
         <div className="info-bar">
           <ImageIcon size={17} />
-          Bild- und Videogenerierung: kein Provider eingerichtet. Referenzbilder
-          und ein Seed garantieren kein identisches Gesicht. Upload und lokale
-          Produktion sind verfügbar.
+          Referenzbilder unterstützen die Wiedererkennbarkeit. Vergleiche neue
+          Bilder vor der Freigabe als Künstlerreferenz. Mit deiner Songaufnahme
+          werden sie im Video-Studio zu fertigen MP4-Clips.
         </div>
       </ArtistRequired>
       {upload && <UploadDialog onClose={() => setUpload(false)} />}
@@ -171,6 +173,8 @@ export function Library() {
                   {active.metadata.duration &&
                     `${Number(active.metadata.duration).toFixed(2)} s · `}
                   {active.mime}
+                  {active.metadata.width &&
+                    ` · ${active.metadata.width} × ${active.metadata.height}`}
                   {active.metadata.streams?.map((s: Row, i: number) => (
                     <div key={i}>
                       {s.codec} ·{" "}
@@ -181,6 +185,25 @@ export function Library() {
                   ))}
                 </dd>
               </dl>
+              {active.metadata.ai_generated && (
+                <details>
+                  <summary>Generierungsinformationen</summary>
+                  <dl>
+                    <dt>Modell</dt>
+                    <dd>{active.metadata.model}</dd>
+                    <dt>Bildwunsch / Prompt</dt>
+                    <dd>{active.metadata.prompt}</dd>
+                    {active.metadata.identity_snapshot && (
+                      <>
+                        <dt>Künstleridentität</dt>
+                        <dd>
+                          Version {active.metadata.identity_snapshot.version}
+                        </dd>
+                      </>
+                    )}
+                  </dl>
+                </details>
+              )}
               <a
                 className="button"
                 href={"/api/assets/" + active.id + "?download"}

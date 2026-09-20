@@ -40,14 +40,14 @@ Historische Kernabnahme umfasst tatsächlichen Worker-SIGKILL/Wiederaufnahme sow
 
 | Integration | Nutzer-Schritt / Grenze |
 |---|---|
-| Codex auf Server | Im Dashboard persönlich mit ChatGPT verbinden und Texttest auslösen. Lokale Modellproduktion bereits live erfolgreich. |
-| Gemini | Persönlichen Google-Login abschließen; Modellproduktion noch nicht live abgenommen. |
+| Codex auf Server | Offizielle Anmeldung am 20.09. erkannt. Bild-KI im Dashboard auswählen. Lokale Text- und Bildproduktion live erfolgreich. |
+| Gemini | Server-Anmeldung erkannt; eigene Modellabnahme offen. Gemini-Bild-API separat konfigurieren. |
 | SunoAPI.org | Eigenen API-Key und bestätigten Tarif/Creditbudgets eintragen. Adapter/Fehlerfälle sind getestet, echter Provider noch nicht verbunden. |
 | Suno Platform | Separate Endpunktspezifikation und Zugang fehlen weiterhin. |
 | TikTok OAuth/Display | Registrierte Developer-App, Redirect/Scopes und Kontozustimmung fehlen; implementiert, kein Live-Test. |
 | TikTok Posting/Business | Keine Zulassung für private interne Direct-Post-Nutzung behauptet. Export/Handveröffentlichung und manueller Datenimport sind verfügbar. |
 | Google Veo (optional) | Dashboard-Verbindung, Startbild-Generierung, Budget und Import implementiert. Separater Google-Key, API-Abrechnung und Liveabnahme fehlen. |
-| Bildgenerierung | Upload und Storyboards nutzbar; kein Bildadapter im Studio aktiviert. |
+| Bildgenerierung | Codex/ChatGPT, Gemini-Bild-API und manueller Import im Dashboard wählbar. Native Codex-Dateiausgabe live geprüft; Gemini-Key/Abrechnung und Liveabnahme fehlen. |
 
 ## Betriebsgrenzen
 
@@ -68,3 +68,7 @@ Das Video-Studio führt ausdrücklich durch **Künstlerbilder + Suno-MP3 → lok
 ### Video-Update auf dem Server
 
 Anwendungscode `45d62b3` auf **https://artist.dorfspy.de** installiert; Build als unprivilegierter Benutzer `artist-studio`, additive Migration 004 erfolgreich. Backup vor Update: `/var/lib/artist-studio/backups/video-update-1789914069`. Web/Worker/Runner aktiv, HTTPS-Health 200 und State ohne Session 401. Quellhashes zwischen Repository und Server stimmen überein. Lokales Studio ebenfalls wieder unter http://127.0.0.1:3210 gestartet. Kein kostenpflichtiger Veo-Liveauftrag ausgeführt.
+
+## Erweiterung: Bildprovider auswählen
+
+Eigene Bildproviderkarte unter **Jobs & Einstellungen → Provider & Konten**, inklusive Einrichtungsmodal und ChatGPT-Anmeldung. Bilder lassen sich unter **Charakter & Medien** erzeugen, optional mit Künstlerreferenz, Identitätsversion und Songzuordnung. Codex-Bildfunktion mit CLI 0.154.0 im isolierten Runner live erfolgreich (echte PNG, kein API-Key). Gemini-Bild-API separat mit verschlüsseltem Key und bestätigten USD-Ansätzen implementiert. Keine bezahlte Gemini-Bildgeneration. Anleitung: [IMAGE_GENERATION.md](IMAGE_GENERATION.md). Additive Migration 005; kein neues npm-Paket.

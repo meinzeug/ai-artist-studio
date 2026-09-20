@@ -7,7 +7,7 @@ PostgreSQL speichert relationale Entitäten, Versionen, Jobzustände, Versuche, 
 
 CLI-Runner: eigener Prozess, Token zwischen Worker und Runner, Umgebungs-Allowlist, isolierte Arbeitsverzeichnisse, nur Textschemas. Keine DB-/Social-/Musik-Credentials. Linux Landlock ABI ≥4 als tatsächlich geprüfte Datei-/TCP-Grenze (User-Namespaces/bubblewrap waren hier nicht verfügbar), ergänzend dedizierter Compose-Container, Tools providerseitig gesperrt, keine Host-Home-Freigabe. CLI-Auth separat und vom Datenbackup ausgeschlossen.
 
-Providergrenzen: Text (Codex/Gemini), Musik (manuelles Suno, ausdrücklich gewähltes SunoAPI.org und weiterhin gesperrte separate Suno Platform), Medien (Upload, FFmpeg und optionaler Veo-Adapter), Social (manueller Export, optional TikTok OAuth/Display). Jeder Adapter meldet Fähigkeiten und tatsächlichen Verbindungszustand.
+Providergrenzen: Text (Codex/Gemini), Musik (manuelles Suno, ausdrücklich gewähltes SunoAPI.org und weiterhin gesperrte separate Suno Platform), Medien (Upload, native Codex-Bilder, explizite Gemini-Bild-API, FFmpeg und optionaler Veo-Adapter), Social (manueller Export, optional TikTok OAuth/Display). Jeder Adapter meldet Fähigkeiten und tatsächlichen Verbindungszustand.
 
 Dateien liegen außerhalb public, Downloads prüfen Anmeldung/Eigentümer und unterstützen Range. Dateityperkennung anhand des Inhalts, FFprobe und Bilddecoder prüfen importierte Medien. Bearbeitungen erzeugen neue Assets mit Elternbeziehung und SHA-256.
 
@@ -28,3 +28,7 @@ SunoAPI: `music_connections` enthält AES-GCM-verschlüsselte Schlüssel und Cre
 ## Optionale Videoszenen
 
 `video_connections` hält den verschlüsselten Google-Key und ausdrücklich bestätigte USD-Kostenansätze. `video_generations` speichert unveränderliche Szenenaufträge und Startbild-Hashes, `video_cost_reservations` die atomare Budgetreservierung. `veo_generate` ist ein externer Job mit einem Übermittlungsversuch. `veo_sync` fragt nur vorhandene Operationen ab; Downloads und Importe sind dedupliziert. Die gemeinsame FFmpeg-Pipeline ersetzt Szenenton durch die gewählte Songaufnahme. Der CLI-Runner erhält keinen Veo-Key. Details: VIDEO_PRODUCTION.md.
+
+## Bildprovider
+
+Migration 005 ergänzt `image_connections`, `image_generations` und `image_reservations`. Die Auswahl ist unabhängig von `settings.provider` (Text). Eigene typisierte Aktionen `image_configure`, `image_generate`, `image_resolve` prüfen Besitz, Freigabe, Versionssnapshot, Not-Aus und atomare Budgets. `queue_ai` kann diese Prüfungen nicht umgehen. Der Worker nutzt entweder den isolierten Runner `/image` oder den festen offiziellen Google-Endpunkt. Einmalige Übermittlung, keine automatische Wiederholung bei unklarem Zustand, wiederanlaufende fachliche Zustandsprüfung. Assets bleiben unverändert und privat. Details: [Bildproduktion](IMAGE_GENERATION.md).

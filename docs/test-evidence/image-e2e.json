@@ -1,0 +1,14 @@
+{
+  "checked_at": "2026-09-20T17:12:40.792Z",
+  "live_codex_image": true,
+  "cli_version": "0.154.0",
+  "separate_api_key": false,
+  "synthetic_test_asset": true,
+  "provider": "codex_chatgpt_image",
+  "sha256": "314342bf4f9288e29025dbd470c1f793e93e40d5f3249bb4812e64cfbb5f52a6",
+  "width": 1254,
+  "height": 1254,
+  "rights_status": "unclear",
+  "gemini_api_live": false,
+  "browser_errors": []
+}

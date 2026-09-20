@@ -65,7 +65,7 @@ export function CliConnect({
     login && ["starting", "waiting", "verifying"].includes(login.state);
   return (
     <>
-      <button className="primary" onClick={() => setOpen(true)}>
+      <button type="button" className="primary" onClick={() => setOpen(true)}>
         {provider === "codex" ? "ChatGPT verbinden" : "Google verbinden"}
       </button>
       {open && (

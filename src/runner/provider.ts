@@ -8,6 +8,8 @@ import {
   copyFile,
   access,
   realpath,
+  readdir,
+  lstat,
 } from "node:fs/promises";
 import { tmpdir, homedir } from "node:os";
 import path from "node:path";
@@ -102,7 +104,7 @@ export class CliProvider implements TextProvider {
     return {
       structuredText: true,
       audioUnderstanding: false,
-      imageGeneration: false,
+      imageGeneration: this.provider === "codex",
       videoGeneration: false,
       musicGeneration: false,
       tools: false,
@@ -127,6 +129,19 @@ export class CliProvider implements TextProvider {
     );
   }
   async runStructuredTask(prompt: string, schema: any, signal?: AbortSignal) {
+    return this.runTask(prompt, schema, signal);
+  }
+  async runImageTask(prompt: string, reference?: Buffer, signal?: AbortSignal) {
+    if (this.provider !== "codex")
+      throw new Error("Native Bildgenerierung ist nur für Codex eingerichtet.");
+    return this.runTask(prompt, null, signal, { reference });
+  }
+  private async runTask(
+    prompt: string,
+    schema: any,
+    signal?: AbortSignal,
+    image?: { reference?: Buffer },
+  ) {
     this.controller = new AbortController();
     const combined = signal
       ? AbortSignal.any([signal, this.controller.signal])
@@ -143,11 +158,12 @@ export class CliProvider implements TextProvider {
         TMPDIR: temp,
         NO_COLOR: "1",
       };
-      await writeFile(
-        path.join(temp, "schema.json"),
-        JSON.stringify(cliSchema(schema)),
-        { mode: 0o600 },
-      );
+      if (!image)
+        await writeFile(
+          path.join(temp, "schema.json"),
+          JSON.stringify(cliSchema(schema)),
+          { mode: 0o600 },
+        );
       let executable = this.provider,
         args: string[] = [];
       if (this.provider === "codex") {
@@ -197,9 +213,8 @@ export class CliProvider implements TextProvider {
           "-c",
           "features.multi_agent=false",
           "-c",
-          "features.image_generation=false",
-          "--output-schema",
-          path.join(temp, "schema.json"),
+          "features.image_generation=" + !!image,
+          ...(image ? [] : ["--output-schema", path.join(temp, "schema.json")]),
           "--json",
           "-",
         ];
@@ -258,6 +273,11 @@ export class CliProvider implements TextProvider {
           "Antworte ausschließlich mit JSON passend zum im Text angegebenen Schema.",
         ];
         prompt += "\nJSON-Schema: " + JSON.stringify(schema);
+      }
+      if (image?.reference) {
+        const file = path.join(temp, "reference.png");
+        await writeFile(file, image.reference, { mode: 0o600 });
+        args.splice(args.length - 1, 0, "--image", file);
       }
       const found = await runProcess("/usr/bin/which", [executable], {
         timeout: 5000,
@@ -319,7 +339,7 @@ export class CliProvider implements TextProvider {
         cwd: temp,
         env,
         input: prompt,
-        timeout: Number(process.env.CLI_TIMEOUT_MS) || 180000,
+        timeout: image ? 540000 : Number(process.env.CLI_TIMEOUT_MS) || 180000,
         maxBytes: 4_000_000,
         signal: combined,
       });
@@ -334,6 +354,44 @@ export class CliProvider implements TextProvider {
       );
       if (result.code !== 0)
         throw new Error(classifyError(result.stderr + " " + result.stdout));
+      if (image) {
+        const images: { data: string }[] = [];
+        let total = 0,
+          count = 0;
+        async function collect(dir: string, depth = 0) {
+          if (depth > 4) return;
+          for (const entry of await readdir(dir, { withFileTypes: true }).catch(
+            () => [],
+          )) {
+            if (++count > 100) throw new Error("Zu viele Bildausgabedateien.");
+            const file = path.join(dir, entry.name);
+            if (entry.isDirectory()) await collect(file, depth + 1);
+            else if (
+              entry.isFile() &&
+              /\.(png|jpe?g|webp)$/i.test(entry.name)
+            ) {
+              const info = await lstat(file);
+              total += info.size;
+              if (total > 15_000_000 || images.length >= 4)
+                throw new Error("Bildausgabe überschreitet das Größenlimit.");
+              images.push({ data: (await readFile(file)).toString("base64") });
+            }
+          }
+        }
+        await collect(path.join(home, ".codex", "generated_images"));
+        if (!images.length)
+          throw new Error(
+            "Codex hat kein Bild ausgegeben. Native Bildfunktion und Kontingent dieses ChatGPT-Kontos prüfen. Kein API-Fallback ausgeführt.",
+          );
+        for (const line of result.stdout.split("\n")) {
+          try {
+            const event = JSON.parse(line);
+            if (event.type === "turn.completed")
+              this.usage = event.usage ?? null;
+          } catch {}
+        }
+        return { result: { images }, usage: this.usage };
+      }
       const parsed = parseProviderOutput(this.provider, result.stdout);
       let data;
       try {

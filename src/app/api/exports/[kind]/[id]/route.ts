@@ -88,6 +88,7 @@ export async function GET(
         "assets",
         "video_projects",
         "video_generations",
+        "image_generations",
         "campaigns",
         "posts",
         "comments",

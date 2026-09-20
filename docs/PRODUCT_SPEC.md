@@ -26,7 +26,7 @@ AI Artist Studio ist eine private, deutsche Produktionszentrale für virtuelle M
 | 9 | Editor, Versionen, Vergleich, Undo, Auswahl schützen, gezielte Überarbeitung | songs.tsx, lyrics_versions | Live-Lyrics; Schutz-/Versions-/Konflikttests |
 | 10 | Suno ZIP, Kopierfelder, eindeutige Nummer, Auftrags-/Versionsimport | exports, upload, music_orders | ZIP/Audiozuordnung im E2E; SunoAPI.org-Adapter + Dashboard/Mocktests, echter API-Key fehlt |
 | 11 | Audioplayer/Wellenform, Varianten/Master, Clips, Timing, ffprobe/EBU | songs.tsx, media.ts | synthetisches Audio, echte Analyse, technische Medienabnahme |
-| 12 | Privater Import Bilder/Audio/Video/PDF, Hash/Provenienz, Storyboards | storage.ts, library.tsx, tasks.ts | Inhalts-/Dateinamentests, Import-E2E; Generierungsprovider fehlen |
+| 12 | Privater Import Bilder/Audio/Video/PDF, Hash/Provenienz, Storyboards, wählbare Bild-KI | storage.ts, library.tsx, tasks.ts | Inhalts-/Dateinamentests, Import-E2E, images.test.ts; native Codex-Bilder live, Gemini-Bild-API simuliert |
 | 13 | 3 echte 1080×1920-MP4-Vorlagen, Timeline, Crop, Untertitel, Renderqueue | video.tsx, media.ts, renders | drei reale Renderings + ffprobe + vollständige FFmpeg-Dekodierung |
 | 14 | Kampagnen, unterschiedliche KI-Konzepte, Monatskalender, Verschieben, DST | publishing.tsx, Temporal | DST-Tests, Terminkonfliktprüfung |
 | 15 | Manuelle Konten, OAuth/Display implementiert, Export, Nachweis | providers/tiktok.ts, API-Routen | Export-E2E; OAuth mangels App nicht live getestet |

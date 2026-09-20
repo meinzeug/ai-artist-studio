@@ -72,3 +72,21 @@ Externer Blocker: kein Veo-API-Key und keine genehmigte kostenpflichtige Livegen
 - [x] Geprüfte Quellen committed/gepusht (`45d62b3`) und auf dem bestehenden Server installiert. HTTPS/Health, Loginpflicht, Dienste und Quellhashes geprüft.
 
 Keine bezahlte Veo-Livegeneration; eigener Google-Key und ausdrückliche Auftragsfreigabe bleiben nötig.
+
+## Erweiterung: auswählbare Bild-KI (2026-09-20)
+
+1. Native Codex-Bildgenerierung mit vorhandener ChatGPT-Anmeldung im eingeschränkten Runner praktisch prüfen; Gemini-Bild-API separat dokumentieren.
+2. Eigene Bildprovider-Auswahl unter Einstellungen mit Login/Key, Modell, Grenzen, Status und Modal-Anleitung. Keine automatische Umstellung der Text-KI.
+3. Bildauftrag aus Medienbibliothek mit Künstleridentität, optionaler Referenz, Format, expliziter Kontingent-/Kostenfreigabe; dauerhafte Queue, geprüfter privater Bildimport und Herkunft.
+4. Tests für Adapter, Rechte, Budgets, Doppelklicks, Fehler und tatsächliche Desktop-/Mobiloberfläche.
+5. Dokumentation, Commit, Push und gesichertes Update des vorhandenen dorfspy-Deployments.
+
+### Abnahme der Bild-Erweiterung
+
+- [x] Native Codex-Bilder mit ChatGPT ohne API-Key praktisch geprüft.
+- [x] Bild-KI-Auswahl, Verbindung/Modell/Grenzen, integrierter ChatGPT-Login und Modal-Anleitung.
+- [x] Echte Bildaufträge aus der Medienbibliothek mit optionaler Referenz, Herkunft und Videoverwendung.
+- [x] 55/55 Unit-/Integrationstests; gezielte 8/8 Bildtests nach Wiederaufnahme-Ergänzung. Typprüfung/Produktionsbuild bestanden.
+- [x] Vier vorhandene Browser-Szenarien bestanden; Bild-Szenario nach behobenem Aufklappfehler 1/1 bestanden. Echte Codex-PNG aus dem Dashboard, Desktop/Mobil dokumentiert.
+- [x] Aktuellen Bildbestand mit Migration 005 tatsächlich gesichert, wiederhergestellt und nach Datenbank-Neustart geprüft.
+- [ ] Geprüfte Änderung committen/pushen, Server sichern und Update mit Migration 005/Runner-Neustart deployen.

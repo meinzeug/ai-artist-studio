@@ -3340,3 +3340,21 @@ tr:last-child td {
 .optional-video details { margin:16px 0; overflow-wrap:anywhere; }
 .veo-reference { width:100%; max-height:420px; aspect-ratio:9/16; object-fit:cover; border-radius:16px; background:#101015; }
 @media(max-width:700px) { .video-workflow { flex-direction:column; align-items:stretch; } .optional-video .panel-heading { align-items:flex-start; flex-direction:column; } }
+
+/* Image provider and production queue */
+.image-provider-panel { border-color: #d3ac7955; }
+.image-provider-summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; margin: 1rem 0; }
+.image-provider-summary small, .image-order-content small { display: block; overflow-wrap: anywhere; }
+.image-generation-panel { margin-bottom: 1.5rem; }
+.image-generation-panel .panel-heading { flex-wrap: wrap; }
+.image-order-list { margin-top: 1rem; }
+.image-order { display: flex; align-items: center; gap: 1rem; border-top: 1px solid var(--border); padding: 1rem 0; }
+.image-order-content { flex: 1; min-width: 0; }
+.image-order-content p { overflow-wrap: anywhere; }
+.image-order-thumb { width: 74px; height: 90px; padding: 0; overflow: hidden; flex-shrink: 0; }
+.image-order-thumb img { width: 100%; height: 100%; object-fit: cover; }
+@media (max-width: 700px) {
+  .image-provider-summary { align-items: flex-start; flex-direction: column; }
+  .image-order { flex-wrap: wrap; }
+  .image-order > .actions { width: 100%; }
+}

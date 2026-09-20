@@ -56,6 +56,12 @@ Auf der Übersicht **Suno API verbinden** wählen, eigenen Schlüssel eintragen 
 
 **SunoAPI.org ist ein separater Drittanbieter**, mit eigenem API-Konto und Credits. Das Studio speichert den Schlüssel verschlüsselt, verlangt eine Produktionsfreigabe und sendet bei unklarem externem Zustand keinen zweiten Generierungsauftrag. [Einrichtung und Fehlerbehandlung →](docs/SUNO_API_SETUP.md)
 
+### Bilder: deinen Generator selbst wählen
+
+**Jobs & Einstellungen → Provider & Konten → Bild-KI auswählen**: Codex mit deinem ChatGPT-Konto, Gemini über einen separat eingerichteten Bild-API-Key oder manueller Import. Anleitung, Login, Modell und Produktionsgrenzen sind im Dashboard erreichbar.
+
+Unter **Charakter & Medien → Bild generieren** entstehen Porträts, Cover und Videoszenen aus einem Prompt und optional einer Künstlerreferenz. Der Worker übernimmt die echte Bilddatei mit Herkunft und Identitätsversion in die Medienbibliothek. Codex nutzt das vorhandene Kontingent **ohne zusätzlichen API-Key**; kostenpflichtige Bild-APIs benötigen eine ausdrückliche Freigabe. [Einrichtung & Grenzen →](docs/IMAGE_GENERATION.md)
+
 ### Musikvideos: Bilder + Suno-Audio
 
 **Der Standardweg ist lokal:** Künstlerbilder importieren, Songaufnahme und Ausschnitt wählen, Vorlage gestalten und MP4 rendern. Drei Vorlagen, Bewegung, Lyrics und Visualizer stehen ohne Video-API bereit.
@@ -105,8 +111,9 @@ TypeScript, Next.js **16.3.5**, React **19.3.0**, PostgreSQL **16**, Drizzle **0
 
 ## Geprüft – mit klaren Grenzen
 
-- **47 Unit-/Integrationstests** bestanden; Typprüfung und Produktionsbuild erfolgreich.
+- **55 Unit-/Integrationstests** bestanden; Typprüfung und Produktionsbuild erfolgreich.
 - Vollständiger Playwright-Durchlauf mit **echter Codex-Textproduktion** und **drei tatsächlich gerenderten, decodierten und im Browser abgespielten Videos**.
+- Bild-KI im Browser eingerichtet; **echte Codex-PNG ohne API-Key** erzeugt, heruntergeladen und auf Desktop/Smartphone geprüft. Gemini-Bild-API separat mit simulierten Antworten getestet.
 - Optionaler Veo-Weg im Browser getestet: Verbindung, Hilfe, Kostenfreigabe, MP4-Import und Übernahme in die Timeline. Zusätzlicher realer Audiotest prüft, dass Szenenton durch die Song-MP3 ersetzt wird.
 - Suno-Dashboard, Budgetfreigabe, verschlüsselte Verbindung und Auftrag getestet. Anbieterantworten dabei ausdrücklich simuliert; echte lokale Audioimporte separat geprüft.
 - Beide tatsächlichen CLI-Anmeldedialoge im Browser bis zum offiziellen Loginlink geprüft, einschließlich Abbruch und CSRF-Schutz. Kein persönlicher Login stellvertretend durchgeführt.
@@ -126,14 +133,14 @@ Tests verwenden eine separate Datenbank. Der CLI-E2E-Test benötigt eine eingeri
 
 | Integration | Stand |
 |---|---|
-| Codex | Lokal mit ChatGPT live geprüft. Auf dem Server eigenes Konto im Dashboard verbinden. |
-| Gemini | Offizieller Google-Login und Headless-Adapter implementiert. Modelltest nach persönlicher Anmeldung erforderlich. |
+| Codex | Text und native Bilder lokal mit ChatGPT live geprüft. Server-Anmeldung erkannt; Bild-KI im Dashboard auswählen. |
+| Gemini | Offizieller Google-Login und Headless-Adapter implementiert; Server-Anmeldung erkannt. Eigenständige Modellabnahme offen; Bild-API benötigt separaten Key. |
 | SunoAPI.org | Implementiert und lokal mit simuliertem Anbieter getestet. Eigener Schlüssel und bestätigtes Creditbudget fehlen noch; keine bezahlte Liveproduktion. |
 | Suno Platform | Separates Produkt; kein verifizierter Zugang. |
 | TikTok OAuth / Display | Implementiert; Developer-App, Scopes und Live-Verbindung fehlen. |
 | TikTok Direct Post | Keine Zulassung für ein privates internes Werkzeug versprochen. Freigegebener Export ist der produktive Veröffentlichungsweg. |
 | Google Veo (optional) | Bild-zu-Video-Adapter, Dashboard, Budgetfreigabe, Statusabruf und Import implementiert; Tests mit simuliertem Google. Kein Key, keine bezahlte Livegeneration. |
-| Bildgenerierung | Noch kein Adapter im Studio aktiviert. Bilder lassen sich importieren; Codex-Bildgenerierung benötigt einen eigenen Medienadapter. |
+| Bildgenerierung | Codex/ChatGPT und Gemini-Bild-API auswählbar; Dashboard, Hilfe, Referenzen, Budgets und echter Bildimport. Native Codex-Dateiausgabe live geprüft, Gemini-API simuliert getestet. |
 
 ## Dokumentation
 

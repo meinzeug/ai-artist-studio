@@ -1,4 +1,5 @@
 "use client";
+import { ImageConnectionCard } from "./images";
 import { VeoConnectionCard } from "./veo";
 import { useState } from "react";
 import { CliConnect } from "./cli-connect";
@@ -42,6 +43,7 @@ const kindNames: Record<string, string> = {
   analyze_metrics: "Kennzahlen analysieren",
   draft_reply: "Antwortentwurf",
   render_video: "Video rendern",
+  image_generate: "KI-Bild erzeugen",
   veo_generate: "Veo-Szene erzeugen",
   veo_sync: "Veo-Ergebnis abrufen",
   analyze_asset: "Audioanalyse",
@@ -310,8 +312,8 @@ export function Settings() {
                       : "Offizielle vorhandene CLI-Anmeldung. Headless-JSON wird separat geprüft."}
                   </p>
                   <p className="muted">
-                    Fähigkeit: strukturierte Texte. Keine implizite Audio-,
-                    Bild-, Musik- oder Videogenerierung.
+                    Fähigkeit: strukturierte Texte. Bilder separat unter
+                    „Bild-KI auswählen“ einrichten.
                   </p>
                   {detection && (
                     <small>
@@ -353,18 +355,10 @@ export function Settings() {
           </div>
           {detected?.error && <p className="error">{detected.error}</p>}
           <SunoConnectionCard />
+          <ImageConnectionCard />
           <VeoConnectionCard />
           <div className="panel">
             <h3>Weitere Produktionsprovider</h3>
-            <div className="provider-row">
-              <strong>Bilder</strong>
-              <Badge status="blocked_external" />
-              <span>
-                Kein Bildgenerierungsprovider konfiguriert. Upload und FFmpeg
-                sind verfügbar.
-              </span>
-              <button onClick={() => nav("library")}>Medien importieren</button>
-            </div>
             <div className="provider-row">
               <strong>TikTok Direct Post</strong>
               <Badge label="Für privates Werkzeug nicht aktiviert" />

@@ -64,7 +64,7 @@ Maschinenlesbare Abnahmezusammenfassungen: `docs/test-evidence/`. Ausführungslo
 
 - Docker-Compose-Betrieb: **nicht ausgeführt**, Docker ist hier nicht installiert. Nativer Betrieb ist getestet.
 - Gemini-Modellproduktion: **nicht erfolgreich live getestet**, Anmeldung fehlt.
-- Bezahlte SunoAPI.org-Liveproduktion, separate Suno Platform, TikTok OAuth/Display/Upload/Direct Post, Business-Kommentare und externe Bild-/Videogeneration: **keine Live-Abnahme**, Zugänge/Berechtigungen fehlen beziehungsweise private Direct-Post-Nutzung ist nicht als zulässig nachgewiesen.
+- Bezahlte SunoAPI.org-Liveproduktion, separate Suno Platform, TikTok OAuth/Display/Upload/Direct Post, Business-Kommentare sowie Gemini-Bild-API/Veo: **keine Live-Abnahme**, Zugänge/Berechtigungen fehlen beziehungsweise private Direct-Post-Nutzung ist nicht als zulässig nachgewiesen.
 - Suno-Webproduktion und echte TikTok-Handveröffentlichung wurden nicht im Nutzerkonto ausgeführt. Lokaler Paket-/Import-/Export-/Nachweisweg ist getestet.
 - Kein unabhängiges Security-Audit, kein Lasttest über große Kataloge, keine mehrstündige Renderabnahme und kein physisches iOS/Android-Gerät. Smartphoneprüfung erfolgte mit realem Chromium in 390px-Viewport.
 
@@ -102,3 +102,21 @@ Der eigenständig aus frischer Testdatenbank laufende Veo-/MP3-Browsertest wurde
 Abschließender eigenständiger MP3-/Veo-Browserlauf: **1/1 bestanden (38,3 s)**. Szenenvorschaubild und fertiges MP4 sind sichtbar. Screenshots deaktivieren CSS-Übergänge während der Aufnahme; eine gesonderte Browserprüfung bestätigt die vollständig ausgeblendete mobile Seitenleiste. Kein dauerhafter Layoutfehler.
 
 Server-Update (`45d62b3`): Datenbackup erstellt, Build als `artist-studio` bestanden, Migration 004 ausgeführt. HTTPS `/api/health` **200**, `/api/state` ohne Session **401**, alle drei systemd-Dienste **active**. SHA-256 von Szenen-Backend, Videooberfläche und Migration stimmt mit dem Repository überein. Keine Provider-Credentials übertragen oder paid Generierung ausgelöst. [Deploymentnachweis](test-evidence/video-deployment.json).
+
+## Erweiterung: Bild-KI auswählen (2026-09-20)
+
+- `npm run typecheck`: bestanden. `npm run build`: bestanden.
+- `npm test`: **55/55** bestanden. Acht neue Bildtests prüfen dokumentierte API-Payloads, begrenzte Antworten, verschlüsselte Keys/Geheimnisprojektion, fehlenden ChatGPT-Login, Eigentümer-/Referenz-/Kostenfreigabe, Konkurrenz um Budgets, Doppelklicks, echte Bilddekodierung, unterbrochene Übermittlung ohne zweiten POST, manuelle Klärung und Codex ohne API-Abrechnung.
+- Nach Ergänzung der Wiederaufnahme eines bereits übernommenen Bildes: `node --import tsx --test tests/images.test.ts` **8/8** bestanden.
+- Direkter eingeschränkter Codex-Runner-Test: echte PNG mit CLI 0.154.0 über vorhandenen ChatGPT-Login, keine separate API-Anmeldung. Synthetisches Testmotiv, keine Künstlerproduktion.
+- Voller Playwright-Durchlauf: bisherige vier Szenarien bestanden; Bildgenerierung im fünften Szenario erzeugte/importierte eine echte PNG. Die Oberfläche klappte die Auftragsliste danach zu früh zu. Dieser tatsächliche Bedienfehler wurde behoben; Nachprüfung separat protokolliert.
+
+Gemini-Bild-API wurde mit simulierten Antworten geprüft. Keine kostenpflichtige Gemini-Bildgeneration und keine Übernahme lokaler CLI-Anmeldedaten auf den Server.
+
+### Ergebnis der Bild-Nachprüfung
+
+`npx playwright test tests/e2e/zz-images.spec.ts`: **1/1 bestanden** nach der Korrektur (51,2 Sekunden). Gemeinsam mit den vier bestandenen bisherigen Szenarien sind alle fünf Browser-Szenarien abgenommen; kein zweiter vollständiger Suite-Lauf behauptet. Echter Codex-Aufruf über Dashboard → Worker → isolierter Runner → Bildimport, PNG **1254 × 1254**, Download/Decoder, Rechtezustand, Providerpersistenz, manueller Modus und Desktop/Mobil geprüft; keine Browserfehler. Screenshot-Prüfung führte außerdem zur Entfernung eines veralteten „kein Bildprovider“-Hinweises in der Bibliothek. Nachweis: [image-e2e.json](test-evidence/image-e2e.json).
+
+Backup/Restore des getrennten Bild-Testbestands mit Migration 005: **46 Tabellen, 24 Datensätze, 1 echte generierte Bilddatei**, Tabelleninhalte/Dateihash identisch; PostgreSQL-Neustart bestanden. Dieser kleine Bestand ergänzt den vorherigen Restore der vollständigen Produktionsstrecke. Keine CLI-Anmeldedateien im Backup. [Restore-Nachweis](test-evidence/image-restore.json).
+
+Ansichten: [Provider mobil](screenshots/image-provider-mobile.png), [Generierung Desktop](screenshots/image-generate-desktop.png), [Ergebnis Desktop](screenshots/image-library-desktop.png), [Ergebnis mobil](screenshots/image-library-mobile.png).

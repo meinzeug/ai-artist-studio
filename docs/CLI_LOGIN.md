@@ -29,3 +29,7 @@ Der Runner hat keine Datenbank-, Suno- oder TikTok-Schlüssel. Texte werden in s
 Stand **2026-09-20**, Codex **0.154.0**, Gemini **0.60.0**. [Offizielle Codex-Authentifizierung](https://developers.openai.com/codex/auth/), [Gemini-Authentifizierung](https://geminicli.com/docs/get-started/authentication/). Gemini-Headless verwendet bereits gespeicherte offizielle Anmeldung; der Erstanmeldedialog ist interaktiv.
 
 Beide echten CLIs wurden mit frischen isolierten Verzeichnissen bis zum offiziellen Anmeldelink ausgeführt und anschließend abgebrochen. Persönliche Anmeldung ist ein Nutzer-Schritt. Codex-Textproduktion wurde mit dem vorhandenen lokalen ChatGPT-Login live geprüft. Gemini-Modellaufruf ist ohne Google-Anmeldung nicht live geprüft. Keine persönlichen Anmeldedaten wurden vom Entwicklungsrechner auf den Server kopiert.
+
+## Bildaufträge über Codex
+
+Die Bild-KI wird unabhängig von der Text-KI unter **Provider & Konten → Bild-KI auswählen** eingestellt. Codex-Bilder verwenden dieselbe offizielle ChatGPT-Anmeldung im Runner und keinen API-Key. Im eigenen Bildauftrag wird ausschließlich die native Bildfunktion zusätzlich erlaubt; die Begrenzungen für Shell, Dateien und Netzwerk bleiben bestehen. Während eines Logins wird auch die Bilderstellung zurückgestellt. Gemini-Bilder verwenden die separat einzurichtende Developer API, nicht den Google-CLI-Login. [Anleitung](IMAGE_GENERATION.md).

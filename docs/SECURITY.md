@@ -41,3 +41,9 @@ SunoAPI-Callback ist öffentlich erreichbar, besitzt keine Schreibbefugnis auf P
 ## Veo (optional)
 
 Gesonderter API-Key, AES-GCM und explizite Bild-/Kostenfreigabe. Modellabfrage/Generierung verwenden den festen offiziellen Google-Host ohne Redirects. Download-URIs sind auf Google-Dateiendpunkte begrenzt; HTTPS-Downloads prüfen/pinnen öffentliche DNS-Ziele, begrenzen Größe und Redirects und entfernen API-Header beim Hostwechsel. Providerfehler geben weder Antwortkörper noch Schlüssel wieder. Startbilder werden per Hash geprüft, mit Pixellimit dekodiert und als separate JPEG-Ableitung übertragen. Alle Kostenreservierungen sperren dieselbe Betreiber-Einstellungszeile. `queue_ai` und Director erlauben keinen Umweg um die Freigabe. Nur bekannte externe Aufträge sind wiederholt abfragbar. Unklare Übermittlungen bleiben ohne automatischen Neuauftrag.
+
+## Bildgenerierung
+
+Codex native Bilder erhalten ausschließlich freigegebenen Prompt, minimale visuelle Künstlerdaten und optionale Referenzdatei. Bildwerkzeug nur im eigenen Runnerauftrag eingeschaltet; reine Textjobs bleiben ohne Bildfunktion. Keine Shell-/Browser-/Web-/Appfreigabe; dieselbe Landlock-Grenze, Zeit- und Ausgabelimits. Authdateien verbleiben im Runner, Medien werden als begrenzte Bilddaten zurückgegeben. Eigene Jobverzeichnisse werden entfernt.
+
+Gemini-Bild-API ist eine separat konfigurierte Verbindung mit AES-GCM-Key, festen HTTPS-Endpunkten und gesperrten Redirects. Kein CLI-Token wird zur API-Authentifizierung umgenutzt. Dashboardzustand enthält keine Schlüssel. Schema-/Besitzprüfungen, unveränderliche Referenzhashes, Bilddecoder und gemeinsame Budgetsperre sichern den Auftrag. Keine automatische externe Wiederholung; manuelle Klärung mit Audit und fortbestehender Verbrauchsbuchung.

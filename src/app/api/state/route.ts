@@ -5,6 +5,7 @@ import { eq, desc } from "drizzle-orm";
 import { requireUser, AppError } from "@/server/security";
 import { summarizeMetrics } from "@/lib/domain";
 import { musicConnection } from "@/server/suno";
+import { imageConnection } from "@/server/image-generation";
 import { videoConnection } from "@/server/video-generation";
 export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
@@ -16,6 +17,7 @@ export async function GET(request: Request) {
       "assets",
       "video_projects",
       "video_generations",
+      "image_generations",
       "campaigns",
       "posts",
       "comments",
@@ -115,6 +117,7 @@ export async function GET(request: Request) {
       direct_post: "not_supported_private_tool",
     };
     state.music_connection = await musicConnection(user.id);
+    state.image_connection = await imageConnection(user.id);
     state.video_connection = await videoConnection(user.id);
     return NextResponse.json(state, {
       headers: { "Cache-Control": "no-store" },

@@ -8,6 +8,7 @@ import { runTask } from "./tasks";
 import { storage } from "../server/storage";
 import { queueMusicPolls, SunoJobError } from "../server/suno";
 import { queueVideoPolls, VideoJobError } from "../server/video-generation";
+import { recoverImageJobs, ImageJobError } from "../server/image-generation";
 const connection = new IORedis(
   process.env.REDIS_URL ?? "redis://127.0.0.1:57379",
   { maxRetriesPerRequest: null },
@@ -22,6 +23,7 @@ async function pump() {
   pumping = true;
   try {
     await recoverJobs();
+    await recoverImageJobs();
     await queueMusicPolls();
     await queueVideoPolls();
     for (const file of await query(
@@ -122,7 +124,11 @@ const worker = new Worker(
     }, 10000);
     const timeout = setTimeout(
       () => controller.abort(),
-      job.kind === "render_video" ? 1800000 : 240000,
+      job.kind === "render_video"
+        ? 1800000
+        : job.kind === "image_generate"
+          ? 600000
+          : 240000,
     );
     try {
       const output = await runTask(job, controller.signal, async (n) => {
@@ -170,7 +176,9 @@ const worker = new Worker(
         job.id,
       ]);
       const state =
-        e instanceof SunoJobError || e instanceof VideoJobError
+        e instanceof SunoJobError ||
+        e instanceof VideoJobError ||
+        e instanceof ImageJobError
           ? e.jobState
           : current?.cancelled_at
             ? "cancelled"
