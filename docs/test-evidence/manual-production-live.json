@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-09-20T20:52:09.423Z",
+  "stage": "music",
+  "state": "waiting_for_input",
+  "lyricsLength": 1892,
+  "styleLength": 792,
+  "sunoMode": "suno_manual",
+  "packageDownloaded": true,
+  "referenceUnchanged": true,
+  "scheduleUnchanged": true,
+  "browserErrors": [],
+  "desktop": 1440,
+  "mobile": 390,
+  "configuredImageLimits": {
+    "daily": 100,
+    "monthly": 1000
+  },
+  "liveTextProvider": "codex",
+  "applicationCommit": "29eca50",
+  "host": "https://artist.dorfspy.de",
+  "startPath": "authenticated dashboard confirmation",
+  "additionalProductionsStarted": 1,
+  "zipIntegrityVerified": true,
+  "newAudioAvailable": false,
+  "newVideoRendered": false,
+  "blocker": "Suno API not configured; import the new recording in the manual task",
+  "paidApiBudgetsChanged": false,
+  "backupBeforeDeployment": true,
+  "migration": "008_manual_production_start.sql",
+  "servicesActive": [
+    "web",
+    "worker",
+    "runner"
+  ],
+  "httpsHealth": 200,
+  "unauthenticatedState": 401,
+  "sourceHashesMatch": true
+}

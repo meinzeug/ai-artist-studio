@@ -6,7 +6,7 @@ Stand: **2026-09-20**. Arbeit im bestehenden Projektverzeichnis, keine fremden �
 
 - Auf Nutzerwunsch Bildlimits auf dorfspy über den regulären Command auf 100/Tag und 1000/Monat erhöht (vorher 10/100); gleiche Codex-Verbindung und bestehende Artist-Automatik erneut bestätigt. Keine kostenpflichtigen API-Budgets geändert.
 - Zusatzstart für einen vorhandenen Artist ohne Warten auf den nächsten Tag: eigene Startkennung und tägliche Eindeutigkeit getrennt, maximal eine aktive Produktion, Schutz für laufende Vollvideos, unveränderter Termin und Katalog-/Porträtgrundlage.
-- 82 Unit-/Integrationstests, Typprüfung, Build und gezielte Browserprüfung bis zur manuellen Suno-Aufgabe bestanden; anschließend regulär deployen und den echten Start über das Dashboard beobachten. Suno ist derzeit nicht verbunden; neue Aufnahme bleibt eine echte notwendige manuelle Übergabe.
+- 82 Unit-/Integrationstests, Typprüfung, Build und gezielte Browserprüfung bis zur manuellen Suno-Aufgabe bestanden; Code `29eca50` nach Backup und Migration 008 auf dorfspy installiert. Ein echter Dashboard-Start mit realem Codex erzeugte neue Idee, Lyrics und Stilprompt; Suno-ZIP erfolgreich heruntergeladen. Hauptporträt und nächster Termin unverändert. Suno ist derzeit nicht verbunden; die neue Aufnahme bleibt als konkrete offene manuelle Aufgabe bestehen. Kein neues MP4 für diesen Lauf behauptet. Nächster Schritt: dessen Suno-Aufnahme produzieren und genau in dieser Aufgabe importieren.
 
 ## Vorheriger Auftrag: vollständiges Musikvideo
 
