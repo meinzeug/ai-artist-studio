@@ -1,0 +1,12 @@
+{
+  "testedAt": "2026-09-20T15:32:11.467Z",
+  "origin": "https://artist.dorfspy.de",
+  "httpsVerified": true,
+  "health": 200,
+  "unauthenticatedState": 401,
+  "invalidSetupToken": 403,
+  "productionHasNoAccount": true,
+  "desktopWidth": 1440,
+  "mobileWidth": 390,
+  "browserErrors": 0
+}

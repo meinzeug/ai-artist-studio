@@ -1,0 +1,112 @@
+name: ai-artist-studio
+services:
+  database:
+    image: postgres:16.15-bookworm
+    environment:
+      POSTGRES_DB: artist_studio
+      POSTGRES_USER: studio
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes: [postgres:/var/lib/postgresql/data]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U studio -d artist_studio"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    mem_limit: 768m
+  redis:
+    image: redis:7.4.7-alpine
+    command: [redis-server, --appendonly, "yes"]
+    volumes: [redis:/data]
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    mem_limit: 256m
+  migrate:
+    build: .
+    command: [node, --import, tsx, scripts/migrate.ts]
+    environment:
+      DATABASE_URL: postgresql://studio:${POSTGRES_PASSWORD}@database:5432/artist_studio
+    depends_on:
+      database: { condition: service_healthy }
+  web:
+    build: .
+    ports: ["127.0.0.1:3210:3210"]
+    environment: &application_env
+      DATABASE_URL: postgresql://studio:${POSTGRES_PASSWORD}@database:5432/artist_studio
+      REDIS_URL: redis://redis:6379
+      SETUP_TOKEN: ${SETUP_TOKEN:-}
+      APP_ORIGIN: ${APP_ORIGIN:-http://127.0.0.1:3210}
+      STORAGE_ROOT: /data/assets
+      RUNNER_URL: http://runner:3211
+      RUNNER_TOKEN: ${RUNNER_TOKEN:?Set RUNNER_TOKEN}
+      TOKEN_ENCRYPTION_KEY: ${TOKEN_ENCRYPTION_KEY:?Set TOKEN_ENCRYPTION_KEY}
+      TIKTOK_CLIENT_KEY: ${TIKTOK_CLIENT_KEY:-}
+      TIKTOK_CLIENT_SECRET: ${TIKTOK_CLIENT_SECRET:-}
+      TIKTOK_REDIRECT_URI: ${TIKTOK_REDIRECT_URI:-}
+    volumes: [assets:/data/assets]
+    tmpfs: ["/tmp:mode=1777,size=512m"]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 160
+    mem_limit: 1536m
+    healthcheck:
+      test:
+        [
+          CMD,
+          node,
+          -e,
+          "fetch('http://127.0.0.1:3210/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      redis: { condition: service_healthy }
+    restart: unless-stopped
+  worker:
+    build: .
+    command: [node, --import, tsx, src/worker/main.ts]
+    environment: *application_env
+    volumes: [assets:/data/assets]
+    tmpfs: ["/tmp:mode=1777,size=4g"]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 128
+    mem_limit: 3g
+    cpus: 2
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      redis: { condition: service_healthy }
+    restart: unless-stopped
+  runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.runner
+    environment:
+      RUNNER_TOKEN: ${RUNNER_TOKEN:?Set RUNNER_TOKEN}
+    volumes:
+      - runner_codex:/auth/codex
+      - runner_gemini:/auth/gemini
+      - runner_managed:/auth/studio
+    tmpfs: ["/tmp:mode=1777,size=512m"]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 96
+    mem_limit: 1536m
+    cpus: 1
+    restart: unless-stopped
+volumes:
+  postgres:
+  redis:
+  assets:
+  runner_codex:
+  runner_gemini:
+  runner_managed:

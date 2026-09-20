@@ -1,0 +1,8 @@
+{
+  "test": "real SIGKILL worker restart",
+  "passed": true,
+  "attempts": 2,
+  "leaseExpiryAccelerated": true,
+  "bullmqStalledRecovery": true,
+  "finishedAt": "2026-09-20T13:27:44.746Z"
+}

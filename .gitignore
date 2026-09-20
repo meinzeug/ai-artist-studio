@@ -1,0 +1,16 @@
+node_modules/
+.next/
+.env
+.env.*
+!.env.example
+!.env.compose.example
+!.env.runner.example
+.local/
+data/
+runner-auth/
+playwright-report/
+test-results/
+*.tsbuildinfo
+
+__pycache__/
+*.pyc

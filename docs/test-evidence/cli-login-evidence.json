@@ -1,0 +1,13 @@
+{
+  "testedAt": "2026-09-20",
+  "codexVersion": "0.154.0",
+  "geminiVersion": "0.60.0",
+  "realLoginLinksLocal": true,
+  "realLoginLinksServer": true,
+  "browserLoginDialogs": true,
+  "cancelVerified": true,
+  "csrfVerified": true,
+  "personalServerLoginCompleted": false,
+  "apiKeyRequired": false,
+  "serverCodexLandlockVersionTest": true
+}

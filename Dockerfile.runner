@@ -1,0 +1,14 @@
+FROM node:22.23.1-bookworm-slim
+RUN apt-get update && apt-get install -y --no-install-recommends gcc libc6-dev linux-libc-dev python3 ca-certificates tini && rm -rf /var/lib/apt/lists/*
+RUN npm install -g @openai/codex@0.154.0 @google/gemini-cli@0.60.0
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --omit=optional
+COPY tsconfig.json ./
+COPY src/runner ./src/runner
+COPY src/lib/process.ts ./src/lib/process.ts
+RUN cc -O2 src/runner/isolate.c -o /app/studio-isolate && mkdir -p /auth/codex /auth/gemini /auth/studio && chown -R node:node /auth /app
+USER node
+ENV RUNNER_AUTH_ROOT=/auth/studio RUNNER_ISOLATE_BIN=/app/studio-isolate RUNNER_BIND=0.0.0.0 RUNNER_PORT=3211 CODEX_AUTH_DIR=/auth/codex GEMINI_AUTH_DIR=/auth/gemini
+ENTRYPOINT ["/usr/bin/tini","--"]
+CMD ["node","--import","tsx","src/runner/main.ts"]

@@ -1,0 +1,9 @@
+{
+  "testedAt": "2026-09-20T13:45:20.121Z",
+  "passed": true,
+  "desktop": 1440,
+  "mobile": 390,
+  "realVideoPlayback": 3,
+  "browserErrors": 0,
+  "testDataOnly": true
+}

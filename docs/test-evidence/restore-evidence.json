@@ -1,0 +1,12 @@
+{
+  "testedAt": "2026-09-20T15:33:29.782Z",
+  "passed": true,
+  "database": "artist_studio_restore_ad78a997dc",
+  "backup": ".local/restore-acceptance-1789918389668/backup",
+  "storage": ".local/restore-acceptance-1789918389668/assets",
+  "tableCount": 40,
+  "rowCount": 130,
+  "verifiedAssetHashes": 8,
+  "databaseRestartVerified": true,
+  "cliAuthIncluded": false
+}

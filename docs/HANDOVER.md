@@ -1,0 +1,61 @@
+# Übergabe – AI Artist Studio
+
+Stand **2026-09-20**. Implementierung im bestehenden Repository `/home/dennis/ai-artist-studio`, Ausgangscommit `8bf8730`. Keine fremden Änderungen verworfen und keine fremden Projekt-Credentials übernommen.
+
+## Anwendung öffnen
+
+**https://artist.dorfspy.de** — produktiver Server `91.99.217.84`, Zugriff über Caddy/HTTPS. Hetzner-DNS A-Eintrag angelegt, Let’s-Encrypt-Zertifikat erfolgreich ausgestellt. Web, Worker und Runner laufen als eigene automatisch startende systemd-Dienste; die vorher vorhandene Anwendung bleibt in Betrieb.
+
+Die Produktionsdatenbank enthält noch kein Betreiberkonto und keine Testkünstler. Die erste Registrierung erfordert einen einmaligen Einrichtungscode. Der Code wurde ausschließlich lokal unter `.local/server-einrichtung.txt` (0600, gitignoriert) bereitgestellt und liegt serverseitig in der geschützten `/etc/artist-studio/web.env`. Danach eigene E-Mail und eigenes Passwort wählen. Weitere Registrierungen werden abgewiesen.
+
+Lokaler Start bleibt möglich: `npm run services:start`, `npm run db:migrate`, `npm run build`, `npm run studio:start` → http://127.0.0.1:3210. Stop: `npm run studio:stop`. [Betrieb](OPERATIONS.md), [Server-Provisionierung](../scripts/deploy/README.md).
+
+## Neue Verbindungen im Dashboard
+
+Unter **Einstellungen → Provider & Konten**:
+
+- **ChatGPT verbinden:** tatsächlicher offizieller Codex-Gerätecode, Anmeldung auf OpenAI-Seite, anschließend Live-Texttest.
+- **Google verbinden:** tatsächliche interaktive Gemini-Anmeldung, offizieller Google-Link und Codefeld, anschließend Live-Texttest.
+- **Suno API verbinden:** eigener SunoAPI.org-Key, Guthabentest ohne Musikproduktion, verschlüsselte Speicherung, Modell und bestätigte Creditgrenzen. Anleitung als Modal direkt im Dashboard.
+
+Auf dem Server sind beide CLIs installiert und bis zum offiziellen Loginlink getestet. **Persönliche Konten sind dort noch nicht angemeldet.** Es wurden keine lokalen Authdateien auf den Server kopiert. Der Suno-Schlüssel fehlt ebenfalls noch. Callbackadresse `https://artist.dorfspy.de/api/suno/callback` wird bei HTTPS vorausgefüllt.
+
+SunoAPI.org ist der vom Betreiber ausdrücklich gewählte Drittanbieter, mit eigenem Konto/Abrechnung. Er ist von der separaten offiziellen Suno Platform zu unterscheiden. [Suno-Anleitung](SUNO_API_SETUP.md), [CLI-Anleitung](CLI_LOGIN.md).
+
+## Funktionierende Produktionsstrecke
+
+Künstler/Character Bible → echte KI-Ideen → Lyrics mit Versionen/geschützten Zeilen → Suno-Paket bzw. freigegebener API-Auftrag → Audioimport mit Varianten/Rechten/Analyse → drei echte lokale FFmpeg-Videoformate → Snapshotfreigabe → TikTok-ZIP → manueller Veröffentlichungsnachweis → Kennzahlen und begründete Folgeidee.
+
+Die 13 deutschen Ansichten, privater Dateispeicher, Timeline/Untertitel/Crop, Communityimport, Director-Aktionen, Budgets, Not-Aus und persistente Jobs sind implementiert. SunoAPI-Aufträge werden nur einmal gesendet; unklare Antworten benötigen Statusklärung. Fertige Dateien werden automatisch überprüft und dedupliziert zugeordnet. Der manuelle Suno-Weg bleibt vollständig nutzbar.
+
+## Prüfergebnisse
+
+38 Unit-/Integrationstests, Typprüfung und Produktionsbuild bestanden. Die Kernstrecke wurde mit echter lokaler Codex-ChatGPT-Anmeldung und drei realen MP4-Dateien im Browser getestet. Suno-Dashboard und Produktionsfreigabe mit ausdrücklich simulierten Anbieterantworten bestanden. Beide echten CLI-Anmeldewege bis zum Loginlink und deren Abbruch wurden im Browser geprüft. Desktop/390px-Mobilansichten geprüft und Screenshots gespeichert.
+
+Serverprüfung: gültiges HTTPS, `/api/health` 200, `/api/state` ohne Session 401, Einrichtung ohne gültigen Code 403, beide CLIs erkannt und Loginlinks erzeugt. Keine öffentliche Musikveröffentlichung und keine kostenpflichtige Suno-Livegeneration ausgeführt.
+
+Historische Kernabnahme umfasst tatsächlichen Worker-SIGKILL/Wiederaufnahme sowie echten Backup/Restore einschließlich Dateihashes und PostgreSQL-Neustart. Der aktuelle genaue Stand und Nachweise stehen in [TEST_REPORT](TEST_REPORT.md).
+
+## Noch nötige externe Schritte
+
+| Integration | Nutzer-Schritt / Grenze |
+|---|---|
+| Codex auf Server | Im Dashboard persönlich mit ChatGPT verbinden und Texttest auslösen. Lokale Modellproduktion bereits live erfolgreich. |
+| Gemini | Persönlichen Google-Login abschließen; Modellproduktion noch nicht live abgenommen. |
+| SunoAPI.org | Eigenen API-Key und bestätigten Tarif/Creditbudgets eintragen. Adapter/Fehlerfälle sind getestet, echter Provider noch nicht verbunden. |
+| Suno Platform | Separate Endpunktspezifikation und Zugang fehlen weiterhin. |
+| TikTok OAuth/Display | Registrierte Developer-App, Redirect/Scopes und Kontozustimmung fehlen; implementiert, kein Live-Test. |
+| TikTok Posting/Business | Keine Zulassung für private interne Direct-Post-Nutzung behauptet. Export/Handveröffentlichung und manueller Datenimport sind verfügbar. |
+| Bild-/Videogeneratoren | Kein externer Generator gewählt. Upload, Storyboards und lokales Rendering nutzbar. |
+
+## Betriebsgrenzen
+
+- Kein Team-Einladungsprodukt, kein unabhängiges Sicherheits-/Lastaudit. Mobile Browseransichten getestet, keine physischen Smartphones.
+- Keine garantierte Stimm-/Gesichtsidentität, automatische Wortausrichtung oder perfekte Lippensynchronität.
+- Docker Compose geliefert, aber nicht ausgeführt; lokal und auf dem Server wurde der native Ubuntu-Weg abgenommen.
+- Server hat etwa 2 GB RAM plus Swap. Worker/Runner arbeiten mit kleiner Parallelität und systemd-Ressourcengrenzen. Umfangreiche Langzeit-/Volllastproduktion wurde nicht geprüft.
+- Anmelde- und Verschlüsselungsschlüssel sind nicht im Git-Repository. Runner-Auth gehört nicht in allgemeine Backups.
+
+## Weiterentwicklung
+
+`AGENTS.md` und `GEMINI.md` sind konsistent. Quellcode, Migrationen, Tests, Deployment-Skripte, Dokumentation und echte Screenshots werden auf ausdrücklichen Wunsch des Betreibers nach `origin/main` committed und gepusht. Aktuellen Git-Stand mit `git log -1` prüfen. Externe Fähigkeiten bleiben getrennt nach dokumentiert/implementiert/konfiguriert/live getestet in der [Integrationsmatrix](INTEGRATION_MATRIX.md).
