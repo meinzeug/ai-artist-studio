@@ -34,3 +34,5 @@ Das Referenz-Uploadformular bestätigt die Übermittlung zur Analyse, keine Lize
 - [Gemini Dateisystemwerkzeuge: Audio-Unterstützung](https://geminicli.com/docs/tools/file-system/), [direkte Dateieinbindung](https://geminicli.com/docs/cli/tutorials/file-management/) und [Authentifizierung](https://geminicli.com/docs/get-started/authentication/).
 
 Die konkrete Google-Ablehnung stammt aus dem tatsächlichen Serveraufruf vom 22.09.2026; eine vorhandene Dokumentationsseite ist kein Nachweis für Kontozugriff.
+
+Abschließende Serverabnahme: Der installierte Runner auf dorfspy führte dieselbe Recherche mit der vorhandenen ChatGPT-Anmeldung erfolgreich aus (zwei bestätigte Suchereignisse, offizielle Kraftwerk-Quelle). [Live-Nachweis](test-evidence/artist-style-cli-live.json).

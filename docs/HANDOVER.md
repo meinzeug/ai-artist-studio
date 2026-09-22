@@ -6,13 +6,13 @@ Stand **2026-09-22**. Implementierung im bestehenden Repository `/home/dennis/ai
 
 Neue Vollvideos planen aus der vollständigen Audiodauer spätestens alle fünf Sekunden ein eigenes Bild (z. B. 38 Bilder bei 188,784 Sekunden). Der gemeinsame Handlungsbogen bleibt über persistente Storyboard-Teilaufträge erhalten. Bestehende Filme werden nicht automatisch neu generiert; vorhandene Bild- und Textbudgets gelten weiterhin.
 
-Unter **Künstler → Artist erstellen → Eigene Wünsche** sind Musikstil, Online-Rechercheauftrag zu Bands/Stilen und optional eine Musikreferenz verfügbar. Recherchequellen und Audioanalyse werden unter **Stil & Quellen** gespeichert und für Künstleridentität/Songs verwendet. Codex-Websuche mit bestehendem ChatGPT-Login tatsächlich erfolgreich geprüft.
+Unter **Künstler → Artist erstellen → Eigene Wünsche** sind Musikstil, Online-Rechercheauftrag zu Bands/Stilen und optional eine Musikreferenz verfügbar. Recherchequellen und Audioanalyse werden unter **Stil & Quellen** gespeichert und für Künstleridentität/Songs verwendet. Codex-Websuche mit bestehendem ChatGPT-Login lokal und anschließend über den installierten dorfspy-Runner tatsächlich erfolgreich geprüft.
 
 **Externe Grenze:** Die MP3-Höranalyse ist implementiert, wird aber auf dorfspy aktuell von Google mit `UNSUPPORTED_CLIENT` für Gemini CLI 0.60.0 abgewiesen. Eine vorhandene Anmeldung genügt nicht. Originale bleiben gespeichert; unter Stil & Quellen lässt sich ausdrücklich ohne Höranalyse fortfahren. Kein kostenpflichtiger Ersatzanbieter wird aktiviert. [Details](ARTIST_STYLE.md).
 
 Neu generierte TikTok-Captions/Hashtags enthalten Musik-/Songtexte ohne KI-/Virtualitätswerbung. Separate Plattformkennzeichnung und Rechteprüfung bleiben erhalten.
 
-Abnahme: **90/90 Unit-/Integrationstests, Typprüfung, Build und 3/3 gezielte Browserprüfungen** bestanden. Echter 64,27-Sekunden-Testfilm mit 13 Bildern und maximal 4,967 Sekunden je Motiv vollständig dekodiert. Browser-KI-Antworten ausdrücklich simuliert; echte Codex-Recherche separat nachgewiesen. Desktop/Mobil geprüft. Migrationen 009/010, keine neue Abhängigkeit. Deployment wird abschließend protokolliert.
+Abnahme: **90/90 Unit-/Integrationstests, Typprüfung, Build und 3/3 gezielte Browserprüfungen** bestanden. Echter 64,27-Sekunden-Testfilm mit 13 Bildern und maximal 4,967 Sekunden je Motiv vollständig dekodiert. Browser-KI-Antworten ausdrücklich simuliert; echte Codex-Recherche separat nachgewiesen. Desktop/Mobil geprüft. Migrationen 009/010, keine neue Abhängigkeit. Code **c130bcb** committed/gepusht und nach Backup `/var/lib/artist-studio/backups/automation-update-1790104028` auf dorfspy installiert. Migrationen 009/010 erfolgreich, alle drei Dienste aktiv, 86 Quell-/Migrations-/Paketdateien hashgleich. HTTPS-Health 200, privater State ohne Session 401, neue Eingaben im echten Dashboard auf Desktop/Mobil geprüft. Keine neue Produktion ausgelöst. Lokales Studio wieder gestartet (Health 200). [Deployment-Nachweis](test-evidence/artist-style-deployment.json).
 
 ## Vorherige Erweiterung: sofort eine weitere Produktion
 

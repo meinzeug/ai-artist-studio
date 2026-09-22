@@ -20,5 +20,15 @@
     "audio_understanding_verified": false
   },
   "paid_api_used": false,
-  "user_music_transmitted": false
+  "user_music_transmitted": false,
+  "codex_server": {
+    "checked_at_server_clock": "2026-09-22T19:09:02.930Z",
+    "verified_at_local_clock": "2026-09-22T21:09:02.227869+00:00",
+    "version": "0.154.0",
+    "environment": "dorfspy installed runner",
+    "authentication": "existing official ChatGPT login",
+    "successful": true,
+    "confirmed_search_events": 2,
+    "source": "https://kraftwerk.com/de/katalog/index-CD_BOX_de.html"
+  }
 }

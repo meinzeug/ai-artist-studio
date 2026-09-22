@@ -1,0 +1,24 @@
+{
+  "checked_at": "2026-09-22T21:07:28.449Z",
+  "origin": "https://artist.dorfspy.de",
+  "code_commit": "c130bcb0c0d63bd503c0a0266b961834fd1eb18b",
+  "health": 200,
+  "unauthenticated_state": 401,
+  "services": [
+    "active",
+    "active",
+    "active"
+  ],
+  "source_files_matching": 86,
+  "migrations": [
+    "009_storyboard_cadence.sql",
+    "010_artist_style_profiles.sql"
+  ],
+  "new_artist_fields_visible": true,
+  "desktop": 1440,
+  "mobile": 390,
+  "horizontal_overflow": false,
+  "browser_errors": [],
+  "production_data_changed_by_test": false,
+  "new_generation_started": false
+}
