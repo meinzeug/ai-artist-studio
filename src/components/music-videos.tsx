@@ -2,6 +2,11 @@
 import { useState, type ReactNode } from "react";
 import { Film, Sparkles, Download, Image as ImageIcon } from "lucide-react";
 import { useStudio, Modal, Preview, Badge, type Row } from "./ui";
+import {
+  requiredSceneCount,
+  sceneWindows,
+  STORYBOARD_BATCH_SIZE,
+} from "@/lib/music-video";
 import { statuses } from "@/lib/domain";
 const stageNames: Record<string, string> = {
   planning: "Storyboard entsteht",
@@ -20,7 +25,7 @@ export function FullMusicVideos({
 }) {
   const { data, artistId, act, nav } = useStudio();
   const [selected, setSelected] = useState<Row | null>(null),
-    [count, setCount] = useState(8),
+    [count, setCount] = useState(0),
     [busy, setBusy] = useState(false);
   const candidates = (
     runs ?? data.automation_runs.filter((r: Row) => r.artist_id === artistId)
@@ -81,14 +86,40 @@ export function FullMusicVideos({
               <>
                 <p>
                   Die KI entwickelt ein Storyboard passend zu den Lyrics und
-                  erzeugt mehrere Bilder mit deiner Künstlerreferenz. Daraus
-                  entsteht ein Musikvideo über die gesamte Songlänge mit
-                  Kamerabewegungen und weichen Übergängen.
+                  erzeugt spätestens alle 5 Sekunden ein neues Bild mit deiner
+                  Künstlerreferenz. Daraus entsteht ein Musikvideo über die
+                  gesamte Songlänge mit Kamerabewegungen und weichen Übergängen.
                 </p>
                 <button
                   className="primary"
                   onClick={() => {
-                    setCount(8);
+                    const variant = data.audio_variants
+                      .filter(
+                        (v: Row) =>
+                          v.order_id === run.music_order_id &&
+                          data.assets.some(
+                            (a: Row) =>
+                              a.id === v.asset_id &&
+                              a.kind === "audio" &&
+                              a.rights_status !== "disputed",
+                          ),
+                      )
+                      .sort(
+                        (a: Row, b: Row) =>
+                          Number(b.is_master) - Number(a.is_master) ||
+                          new Date(a.created_at).getTime() -
+                            new Date(b.created_at).getTime(),
+                      )[0];
+                    const audio = data.assets.find(
+                      (a: Row) => a.id === variant?.asset_id,
+                    );
+                    try {
+                      setCount(
+                        requiredSceneCount(Number(audio?.metadata?.duration)),
+                      );
+                    } catch {
+                      setCount(0);
+                    }
                     setSelected({ run });
                   }}
                 >
@@ -101,6 +132,17 @@ export function FullMusicVideos({
                 {p.error && (
                   <p className="error" role="alert">
                     {p.error}
+                  </p>
+                )}
+                {p.state === "planning" && (
+                  <p>
+                    {scenes.length} von {p.scene_count} Bildszenen geplant ·
+                    zusammenhängende Geschichte in Teilaufträgen.
+                  </p>
+                )}
+                {p.snapshot.max_image_seconds && (
+                  <p className="muted">
+                    Neue Bildmotive spätestens alle 5 Sekunden.
                   </p>
                 )}
                 {p.state === "images" && (
@@ -135,13 +177,13 @@ export function FullMusicVideos({
                     </button>
                   </div>
                 )}
-                {p.storyboard && (
+                {(p.storyboard || p.storyboard_plan) && (
                   <details
                     className="storyboard-details"
                     open={p.state !== "ready"}
                   >
                     <summary>Storyboard & Szenen ({scenes.length})</summary>
-                    <p>{p.storyboard.treatment}</p>
+                    <p>{(p.storyboard ?? p.storyboard_plan).treatment}</p>
                     <p className="muted">
                       Dramaturgische Zuordnung anhand der Lyrics. Keine
                       automatische wortgenaue Gesangs-Ausrichtung.
@@ -176,9 +218,22 @@ export function FullMusicVideos({
                                 </span>
                               </div>
                             )}
-                            <small>SZENE {s.position + 1}</small>
+                            <small>
+                              SZENE {s.position + 1}
+                              {p.snapshot.max_image_seconds &&
+                                (() => {
+                                  const w = sceneWindows(
+                                    p.snapshot.duration,
+                                    p.scene_count,
+                                  )[s.position];
+                                  return ` · ${w.start.toFixed(1)}–${w.end.toFixed(1)} s`;
+                                })()}
+                            </small>
                             <h4>{s.title}</h4>
                             <blockquote>{s.lyric_excerpt}</blockquote>
+                            {s.continuity && (
+                              <p className="muted">{s.continuity}</p>
+                            )}
                             <details>
                               <summary>Bildauftrag ansehen</summary>
                               <p>{s.prompt}</p>
@@ -267,21 +322,19 @@ export function FullMusicVideos({
           onClose={() => !busy && setSelected(null)}
         >
           <label>
-            Neue Bildmotive
-            <input
-              type="number"
-              min={4}
-              max={24}
-              value={count}
-              disabled={!!selected.production}
-              onChange={(e) => setCount(Number(e.target.value))}
-            />
+            Benötigte Bildmotive
+            <input type="number" value={count} readOnly />
           </label>
           <p>
-            Ein Storyboard-Auftrag, {count} referenzbasierte Szenenbilder und
-            ein lokales Rendering. Längere Szenen erhalten zusätzliche
-            Nahaufnahmen und wechselnde Kamerabewegungen. Der Titel erscheint
-            nur kurz am Anfang.
+            {count > 0
+              ? `${Math.ceil(count / STORYBOARD_BATCH_SIZE)} Storyboard-Teilaufträge, ${count} eigenständige referenzbasierte Szenenbilder und ein lokales Rendering.`
+              : "Die Aufnahme muss zwischen 2 Sekunden und 20 Minuten lang sein."}
+            {selected.production &&
+            !selected.production.snapshot.max_image_seconds
+              ? " Bestehende Produktion mit gespeichertem Schnittplan."
+              : " Neues Bild spätestens alle 5 Sekunden; die Anzahl wird aus der tatsächlichen Songlänge berechnet."}
+            Eine zusammenhängende Bildgeschichte mit klaren Anschlüssen. Der
+            Titel erscheint nur kurz am Anfang.
           </p>
           <p>
             {connection?.provider === "gemini_api"
@@ -300,7 +353,7 @@ export function FullMusicVideos({
           <button
             className="primary"
             disabled={
-              busy || count < 4 || count > 24 || !Number.isInteger(count)
+              busy || count < 4 || count > 240 || !Number.isInteger(count)
             }
             onClick={async () => {
               setBusy(true);

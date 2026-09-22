@@ -1,0 +1,33 @@
+{
+  "checked_at": "2026-09-22T21:00:40.606Z",
+  "storyboard_provider": "explicit synthetic fixture",
+  "images": "synthetic local fixtures via manual scene handoff",
+  "duration": 64.266667,
+  "scene_count": 13,
+  "shot_count": 13,
+  "streams": [
+    {
+      "type": "video",
+      "codec": "h264",
+      "width": 1080,
+      "height": 1920,
+      "pix_fmt": "yuv420p",
+      "frame_rate": "30/1",
+      "attached_pic": false
+    },
+    {
+      "type": "audio",
+      "codec": "aac",
+      "channels": 2,
+      "frame_rate": "0/0",
+      "sample_rate": "48000",
+      "attached_pic": false
+    }
+  ],
+  "decoded": true,
+  "max_image_seconds": 4.966666666666667,
+  "storyboard_jobs": 2,
+  "manual_handoff": true,
+  "public_post_sent": false,
+  "browser_errors": []
+}

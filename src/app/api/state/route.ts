@@ -63,6 +63,8 @@ export async function GET(request: Request) {
         "metric_snapshots x JOIN posts p ON p.id=x.post_id JOIN artists a ON a.id=p.artist_id",
       rights_records:
         "rights_records x JOIN assets p ON p.id=x.asset_id JOIN artists a ON a.id=p.artist_id",
+      artist_style_profiles:
+        "artist_style_profiles x JOIN artists a ON a.id=x.artist_id",
       artist_references:
         "artist_references x JOIN artists a ON a.id=x.artist_id",
       reply_drafts:

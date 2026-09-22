@@ -33,6 +33,8 @@ import {
   formatDate,
 } from "./ui";
 const kindNames: Record<string, string> = {
+  auto_style_research: "Musikstil im Internet recherchieren",
+  auto_style_audio: "Musikreferenz anhören und analysieren",
   auto_identity: "Artist autonom entwickeln",
   auto_song: "Tägliche Songproduktion planen",
   music_video_storyboard: "Musikvideo-Storyboard entwickeln",

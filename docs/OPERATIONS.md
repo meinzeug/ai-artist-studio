@@ -123,3 +123,11 @@ Restore nach Migration 007 mit 52 Tabellen, 64 Datensätzen, sieben Dateihashes 
 ## Zusätzliche Produktionen (Migration 008)
 
 Vor dem Update laufende Aufträge auslaufen lassen und Daten sichern. Migration 008 ergänzt Startart/Startkennung an `automation_runs` und ersetzt den allgemeinen Tagesindex durch einen partiellen Index für geplante Tagesproduktionen. Vorhandene Läufe bleiben tägliche Produktionen. Web und sämtliche Worker gemeinsam aktualisieren und neu starten, da sich auch der Scheduler-Sperrschlüssel auf das aktuelle Datenbankschema bezieht. Keine neue Abhängigkeit. Zusätzliche Produktionen über den Dashboard-Dialog starten; keine Termine oder bestehenden Laufdaten zum Erzwingen eines Starts manipulieren.
+
+## Bildwechsel und Stilreferenzen (Migrationen 009/010)
+
+Vor dem Update aktive CLI-/Renderaufträge auslaufen lassen und Daten sichern; danach Migrationen 009/010 sowie Web, Worker und Runner gemeinsam installieren. Keine neuen npm-/Systempakete. Migration 009 erweitert Szenenpositionen/-anzahl auf 240 und ergänzt Plan/Anschluss; vorhandene Snapshots behalten ihren bisherigen Schnittplan. Die alten `video_scene_count`-Felder an Artist/Run bleiben ausschließlich aus Kompatibilitätsgründen erhalten; neue Vollvideos berechnen die Motivanzahl aus der Audiodauer.
+
+Migration 010 ergänzt relationale `artist_style_profiles` mit Assetbezug, getrennten Recherche-/Audiojobs, Berichten, Prüfzeiten und Version. Neue lange Storyboards verbrauchen einen KI-Auftrag pro acht Szenen; Bild-/Credit-/Renderlimits werden nicht erhöht. Unterbrechungen behalten abgeschlossene Teile. Größere Produktionsmengen verlängern Bild- und Renderzeit.
+
+Google-CLI-Modellzugang am 22.09. auf dorfspy mit `UNSUPPORTED_CLIENT` gescheitert, obwohl eine Authdatei existiert. Keine Authdateien kopieren und keinen kostenpflichtigen Provider als Umgehung konfigurieren. Aktuelle Grenze und Bedienung: [ARTIST_STYLE.md](ARTIST_STYLE.md).

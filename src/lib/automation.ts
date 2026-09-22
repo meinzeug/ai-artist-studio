@@ -3,7 +3,8 @@ import { Temporal } from "@js-temporal/polyfill";
 import { artistSchema, ideaSchema, lyricsSchema } from "./domain";
 export const automaticArtistBrief = z.object({
   name: z.string().trim().max(160).default(""),
-  genre: z.string().trim().max(500).default(""),
+  genre: z.string().trim().max(2000).default(""),
+  research_query: z.string().trim().max(6000).default(""),
   appearance: z.string().trim().max(4000).default(""),
   wishes: z.string().trim().max(6000).default(""),
   language: z.string().trim().min(1).max(80).default("Deutsch"),

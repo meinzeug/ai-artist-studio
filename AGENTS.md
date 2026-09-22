@@ -22,3 +22,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+- Neue Vollvideo-Produktionen: reale Audiodauer bestimmt die Bildanzahl (höchstens fünf Sekunden je neuem Motiv); persistente Storyboard-Teilaufträge, bestehende Snapshots/Budgets erhalten.
+- Stilrecherche nur als dedizierter `auto_style_*`-Auftrag mit echten Suchereignissen. Audio nur an ausdrücklich bestätigten Gemini-Weg; aktueller dorfspy-Zugang meldet UNSUPPORTED_CLIENT. Keine vorgetäuschte Höranalyse und kein bezahlter Fallback.
+- TikTok-Captions thematisieren Musik statt KI/Virtualität; separate Plattformkennzeichnungen und Rechteprüfung bleiben bestehen.

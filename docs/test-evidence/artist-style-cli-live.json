@@ -1,0 +1,24 @@
+{
+  "checked_at": "2026-09-22",
+  "codex": {
+    "version": "0.154.0",
+    "environment": "local isolated CLI runner",
+    "authentication": "existing official ChatGPT login",
+    "web_search_mode": "live",
+    "successful": true,
+    "confirmed_search_events": 3,
+    "source": "https://kraftwerk.com/de/katalog/index-CD_BOX_de.html"
+  },
+  "gemini": {
+    "version": "0.60.0",
+    "environment": "dorfspy isolated CLI provider probe",
+    "authentication_detected": true,
+    "input": "explicitly synthetic 4-second MP3 tone",
+    "successful": false,
+    "provider_error": "UNSUPPORTED_CLIENT",
+    "error_type": "IneligibleTierError",
+    "audio_understanding_verified": false
+  },
+  "paid_api_used": false,
+  "user_music_transmitted": false
+}

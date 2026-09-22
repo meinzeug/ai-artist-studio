@@ -91,7 +91,7 @@ export const timelineSchema = z
         }),
       )
       .min(1)
-      .max(64),
+      .max(240),
     subtitles: z.array(subtitleSchema).max(100).default([]),
     title: short.default(""),
     title_duration: z.number().min(0).max(1200).nullable().default(null),
@@ -235,6 +235,8 @@ export const jobKinds = [
   "prepare_music_package",
   "suno_generate",
   "suno_sync",
+  "auto_style_research",
+  "auto_style_audio",
   "auto_identity",
   "auto_song",
   "music_video_storyboard",

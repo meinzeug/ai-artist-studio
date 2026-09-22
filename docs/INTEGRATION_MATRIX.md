@@ -2,6 +2,16 @@
 
 Letzte Dokumentations- und Umgebungsprüfung: **2026-09-20**. „Dokumentiert“, „implementiert“, „konfiguriert“ und „live getestet“ sind getrennte Nachweise. Eine erreichbare Dokumentationsadresse belegt keine Kontoberechtigung.
 
+## Ergänzung, geprüft am 22.09.2026
+
+| Funktion | Dokumentiert | Implementiert | Konfiguriert | Live-Test | Alternative |
+|---|---|---|---|---|---|
+| Codex-Websuche für Stilrecherche | [web_search=live, entspricht --search](https://learn.chatgpt.com/docs/config-file/config-basic) | Dedizierter Stilauftrag, nur Websuche, Suchaktivität geprüft, Quellenbericht gespeichert | Vorhandener ChatGPT-CLI-Login | Erfolgreich: tatsächliche Suchereignisse und Quellenlink, CLI 0.154.0 | Eigenen Stil beschreiben |
+| Gemini CLI: Audio als Dateikontext | [Audio-Unterstützung](https://geminicli.com/docs/tools/file-system/), [Dateieinbindung](https://geminicli.com/docs/cli/tutorials/file-management/) | Optionaler Upload, maximal 90 Sekunden Auszug, dedizierter Gemini-Auftrag, Schema/Fehler/Abbruch | Server-Login-Datei vorhanden, CLI 0.60.0; lokal kein Login | **Gescheitert:** Google meldet `UNSUPPORTED_CLIENT` / `IneligibleTierError`; kein Hörergebnis übernommen | Analyse ausdrücklich auslassen, Text-/Web-Stilvorgaben nutzen |
+| Gemini CLI: allgemeiner Modellzugriff | [Authentifizierung](https://geminicli.com/docs/get-started/authentication/) | Bisheriger CLI-Adapter; Fehler jetzt präzise statt pauschaler Login-Aufforderung | Token erkannt ist kein bestätigter Modellzugang | Aktueller Serverzugang von Google zurückgewiesen | Codex ausdrücklich wählen |
+
+Diese aktuelle Google-Abnahme präzisiert die älteren Angaben zur erkannten Anmeldung. Keine Umstellung auf Antigravity oder eine kostenpflichtige API durchgeführt. Details: [ARTIST_STYLE.md](ARTIST_STYLE.md). Die folgende Tabelle dokumentiert die vorherigen Abnahmen vom 20.09.2026.
+
 | Anbieter / Produkt / Funktion | Offizielle Dokumentation | Technische Fähigkeit | Auth / Freischaltung / Review | Implementiert | Hier konfiguriert | Tatsächlicher Test | Alternative |
 |---|---|---|---|---|---|---|---|
 | OpenAI Codex CLI, Text | [Headless](https://developers.openai.com/codex/noninteractive/), [Auth](https://developers.openai.com/codex/auth/) | `exec`, STDIN, JSONL-Ereignisse, `--output-schema` | offizieller ChatGPT-Login, Kontolimits | Ja, CLI 0.154.0, Schemaadapter, Abbruch, Linux-Isolation; API-Key-Modus wird abgewiesen | Ja, vorhandene eigene offizielle Anmeldung ausschließlich im Runner | **Live erfolgreich:** Verbindung, Songidee, Lyrics, datenbezogene Erkenntnis, Folgeidee und Antwortentwurf | manuelle Texte |

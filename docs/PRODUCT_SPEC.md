@@ -87,3 +87,12 @@ Details und konkrete Serverabnahme: [Vollständige Musikvideos](FULL_MUSIC_VIDEO
 | Anforderung | Implementierung | Nachweis |
 |---|---|---|
 | Bestehenden Artist sofort einen weiteren Song entwickeln lassen | `auto_start`, `StartProduction`, Migration 008 | `manual-production.test.ts`: Tageslauf und Zusatzlauf, Deduplizierung, Referenz/Termin, Budgetstopp; `manual-production.spec.ts`: Dashboard bis Suno-Paket |
+
+## Ergänzungen vom 22.09.2026
+
+| Anforderung | Implementierung | Nachweis |
+|---|---|---|
+| Neues Bild spätestens alle fünf Sekunden, logisch verknüpft | `requiredSceneCount`, `sceneWindows`, persistente Acht-Szenen-Teilaufträge, `continuity`, Migration 009 | `music-video.test.ts`: 38 Szenen/5 Teiljobs, Budget/Wiederaufnahme, 240 Motive; echter Film; `music-video.spec.ts` |
+| Optional Band-/Stilrecherche beim Artist-Start | `auto_style_research`, CLI-Suchfreigabe, `artist_style_profiles` | `artist-style.test.ts`, tatsächlicher Codex-Websuchlauf, Browserprüfung |
+| Optional MP3-Referenz und nachvollziehbare Analyse | Multipart-Erstellung, privates Referenzasset, maximal 90 Sekunden, `auto_style_audio` | Echtes Audio in Unit-/Browsertest, Providerantwort simuliert; Google-Livezugang blockiert (UNSUPPORTED_CLIENT) |
+| TikTok-Captions ohne KI-Thema | Gemeinsame Textanweisung und Filter für automatische Captions/Hashtags | Captionfälle in `artist-style.test.ts`; Kennzeichnung separat erhalten |

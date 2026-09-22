@@ -4,7 +4,11 @@ import { pool, one, query, transaction } from "./db";
 import { AppError, own, audit } from "./security";
 import { enqueue } from "./jobs";
 import { imageCommand, imageConnection } from "./image-generation";
-import { sceneCount, fullMusicVideoTimeline } from "../lib/music-video";
+import {
+  requiredSceneCount,
+  MAX_IMAGE_SECONDS,
+  fullMusicVideoTimeline,
+} from "../lib/music-video";
 
 const key = (id: string, step: string) => {
   const h = createHash("sha256")
@@ -37,8 +41,7 @@ async function connectionApproval(user: string, d: any, count: number, c: any) {
   return connection;
 }
 export async function createMusicVideo(user: string, d: any) {
-  const runId = z.uuid().parse(d.run_id),
-    count = sceneCount.parse(d.scene_count ?? 8);
+  const runId = z.uuid().parse(d.run_id);
   return transaction(async (c) => {
     const settings = await one(
       "SELECT * FROM settings WHERE user_id=$1 FOR UPDATE",
@@ -61,7 +64,6 @@ export async function createMusicVideo(user: string, d: any) {
       c,
     );
     if (old) return old;
-    const connection = await connectionApproval(user, d, count, c);
     const policy = await one(
       "SELECT * FROM artist_automations WHERE artist_id=$1",
       [run.artist_id],
@@ -86,6 +88,13 @@ export async function createMusicVideo(user: string, d: any) {
       throw new AppError(
         "Vollversion: Aufnahme muss zwischen 2 Sekunden und 20 Minuten lang sein.",
       );
+    const count = requiredSceneCount(duration);
+    if (d.scene_count !== undefined && d.scene_count !== count)
+      throw new AppError(
+        `Die Aufnahme benötigt ${count} neue Bildmotive für Bildwechsel spätestens alle 5 Sekunden. Vorschau erneut öffnen.`,
+        409,
+      );
+    const connection = await connectionApproval(user, d, count, c);
     const lyrics = await one(
       "SELECT * FROM lyrics_versions WHERE id=$1 AND song_id=$2",
       [variant.lyrics_version_id, run.song_id],
@@ -108,6 +117,7 @@ export async function createMusicVideo(user: string, d: any) {
         style_prompt: lyrics.style_prompt,
       },
       duration,
+      max_image_seconds: MAX_IMAGE_SECONDS,
       audio_hash: variant.sha256,
       reference_hash: reference.sha256,
       timing: "lyric_story_order_not_audio_alignment",
@@ -284,12 +294,24 @@ async function advance(p: any) {
   if (p.state === "planning") {
     if (!p.job_id) {
       await transaction(async (c) => {
+        const current = await one(
+          "SELECT * FROM music_video_productions WHERE id=$1 FOR UPDATE",
+          [p.id],
+          c,
+        );
+        if (current?.state !== "planning" || current.job_id) return;
+        const progress = await one(
+          "SELECT count(*)::int n FROM music_video_scenes WHERE production_id=$1",
+          [p.id],
+          c,
+        );
+        const offset = progress!.n;
         const j = await enqueue(
           p.user_id,
           p.artist_id,
           "music_video_storyboard",
-          { production_id: p.id },
-          key(p.id, "storyboard:" + p.attempt),
+          { production_id: p.id, start_position: offset },
+          key(p.id, "storyboard:" + p.attempt + ":" + offset),
           c,
         );
         await c.query(
@@ -372,6 +394,7 @@ async function advance(p: any) {
           prompt: [
             "Ein einzelnes hochwertiges filmisches Musikvideo-Standbild, vertikal 9:16. Verwende die angehängte Künstlerreferenz für dieselbe erwachsene fiktive Person; Gesicht, Haare, Haut und Kostüm konsistent. Neue Komposition und Handlung für diese Szene, keine Kopie der Referenzpose. Keine Schrift, Beschriftung, Collage, Wasserzeichen oder Logos.",
             p.storyboard.visual_style,
+            scene.continuity ? "Anschluss: " + scene.continuity : "",
             "Szenenauftrag: " + scene.prompt,
             "Kontinuität: " + JSON.stringify(p.snapshot.artist?.identity ?? {}),
           ]
@@ -435,6 +458,7 @@ async function advance(p: any) {
         p.snapshot.duration,
         `${p.snapshot.lyrics.title} · ${p.snapshot.artist?.name ?? ""}`,
         scenes,
+        !p.snapshot.max_image_seconds,
       );
       const project = {
         id: randomUUID(),

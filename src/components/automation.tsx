@@ -35,16 +35,26 @@ function useAutomaticAction() {
     lock = useRef(false);
   const [busy, setBusy] = useState(false),
     [error, setError] = useState("");
-  async function run(action: string, data: Row, key?: string) {
+  async function run(
+    action: string,
+    data: Row,
+    key?: string,
+    reference?: File | null,
+  ) {
     if (lock.current) return;
     lock.current = true;
     setBusy(true);
     setError("");
     try {
-      const r = await fetch("/api/command", {
+      const form = reference ? new FormData() : null;
+      if (form) {
+        form.append("file", reference!);
+        form.append("data", JSON.stringify({ data, key }));
+      }
+      const r = await fetch(form ? "/api/artists/create" : "/api/command", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action, data, key }),
+        ...(form ? {} : { headers: { "Content-Type": "application/json" } }),
+        body: form ?? JSON.stringify({ action, data, key }),
       });
       const v = await r.json();
       if (!r.ok) throw new Error(v.error);
@@ -117,6 +127,7 @@ function BudgetPreview({
 export function CreateAutomaticArtist({ onClose }: { onClose: () => void }) {
   const { data, setArtistId, nav } = useStudio(),
     { run, busy, error } = useAutomaticAction();
+  const [reference, setReference] = useState<File | null>(null);
   const [key] = useState(() => crypto.randomUUID()),
     [providers] = useState({
       image: data.image_connection ?? null,
@@ -146,6 +157,7 @@ export function CreateAutomaticArtist({ onClose }: { onClose: () => void }) {
               brief: {
                 name: v.name ?? "",
                 genre: v.genre ?? "",
+                research_query: v.research_query ?? "",
                 appearance: v.appearance ?? "",
                 wishes: v.wishes ?? "",
                 language: v.language || "Deutsch",
@@ -153,10 +165,11 @@ export function CreateAutomaticArtist({ onClose }: { onClose: () => void }) {
               approved: true,
               image_version: providers.image?.version ?? null,
               music_version: providers.music?.version ?? null,
+              audio_consent: v.audio_consent === "on",
               full_music_video: v.full_music_video === "on",
-              video_scene_count: Number(v.video_scene_count),
             },
             key,
+            reference,
           );
           if (result) {
             setArtistId(result.id);
@@ -178,6 +191,36 @@ export function CreateAutomaticArtist({ onClose }: { onClose: () => void }) {
               label="Musikstil (optional)"
               placeholder="z. B. melancholischer Deutschpop"
             />
+            <Textarea
+              name="research_query"
+              label="Band oder Musikstil im Internet recherchieren (optional)"
+              placeholder="z. B. Recherchiere Band XY: Sound, Instrumentierung und Songaufbau. Entwickle daraus einen eigenständigen, moderneren Stil."
+            />
+            <p className="muted">
+              Die gewählte Text-KI recherchiert mit Websuche und speichert ihre
+              Quellen. Die Ergebnisse fließen in das musikalische Profil ein.
+            </p>
+            <label>
+              Musikreferenz hochladen (optional)
+              <input
+                type="file"
+                accept="audio/mpeg,audio/wav,audio/flac,audio/ogg,.mp3"
+                onChange={(e) => setReference(e.target.files?.[0] ?? null)}
+              />
+            </label>
+            {reference && (
+              <label className="checkbox">
+                <input name="audio_consent" type="checkbox" required />
+                Ich darf diese Datei zur Analyse verwenden und bestätige die
+                Übermittlung von bis zu 90 Sekunden an Gemini über meinen
+                Google-CLI-Login. Maximal 25 MB / 20 Minuten.
+              </label>
+            )}
+            <p className="muted">
+              Höranalyse nutzt Gemini separat von der Text-KI. Ohne
+              funktionierenden Google-Login erscheint eine manuelle Aufgabe. Das
+              Original bleibt privat in der Medienbibliothek.
+            </p>
             <Input name="language" label="Sprache" defaultValue="Deutsch" />
             <Textarea
               name="appearance"
@@ -195,14 +238,11 @@ export function CreateAutomaticArtist({ onClose }: { onClose: () => void }) {
           <input name="full_music_video" type="checkbox" defaultChecked />
           Vollständiges Musikvideo automatisch produzieren
         </label>
-        <Input
-          name="video_scene_count"
-          type="number"
-          min={4}
-          max={24}
-          defaultValue={8}
-          label="Neue Bildmotive pro Musikvideo"
-        />
+        <p className="muted">
+          Neues Bild spätestens alle 5 Sekunden. Die Bildanzahl ergibt sich aus
+          der Songlänge: z. B. 36 Bilder bei 3 Minuten. Zusammenhängende Szenen
+          mit fester Künstlerreferenz; bestehende Budgets gelten weiter.
+        </p>
         <BudgetPreview image={providers.image} music={providers.music} />
         <p className="muted">
           Mit „Artist erstellen & Automatik starten“ gibst du diese internen
@@ -257,7 +297,6 @@ export function AutomationSettings({
               image_version: snapshot.image?.version ?? null,
               music_version: snapshot.music?.version ?? null,
               full_music_video: v.full_music_video === "on",
-              video_scene_count: Number(v.video_scene_count),
             })
           )
             onClose();
@@ -298,14 +337,11 @@ export function AutomationSettings({
           />
           Vollständiges Musikvideo automatisch produzieren
         </label>
-        <Input
-          name="video_scene_count"
-          type="number"
-          min={4}
-          max={24}
-          defaultValue={p?.video_scene_count ?? 8}
-          label="Neue Bildmotive pro Musikvideo"
-        />
+        <p className="muted">
+          Neues Bild spätestens alle 5 Sekunden. Die Bildanzahl ergibt sich aus
+          der Songlänge: z. B. 36 Bilder bei 3 Minuten. Zusammenhängende Szenen
+          mit fester Künstlerreferenz; bestehende Budgets gelten weiter.
+        </p>
         <BudgetPreview image={snapshot.image} music={snapshot.music} />
         <p className="muted">
           Speichern bestätigt die hier angezeigten aktuellen Provider und
@@ -629,7 +665,7 @@ function StartProduction({
       </p>
       <p>
         {snapshot.policy.full_music_video
-          ? `Geplant: eine Vollversion mit ${snapshot.policy.video_scene_count} neuen Bildmotiven und drei Kurzclips.`
+          ? "Geplant: eine Vollversion mit einem neuen Bild spätestens alle 5 Sekunden, passend zur Songlänge, und drei Kurzclips."
           : "Geplant: eine neue Bildszene und drei Kurzclips."}{" "}
         Der tägliche Termin bleibt bestehen.
       </p>

@@ -1,3 +1,4 @@
+import { MUSIC_CAPTION_GUIDANCE, musicCaption } from "../lib/captions";
 import { z } from "zod";
 import { randomUUID } from "node:crypto";
 import { one, query, transaction } from "../server/db";
@@ -31,6 +32,10 @@ export async function runAutomaticText(
     "SELECT provider FROM settings WHERE user_id=$1",
     [job.user_id],
   ))!;
+  const styleProfile = await one(
+    "SELECT research_result,audio_result FROM artist_style_profiles WHERE artist_id=$1 AND user_id=$2",
+    [artist.id, job.user_id],
+  );
   const catalog = await query(
     "SELECT title,premise,feedback FROM ideas WHERE artist_id=$1 ORDER BY created_at DESC LIMIT 30",
     [artist.id],
@@ -57,7 +62,7 @@ export async function runAutomaticText(
   const identity = job.kind === "auto_identity",
     schema = identity ? automaticIdentity : automaticSong;
   const purpose = identity
-    ? "Entwickle einen vollständigen eigenständigen virtuellen Musikkünstler: origineller Name, öffentliche Bio (ausdrücklich virtueller KI-gestützter Charakter), vollständige Character Bible, stimmiges Musikprofil und präzise visuelle Identität. Berücksichtige optionale Vorgaben, erfinde sonst alle kreativen Details selbst. Beschreibe eine erwachsene fiktive Figur; keine Kopie echter Personen. Fiktion, bestätigte Informationen und interne Anweisungen getrennt. Namens- und Handle-Verfügbarkeit ungeprüft. Keine behauptete echte menschliche Biografie."
+    ? "Entwickle einen vollständigen eigenständigen virtuellen Musikkünstler: origineller Name, öffentliche Bio (ausdrücklich virtueller KI-gestützter Charakter), vollständige Character Bible, stimmiges Musikprofil und präzise visuelle Identität. Berücksichtige optionale Vorgaben sowie gespeicherte style_research und reference_audio_analysis: deren musikalische Merkmale und kreative Richtung müssen im Musikprofil und Genre konkret erkennbar sein. Die Audioanalyse stammt vom separat ausgewiesenen Audiomodell; du hast selbst nur deren Bericht gelesen. Erfinde sonst kreative Details selbst. Beschreibe eine erwachsene fiktive Figur; keine Kopie echter Personen. Fiktion, bestätigte Informationen und interne Anweisungen getrennt. Namens- und Handle-Verfügbarkeit ungeprüft. Keine behauptete echte menschliche Biografie."
     : "Plane die heutige vollständige Produktion: eine eigenständige Songidee, singbare vollständige Lyrics mit Struktur, separater Suno-Stilprompt ohne reale Stimmenimitation und drei bewusst verschiedene TikTok-Clips. Nutze vorhandene Erkenntnisse und analytics für eine begründete nächste Idee; nenne in der Begründung konkrete vorhandene Beitragstitel und IDs, soweit du dich darauf beziehst. Fehlende Werte sind keine Nullen. Vergleiche nur ähnliche Beobachtungszeiträume; kleine Stichproben und Unsicherheit benennen, Korrelation nicht als Ursache darstellen. Ohne Daten rein kreative Begründung; keine Daten/Trends erfinden; keine Wiederholung des Katalogs. Liefere einen Bildprompt zur neuen Szene, der die Identität der festen Porträtreferenz erhält. Drei Clips: je ein eigener Einstieg, Caption, Hashtags, kurze redaktionelle Texteinblendung und Aufnahmebereich opening/middle/ending. Du hast die Aufnahme noch nicht gehört: keine Audiorankings, Refrainzeitstempel oder lippensynchrone Lyrics behaupten. Captions auf Deutsch, keine erfundenen Veröffentlichungsdaten. Stilprompt höchstens 900 Zeichen, Lyrics höchstens 4500 Zeichen.";
   const response = await transport(
     (process.env.RUNNER_URL ?? "http://127.0.0.1:3211") + "/run",
@@ -83,9 +88,12 @@ export async function runAutomaticText(
               JSON.stringify(artist.name) +
               "; keine alternative Namensidee stattdessen einsetzen."
             : "") +
+          (identity ? "" : "\n" + MUSIC_CAPTION_GUIDANCE) +
           "\nDATA:\n" +
           JSON.stringify({
             brief: policy.brief,
+            style_research: styleProfile?.research_result ?? null,
+            reference_audio_analysis: styleProfile?.audio_result ?? null,
             artist,
             catalog,
             insights,
@@ -169,6 +177,14 @@ export async function runAutomaticText(
       );
     } else if (!identity && !latest.song_id) {
       const v = automaticSong.parse(result);
+      v.clips = v.clips.map((clip) => ({
+        ...clip,
+        ...musicCaption(
+          clip.caption,
+          clip.hashtags,
+          `${v.lyrics.title} · ${artist.name}`,
+        ),
+      }));
       v.idea.sources = [];
       if (
         catalog.some(

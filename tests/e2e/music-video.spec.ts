@@ -4,7 +4,7 @@ import { randomUUID, randomBytes, createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import sharp from "sharp";
 import { runProcess } from "../../src/lib/process";
-test("Vollständiges Musikvideo: Storyboard, vier eigene Bilder, volle Aufnahme und Download (synthetische KI-Antwort)", async ({
+test("Vollständiges Musikvideo: Storyboard, 13 eigene Bilder und Bildwechsel spätestens alle fünf Sekunden, volle Aufnahme und Download (synthetische KI-Antwort)", async ({
   page,
   context,
 }) => {
@@ -78,6 +78,15 @@ test("Vollständiges Musikvideo: Storyboard, vier eigene Bilder, volle Aufnahme 
       "#3366dd",
       "#aacc33",
       "#bb5599",
+      "#881177",
+      "#228877",
+      "#992233",
+      "#777777",
+      "#5555aa",
+      "#eeee55",
+      "#442200",
+      "#bb6633",
+      "#aabbcc",
     ].entries()) {
       const bytes = await sharp({
         create: { width: 360, height: 640, channels: 3, background: color },
@@ -106,7 +115,7 @@ test("Vollständiges Musikvideo: Storyboard, vier eigene Bilder, volle Aufnahme 
       "-f",
       "lavfi",
       "-i",
-      "sine=frequency=440:duration=34.2",
+      "sine=frequency=440:duration=64.2",
       "-c:a",
       "libmp3lame",
       "-y",
@@ -151,7 +160,12 @@ test("Vollständiges Musikvideo: Storyboard, vier eigene Bilder, volle Aufnahme 
         exact: true,
       })
       .click();
-    await page.getByLabel("Neue Bildmotive", { exact: true }).fill("4");
+    await expect(
+      page.getByLabel("Benötigte Bildmotive", { exact: true }),
+    ).toHaveValue("13");
+    await expect(page.getByRole("dialog")).toContainText(
+      "2 Storyboard-Teilaufträge",
+    );
     await page
       .getByRole("button", {
         name: "Musikvideo jetzt produzieren",
@@ -163,8 +177,8 @@ test("Vollständiges Musikvideo: Storyboard, vier eigene Bilder, volle Aufnahme 
         intervals: [1000],
       })
       .toBe("blocked");
-    await expect(page.locator(".music-storyboard-scene")).toHaveCount(4);
-    for (let i = 0; i < 4; i++) {
+    await expect(page.locator(".music-storyboard-scene")).toHaveCount(13);
+    for (let i = 0; i < 13; i++) {
       await page
         .locator(".music-storyboard-scene")
         .nth(i)
@@ -175,7 +189,7 @@ test("Vollständiges Musikvideo: Storyboard, vier eigene Bilder, volle Aufnahme 
       ).toBeVisible();
     }
     await page.screenshot({
-      path: "docs/screenshots/full-music-video-storyboard.png",
+      path: "docs/screenshots/five-second-storyboard.png",
       fullPage: true,
       animations: "disabled",
     });
@@ -211,9 +225,19 @@ test("Vollständiges Musikvideo: Storyboard, vier eigene Bilder, volle Aufnahme 
       p = s.music_video_productions[0],
       post = s.posts.find((x: any) => x.id === p.post_id),
       asset = s.assets.find((a: any) => a.id === post.asset_id);
-    expect(asset.metadata.duration).toBeGreaterThan(34);
+    expect(asset.metadata.duration).toBeGreaterThan(64);
     expect(asset.metadata.full_song).toBe(true);
-    expect(asset.metadata.scene_count).toBe(4);
+    expect(asset.metadata.scene_count).toBe(13);
+    const timeline = s.video_projects.find(
+      (v: any) => v.id === p.project_id,
+    ).timeline;
+    expect(timeline.scenes.every((x: any) => x.duration <= 5)).toBe(true);
+    expect(
+      s.jobs.filter((j: any) => j.kind === "music_video_storyboard"),
+    ).toHaveLength(2);
+    expect(
+      s.music_video_scenes.every((x: any) => x.continuity.length > 10),
+    ).toBe(true);
     expect(post.status).toBe("waiting_for_approval");
     await expect(
       page.getByRole("link", { name: "MP4 herunterladen", exact: true }),
@@ -229,13 +253,13 @@ test("Vollständiges Musikvideo: Storyboard, vier eigene Bilder, volle Aufnahme 
     );
     expect(decoded.code, decoded.stderr).toBe(0);
     await page.screenshot({
-      path: "docs/screenshots/full-music-video-desktop.png",
+      path: "docs/screenshots/five-second-desktop.png",
       fullPage: true,
       animations: "disabled",
     });
     await page.setViewportSize({ width: 390, height: 844 });
     await page.screenshot({
-      path: "docs/screenshots/full-music-video-mobile.png",
+      path: "docs/screenshots/five-second-mobile.png",
       fullPage: true,
       animations: "disabled",
     });
@@ -246,7 +270,7 @@ test("Vollständiges Musikvideo: Storyboard, vier eigene Bilder, volle Aufnahme 
     ).toBeTruthy();
     expect(errors).toEqual([]);
     await writeFile(
-      "docs/test-evidence/full-music-video-browser.json",
+      "docs/test-evidence/five-second-browser.json",
       JSON.stringify(
         {
           checked_at: new Date().toISOString(),
@@ -257,6 +281,10 @@ test("Vollständiges Musikvideo: Storyboard, vier eigene Bilder, volle Aufnahme 
           shot_count: asset.metadata.shot_count,
           streams: asset.metadata.streams,
           decoded: true,
+          max_image_seconds: Math.max(
+            ...timeline.scenes.map((x: any) => x.duration),
+          ),
+          storyboard_jobs: 2,
           manual_handoff: true,
           public_post_sent: false,
           browser_errors: errors,

@@ -107,7 +107,9 @@ test("Zusatzproduktion über Dashboard bis zur manuellen Suno-Aufgabe (synthetis
     await page
       .getByRole("button", { name: "Neue Produktion", exact: true })
       .click();
-    await expect(page.getByRole("dialog")).toContainText("8 neuen Bildmotiven");
+    await expect(page.getByRole("dialog")).toContainText(
+      "neuen Bild spätestens alle 5 Sekunden",
+    );
     const started = page.waitForResponse(
       (r) =>
         r.url().endsWith("/api/command") &&
@@ -165,7 +167,9 @@ test("Zusatzproduktion über Dashboard bis zur manuellen Suno-Aufgabe (synthetis
     await page.setViewportSize({ width: 390, height: 844 });
     await expect
       .poll(() =>
-        page.locator(".sidebar").evaluate((el) => el.getBoundingClientRect().right),
+        page
+          .locator(".sidebar")
+          .evaluate((el) => el.getBoundingClientRect().right),
       )
       .toBeLessThanOrEqual(0);
     expect(

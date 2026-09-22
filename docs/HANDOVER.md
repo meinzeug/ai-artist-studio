@@ -1,8 +1,20 @@
 # Übergabe – AI Artist Studio
 
-Stand **2026-09-20**. Implementierung im bestehenden Repository `/home/dennis/ai-artist-studio`, Ausgangscommit `8bf8730`. Keine fremden Änderungen verworfen und keine fremden Projekt-Credentials übernommen.
+Stand **2026-09-22**. Implementierung im bestehenden Repository `/home/dennis/ai-artist-studio`, Ausgangscommit `8bf8730`. Keine fremden Änderungen verworfen und keine fremden Projekt-Credentials übernommen.
 
-## Aktuelle Erweiterung: sofort eine weitere Produktion
+## Aktuelle Erweiterung: dichtere Musikvideos und musikalische Grundlagen
+
+Neue Vollvideos planen aus der vollständigen Audiodauer spätestens alle fünf Sekunden ein eigenes Bild (z. B. 38 Bilder bei 188,784 Sekunden). Der gemeinsame Handlungsbogen bleibt über persistente Storyboard-Teilaufträge erhalten. Bestehende Filme werden nicht automatisch neu generiert; vorhandene Bild- und Textbudgets gelten weiterhin.
+
+Unter **Künstler → Artist erstellen → Eigene Wünsche** sind Musikstil, Online-Rechercheauftrag zu Bands/Stilen und optional eine Musikreferenz verfügbar. Recherchequellen und Audioanalyse werden unter **Stil & Quellen** gespeichert und für Künstleridentität/Songs verwendet. Codex-Websuche mit bestehendem ChatGPT-Login tatsächlich erfolgreich geprüft.
+
+**Externe Grenze:** Die MP3-Höranalyse ist implementiert, wird aber auf dorfspy aktuell von Google mit `UNSUPPORTED_CLIENT` für Gemini CLI 0.60.0 abgewiesen. Eine vorhandene Anmeldung genügt nicht. Originale bleiben gespeichert; unter Stil & Quellen lässt sich ausdrücklich ohne Höranalyse fortfahren. Kein kostenpflichtiger Ersatzanbieter wird aktiviert. [Details](ARTIST_STYLE.md).
+
+Neu generierte TikTok-Captions/Hashtags enthalten Musik-/Songtexte ohne KI-/Virtualitätswerbung. Separate Plattformkennzeichnung und Rechteprüfung bleiben erhalten.
+
+Abnahme: **90/90 Unit-/Integrationstests, Typprüfung, Build und 3/3 gezielte Browserprüfungen** bestanden. Echter 64,27-Sekunden-Testfilm mit 13 Bildern und maximal 4,967 Sekunden je Motiv vollständig dekodiert. Browser-KI-Antworten ausdrücklich simuliert; echte Codex-Recherche separat nachgewiesen. Desktop/Mobil geprüft. Migrationen 009/010, keine neue Abhängigkeit. Deployment wird abschließend protokolliert.
+
+## Vorherige Erweiterung: sofort eine weitere Produktion
 
 Unter **Manuelle Aufgaben → Neue Produktion** kann ein bestehender Artist einen weiteren Song entwickeln, ohne bis zum nächsten Tageslauf zu warten. Der Bestätigungsdialog bindet die aktuellen Provider-Versionen; offene Produktionen, Not-Aus und Budgetgrenzen bleiben wirksam. Migration 008 trennt geplante Tagesläufe von zusätzlichen Starts mit eigener Deduplizierungskennung. Künstleridentität, Hauptporträt und Tagesplanung bleiben bestehen. 82 Unit-/Integrationstests, Typprüfung, Build und gezielter Playwright-Test bis zum Suno-ZIP bestanden. Die Browserprüfung verwendet einen ausdrücklich synthetischen Textprovider. Code **29eca50** ist auf dorfspy installiert; zusätzlich wurde über das echte Dashboard genau ein neuer Lauf gestartet und mit realem Codex bis zur gespeicherten Idee, Lyrics, Stilprompt und heruntergeladenem Suno-ZIP beobachtet. Termin und Porträt unverändert. Die offene manuelle Suno-Aufgabe benötigt jetzt die neue Aufnahme; für diesen neuen Song ist noch kein MP4 vorhanden. [Live-Nachweis](test-evidence/manual-production-live.json).
 
@@ -30,7 +42,7 @@ SunoAPI.org ist der vom Betreiber ausdrücklich gewählte Drittanbieter, mit eig
 
 ## Funktionierende Produktionsstrecke
 
-**Neue Vollversion:** Lyrics-Storyboard → standardmäßig acht neue KI-Bildmotive mit festem Hauptporträt → Kamerabewegungen, mehrere Einstellungen und echte Überblendungen → vollständiger Song als MP4. Bei neuen Artists vorausgewählt; für bestehende Songs unter Manuelle Aufgaben oder Video-Studio startbar. Einzelne Szenen bleiben bei Unterbrechungen erhalten. Der Titel erscheint nur kurz am Anfang. Zusatz-Kurzclips bleiben separat verfügbar. Migration 007, keine neue Bibliothek. Code `5f03a3b` committed, nach GitHub gepusht und nach Datensicherung auf dorfspy installiert. 79 Unit-/Integrationstests, zwei gezielte Browser-Szenarien und ein abschließender Wiederholungslauf bestanden. Restore: 52 Tabellen / 64 Datensätze und sieben Dateihashes geprüft. [Bedienung und technische Grenzen](FULL_MUSIC_VIDEOS.md).
+**Vollversion (Abnahme vom 20.09.; neue Bildanzahl siehe oben):** Lyrics-Storyboard → damals acht neue KI-Bildmotive mit festem Hauptporträt → Kamerabewegungen, mehrere Einstellungen und echte Überblendungen → vollständiger Song als MP4. Bei neuen Artists vorausgewählt; für bestehende Songs unter Manuelle Aufgaben oder Video-Studio startbar. Einzelne Szenen bleiben bei Unterbrechungen erhalten. Der Titel erscheint nur kurz am Anfang. Zusatz-Kurzclips bleiben separat verfügbar. Migration 007, keine neue Bibliothek. Code `5f03a3b` committed, nach GitHub gepusht und nach Datensicherung auf dorfspy installiert. 79 Unit-/Integrationstests, zwei gezielte Browser-Szenarien und ein abschließender Wiederholungslauf bestanden. Restore: 52 Tabellen / 64 Datensätze und sieben Dateihashes geprüft. [Bedienung und technische Grenzen](FULL_MUSIC_VIDEOS.md).
 
 Künstler/Character Bible → echte KI-Ideen → Lyrics mit Versionen/geschützten Zeilen → Suno-Paket bzw. freigegebener API-Auftrag → Audioimport mit Varianten/Rechten/Analyse → drei echte lokale FFmpeg-Videoformate → Snapshotfreigabe → TikTok-ZIP → manueller Veröffentlichungsnachweis → Kennzahlen und begründete Folgeidee.
 
@@ -53,7 +65,7 @@ Historische Kernabnahme umfasst tatsächlichen Worker-SIGKILL/Wiederaufnahme sow
 | Integration | Nutzer-Schritt / Grenze |
 |---|---|
 | Codex auf Server | Offizielle Anmeldung am 20.09. erkannt. Bild-KI im Dashboard auswählen. Lokale Text- und Bildproduktion live erfolgreich. |
-| Gemini | Server-Anmeldung erkannt; eigene Modellabnahme offen. Gemini-Bild-API separat konfigurieren. |
+| Gemini | Anmeldung vorhanden, aber Livezugriff am 22.09. mit UNSUPPORTED_CLIENT abgewiesen. Höranalyse extern blockiert; ausdrücklich auslassbar. Gemini-Bild-API ist separat. |
 | SunoAPI.org | Eigenen API-Key und bestätigten Tarif/Creditbudgets eintragen. Adapter/Fehlerfälle sind getestet, echter Provider noch nicht verbunden. |
 | Suno Platform | Separate Endpunktspezifikation und Zugang fehlen weiterhin. |
 | TikTok OAuth/Display | Registrierte Developer-App, Redirect/Scopes und Kontozustimmung fehlen; implementiert, kein Live-Test. |

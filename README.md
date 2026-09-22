@@ -16,11 +16,11 @@ Dein selbst gehostetes Studio entwickelt virtuelle Musikkünstler und produziert
 
 ## Artist erstellen. Die KI übernimmt.
 
-**Künstler → Artist erstellen**: Name, Musikstil, Aussehen und weitere Wünsche sind optional. Die KI entwickelt Character Bible und Bio, erzeugt das Hauptporträt und startet die erste Songproduktion.
+**Künstler → Artist erstellen**: Name, Musikstil, Aussehen und weitere Wünsche sind optional. Eine Band-/Stilrecherche mit Quellen sowie ein Referenz-MP3 können ergänzt werden. Codex-Websuche ist live geprüft; Gemini-Höranalyse ist auf dem aktuellen Serverzugang von Google blockiert. [Stil, Referenzen und tatsächliche Grenzen →](docs/ARTIST_STYLE.md) Die KI entwickelt Character Bible und Bio, erzeugt das Hauptporträt und startet die erste Songproduktion.
 
-Danach entsteht täglich ein neuer Song mit Lyrics, Musikstil und einem **vollständigen Musikvideo über die gesamte Songlänge**: Die KI schreibt ein Storyboard passend zu den Lyrics, erzeugt standardmäßig acht neue Bildmotive mit Künstlerreferenz und setzt sie mit Kamerabewegungen und weichen Überblendungen um. Zusätzlich entstehen drei Kurzclips samt Beschreibung. SunoAPI.org kann die Musik innerhalb deiner bestätigten Creditgrenzen erzeugen. Ohne API bekommst du unter **Manuelle Aufgaben** ein fertiges Suno-Paket; nach dem MP3-Upload läuft die Videoproduktion automatisch weiter. [Vollständige Musikvideos →](docs/FULL_MUSIC_VIDEOS.md)
+Danach entsteht täglich ein neuer Song mit Lyrics, Musikstil und einem **vollständigen Musikvideo über die gesamte Songlänge**: Die KI schreibt ein Storyboard passend zu den Lyrics, erzeugt spätestens alle fünf Sekunden ein neues Bildmotiv mit Künstlerreferenz (z. B. 38 Bilder bei 3:09 Minuten) und setzt sie mit Kamerabewegungen und weichen Überblendungen um. Zusätzlich entstehen drei Kurzclips samt Beschreibung. SunoAPI.org kann die Musik innerhalb deiner bestätigten Creditgrenzen erzeugen. Ohne API bekommst du unter **Manuelle Aufgaben** ein fertiges Suno-Paket; nach dem MP3-Upload läuft die Videoproduktion automatisch weiter. [Vollständige Musikvideos →](docs/FULL_MUSIC_VIDEOS.md)
 
-Die fertigen Videos stehen dort als MP4 oder ZIP bereit. Du prüfst sie, lädst sie bei TikTok hoch und trägst den Veröffentlichungslink ein. Unter **Manuelle Aufgaben → Neue Produktion** kannst du auch sofort einen weiteren Song starten. Produktionszeit, Pause und Budgets sind pro Artist einstellbar. Das Hauptporträt bleibt die feste Bildreferenz; perfekte Gesichtsgleichheit ist nicht garantiert. [Ablauf, Voraussetzungen und Fehlerbehandlung →](docs/AUTOMATION.md)
+Die fertigen Videos stehen dort als MP4 oder ZIP bereit. Neue TikTok-Captions sprechen über Song, Stimmung und Geschichte; KI-/Virtualitätsformulierungen und entsprechende Hashtags werden herausgefiltert. Plattformkennzeichnungen bleiben ein eigener Veröffentlichungsschritt. Du prüfst sie, lädst sie bei TikTok hoch und trägst den Veröffentlichungslink ein. Unter **Manuelle Aufgaben → Neue Produktion** kannst du auch sofort einen weiteren Song starten. Produktionszeit, Pause und Budgets sind pro Artist einstellbar. Das Hauptporträt bleibt die feste Bildreferenz; perfekte Gesichtsgleichheit ist nicht garantiert. [Ablauf, Voraussetzungen und Fehlerbehandlung →](docs/AUTOMATION.md)
 
 ## Ein durchgängiger Produktionsweg
 
@@ -81,7 +81,7 @@ Unter **Charakter & Medien → Bild generieren** entstehen Porträts, Cover und 
 
 ### Eingerichteter Server
 
-**https://artist.dorfspy.de** — Bild-KI und Artist-Automatik sind installiert, HTTPS und drei systemd-Dienste geprüft. Mit dem bestehenden Betreiberkonto anmelden und unter **Künstler → Artist erstellen** starten. Für bestehende Artists **Tägliche Automatik** aktivieren. Codex und Gemini sind auf diesem Server angemeldet; SunoAPI.org bei Bedarf im Dashboard verbinden.
+**https://artist.dorfspy.de** — Bild-KI und Artist-Automatik sind installiert, HTTPS und drei systemd-Dienste geprüft. Mit dem bestehenden Betreiberkonto anmelden und unter **Künstler → Artist erstellen** starten. Für bestehende Artists **Tägliche Automatik** aktivieren. Codex ist live nutzbar. Die vorhandene Gemini-Anmeldung wird aktuell von Google mit `UNSUPPORTED_CLIENT` zurückgewiesen; siehe [Integrationsstatus](docs/INTEGRATION_MATRIX.md). SunoAPI.org bei Bedarf im Dashboard verbinden.
 
 Bei einer frischen Installation schützt ein einmaliger Einrichtungscode die Anlage des Betreiberkontos. Es gibt kein voreingestelltes Login-Passwort.
 
@@ -122,10 +122,10 @@ TypeScript, Next.js **16.3.5**, React **19.3.0**, PostgreSQL **16**, Drizzle **0
 
 ## Geprüft – mit klaren Grenzen
 
-- **79 Unit-/Integrationstests** bestanden; Typprüfung und Produktionsbuild erfolgreich.
+- **90 Unit-/Integrationstests** bestanden; Typprüfung und Produktionsbuild erfolgreich.
 - Letzte vollständige Browserabnahme: **6/6 Playwright-Szenarien**, mit **echter Codex-Textproduktion** und **drei tatsächlich gerenderten, decodierten und im Browser abgespielten Videos**.
 - Zusätzlicher Upload-Regressionslauf: **1/1 bestanden**. MP3 mit eingebettetem Cover über die manuellen Aufgaben übernommen, Original unverändert erhalten und automatisch drei echte MP4 erzeugt. Falsche Dateitypen und Auftragszuordnungen bleiben gesperrt.
-- Neue Vollvideo-Abnahme: Storyboard, einzelne Szenenbilder, Wiederaufnahme und ein vollständiges MP4 über 30 Sekunden im Browser geprüft; Desktop/Mobilansichten und echte Überblendungen getestet. Test-KI und Testbilder ausdrücklich synthetisch. [Vollvideo-Anleitung →](docs/FULL_MUSIC_VIDEOS.md)
+- Aktuelle Abnahme: drei gezielte Browsertests für Artist-Erstellung mit Recherche/MP3, manuelle Suno-Produktion und Vollvideo bestanden. Echter 64,27-Sekunden-Film mit 13 Bildern, Wechsel spätestens alle fünf Sekunden und vollständiger Dekodierung; Desktop/Mobil geprüft. Test-KI und Testbilder ausdrücklich synthetisch. [Vollvideo-Anleitung →](docs/FULL_MUSIC_VIDEOS.md)
 - Autonome Artist-Erstellung inklusive echtem Porträt, Referenzszene, Suno-Aufgabe, automatischen MP4 und Veröffentlichungsnachweis im Browser bestanden. Restore mit 50 Tabellen und 22 Dateien geprüft.
 - Bild-KI im Browser eingerichtet; **echte Codex-PNG ohne API-Key** erzeugt, heruntergeladen und auf Desktop/Smartphone geprüft. Gemini-Bild-API separat mit simulierten Antworten getestet.
 - Optionaler Veo-Weg im Browser getestet: Verbindung, Hilfe, Kostenfreigabe, MP4-Import und Übernahme in die Timeline. Zusätzlicher realer Audiotest prüft, dass Szenenton durch die Song-MP3 ersetzt wird.
@@ -148,7 +148,7 @@ Tests verwenden eine separate Datenbank. Der CLI-E2E-Test benötigt eine eingeri
 | Integration | Stand |
 |---|---|
 | Codex | Text und native Bilder lokal mit ChatGPT live geprüft. Server-Anmeldung erkannt; Bild-KI im Dashboard auswählen. |
-| Gemini | Offizieller Google-Login und Headless-Adapter implementiert; Server-Anmeldung erkannt. Eigenständige Modellabnahme offen; Bild-API benötigt separaten Key. |
+| Gemini | Google-Login, Headless- und Audioadapter implementiert; vorhandener Serverzugang wird aktuell mit `UNSUPPORTED_CLIENT` abgewiesen. Höranalyse ausdrücklich auslassbar; Bild-API separat. |
 | SunoAPI.org | Implementiert und lokal mit simuliertem Anbieter getestet. Eigener Schlüssel und bestätigtes Creditbudget fehlen noch; keine bezahlte Liveproduktion. |
 | Suno Platform | Separates Produkt; kein verifizierter Zugang. |
 | TikTok OAuth / Display | Implementiert; Developer-App, Scopes und Live-Verbindung fehlen. |

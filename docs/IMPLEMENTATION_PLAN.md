@@ -1,8 +1,22 @@
 # Implementierungsplan und Arbeitsstand
 
-Stand: **2026-09-20**. Arbeit im bestehenden Projektverzeichnis, keine fremden Änderungen überschrieben.
+Stand: **2026-09-22**. Arbeit im bestehenden Projektverzeichnis, keine fremden Änderungen überschrieben.
 
-## Aktueller Auftrag: zusätzlicher Live-Produktionsdurchlauf
+## Aktueller Auftrag: neue Bildmotive spätestens alle fünf Sekunden
+
+- Bildanzahl aus der realen Audiodauer berechnen, maximal fünf Sekunden pro neuem Motiv, bis 240 Motive für 20 Minuten. Feste Acht-Bilder-Auswahl durch automatische Anzeige ersetzen.
+- Zusammenhängendes Storyboard in begrenzten, persistenten Teilaufträgen entwickeln: gemeinsamer Handlungsbogen/Stil, echte Lyrics-Bezüge, Anschluss zur vorherigen Szene, feste Porträtreferenz.
+- Vorhandene Produktionssnapshots und fertige Filme erhalten; neue Produktionen verwenden die neue Regel. Bestehende Budgets bleiben wirksam, auch für einzelne Text-Teilaufträge.
+- 90/90 Unit-/Integrationstests, Typprüfung, Produktionsbuild und drei gezielte Playwright-Szenarien bestanden. Echter Browserfilm: 64,27 Sekunden, 13 verschiedene Bilder, höchstens 4,967 Sekunden je Motiv, zwei Storyboard-Teilaufträge; H.264/AAC, 1080×1920 und vollständige Dekodierung. Zusätzlich 38-Motiv-Plan in fünf Teilaufträgen, Wiederaufnahme/Budgetstopp und framegenaue Grenzen bis 240 Bilder geprüft.
+
+### Zusatzauftrag: Stilrecherche, MP3-Referenz und Captions
+
+- Optionaler Musikstil ist schon vorhanden, erhält einen ausdrücklichen Rechercheweg mit echten Web-Suchrechten im eingeschränkten CLI-Runner und gespeicherten Quellen/Prüfzeit. Bandreferenzen in konkrete musikalische Eigenschaften und eigenständige Entwicklung übersetzen.
+- Optionaler MP3-Upload bei Artist-Erstellung; Höranalyse über Gemini CLI prüfen (offizielle Dateisystemdokumentation nennt Audio). Kein vorgetäuschtes Hören durch Codex. Eigenständiger begrenzter Auftrag, sichere Dateiübermittlung, explizite Google-Übermittlung und gespeicherte Analyse samt Unsicherheit.
+- Neue TikTok-Captions/Hashtags thematisieren Musik/Song/Geschichte und enthalten keine KI-/Virtualitätswerbung. Rechte- und Plattformkennzeichnung separat erhalten; keine erfundene menschliche Biografie.
+- OpenAI Docs Skill gelesen; Dokumentation 22.09.: Codex web_search=live entspricht --search; Gemini read_file unterstützt Audio. Reale lokale Codex-Websuche mit bestehendem ChatGPT-Login erfolgreich (drei Suchereignisse, offizielle Kraftwerk-Quelle). Gemini 0.60.0 auf dorfspy mit vorhandener Anmeldung live versucht: Google lehnt den Zugang mit UNSUPPORTED_CLIENT ab; keine erfolgreiche Höranalyse behauptet, explizites Fortsetzen ohne Analyse vorhanden. Commit/Push und gesicherte Installation werden abschließend geprüft.
+
+## Vorheriger Auftrag: zusätzlicher Live-Produktionsdurchlauf
 
 - Auf Nutzerwunsch Bildlimits auf dorfspy über den regulären Command auf 100/Tag und 1000/Monat erhöht (vorher 10/100); gleiche Codex-Verbindung und bestehende Artist-Automatik erneut bestätigt. Keine kostenpflichtigen API-Budgets geändert.
 - Zusatzstart für einen vorhandenen Artist ohne Warten auf den nächsten Tag: eigene Startkennung und tägliche Eindeutigkeit getrennt, maximal eine aktive Produktion, Schutz für laufende Vollvideos, unveränderter Termin und Katalog-/Porträtgrundlage.

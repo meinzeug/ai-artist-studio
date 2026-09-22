@@ -16,6 +16,37 @@ import path from "node:path";
 import { runProcess } from "../lib/process";
 import { z } from "zod";
 export type ProviderName = "codex" | "gemini";
+export type TextTaskOptions = { webSearch?: boolean; audio?: Buffer };
+export function neutralizeFileMentions(prompt: string) {
+  return prompt.replace(/@/g, "＠");
+}
+export function searchActivity(provider: ProviderName, stdout: string) {
+  if (provider === "gemini") {
+    const stats = JSON.parse(stdout).stats?.tools?.byName?.google_web_search;
+    return {
+      executed: Number(stats?.totalCalls ?? 0) > 0,
+      calls: Number(stats?.totalCalls ?? 0),
+    };
+  }
+  const calls = stdout.split("\n").flatMap((line) => {
+    try {
+      const e = JSON.parse(line);
+      return e.type === "item.completed" && e.item?.type === "web_search"
+        ? [e.item.action ?? { query: e.item.query }]
+        : [];
+    } catch {
+      return [];
+    }
+  });
+  return {
+    executed: calls.length > 0,
+    calls: calls.length,
+    queries: calls
+      .map((x) => x.query)
+      .filter(Boolean)
+      .slice(0, 10),
+  };
+}
 export interface TextProvider {
   detect(): Promise<unknown>;
   healthCheck(signal?: AbortSignal): Promise<unknown>;
@@ -24,6 +55,7 @@ export interface TextProvider {
     prompt: string,
     schema: any,
     signal?: AbortSignal,
+    options?: TextTaskOptions,
   ): Promise<{ result: unknown; usage: unknown }>;
   cancel(id: string): void;
   getUsage(): unknown;
@@ -54,6 +86,12 @@ export function parseProviderOutput(provider: ProviderName, stdout: string) {
   return { text, usage };
 }
 export function classifyError(message: string) {
+  if (
+    /UNSUPPORTED_CLIENT|IneligibleTierError|client is no longer supported/i.test(
+      message,
+    )
+  )
+    return "Google unterstützt diesen Gemini-CLI-Zugang derzeit nicht (UNSUPPORTED_CLIENT). Die gespeicherte Anmeldung genügt nicht. Kein Wechsel zu einer kostenpflichtigen API. In Stil & Quellen kann die Höranalyse ausgelassen werden.";
   if (/quota|rate.limit|usage.limit|429|exhausted/i.test(message))
     return "Quota erreicht. Kontolimits prüfen und später manuell erneut starten.";
   if (/auth|login|credential|401|sign.in|not logged/i.test(message))
@@ -103,7 +141,8 @@ export class CliProvider implements TextProvider {
   getCapabilities() {
     return {
       structuredText: true,
-      audioUnderstanding: false,
+      audioUnderstanding: this.provider === "gemini",
+      webSearch: true,
       imageGeneration: this.provider === "codex",
       videoGeneration: false,
       musicGeneration: false,
@@ -128,8 +167,17 @@ export class CliProvider implements TextProvider {
       signal,
     );
   }
-  async runStructuredTask(prompt: string, schema: any, signal?: AbortSignal) {
-    return this.runTask(prompt, schema, signal);
+  async runStructuredTask(
+    prompt: string,
+    schema: any,
+    signal?: AbortSignal,
+    options: TextTaskOptions = {},
+  ) {
+    if (options.audio && this.provider !== "gemini")
+      throw new Error(
+        "Audioverständnis ist nur über den ausdrücklich gewählten Gemini-CLI-Weg verfügbar.",
+      );
+    return this.runTask(prompt, schema, signal, undefined, options);
   }
   async runImageTask(prompt: string, reference?: Buffer, signal?: AbortSignal) {
     if (this.provider !== "codex")
@@ -141,6 +189,7 @@ export class CliProvider implements TextProvider {
     schema: any,
     signal?: AbortSignal,
     image?: { reference?: Buffer },
+    options: TextTaskOptions = {},
   ) {
     this.controller = new AbortController();
     const combined = signal
@@ -195,7 +244,7 @@ export class CliProvider implements TextProvider {
           "-c",
           'approval_policy="never"',
           "-c",
-          'web_search="disabled"',
+          options.webSearch ? 'web_search="live"' : 'web_search="disabled"',
           "-c",
           "agents.enabled=false",
           "-c",
@@ -237,7 +286,7 @@ export class CliProvider implements TextProvider {
           JSON.stringify({
             security: { auth: { selectedType: "oauth-personal" } },
             tools: {
-              core: [],
+              core: options.webSearch ? ["google_web_search"] : [],
               exclude: [
                 "run_shell_command",
                 "read_file",
@@ -246,7 +295,7 @@ export class CliProvider implements TextProvider {
                 "list_directory",
                 "glob",
                 "grep_search",
-                "google_web_search",
+                ...(options.webSearch ? [] : ["google_web_search"]),
                 "web_fetch",
                 "save_memory",
               ],
@@ -254,13 +303,18 @@ export class CliProvider implements TextProvider {
             mcpServers: {},
             context: { fileName: [] },
             general: { enableAutoUpdate: false },
+            model: { maxSessionTurns: 8 },
           }),
         );
         await writeFile(
           path.join(temp, "deny.toml"),
-          '[[rule]]\ntoolName = "*"\ndecision = "deny"\npriority = 999\n',
+          '[[rule]]\ntoolName = "*"\ndecision = "deny"\npriority = 999\n' +
+            (options.webSearch
+              ? '\n[[rule]]\ntoolName = "google_web_search"\ndecision = "allow"\npriority = 1000\n'
+              : ""),
         );
         args = [
+          "--skip-trust",
           "--output-format",
           "json",
           "--approval-mode",
@@ -272,6 +326,18 @@ export class CliProvider implements TextProvider {
           "-p",
           "Antworte ausschließlich mit JSON passend zum im Text angegebenen Schema.",
         ];
+        // Gemini expands @file references before the model runs, including in stdin.
+        // Only our fixed audio attachment may become a file inclusion.
+        prompt = neutralizeFileMentions(prompt);
+        if (options.audio) {
+          if (options.audio.length > 4_000_000)
+            throw new Error("Audioauszug zu groß.");
+          await writeFile(path.join(temp, "reference.mp3"), options.audio, {
+            mode: 0o600,
+          });
+          prompt +=
+            "\nAnalysiere den tatsächlich beigefügten Audioauszug: @./reference.mp3";
+        }
         prompt += "\nJSON-Schema: " + JSON.stringify(schema);
       }
       if (image?.reference) {
@@ -402,7 +468,19 @@ export class CliProvider implements TextProvider {
         );
       }
       this.usage = parsed.usage;
-      return { result: data, usage: parsed.usage };
+      const activity = options.webSearch
+        ? searchActivity(this.provider, result.stdout)
+        : null;
+      if (options.webSearch && !activity?.executed)
+        throw new Error(
+          "Recherche hat keine bestätigte Websuche ausgeführt. Keine Quellen als live recherchiert übernommen.",
+        );
+      return {
+        result: data,
+        usage: parsed.usage,
+        ...(activity ? { research: activity } : {}),
+        ...(options.audio ? { audio_input: true } : {}),
+      };
     } finally {
       this.controller = null;
       await rm(temp, { recursive: true, force: true });

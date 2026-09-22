@@ -1,6 +1,21 @@
 # Testbericht
 
-Abnahme: **2026-09-20**, Linux/Ubuntu, Node 22.23.1, PostgreSQL 16.15, Redis 7.0.15, FFmpeg 6.1.1, Google Chrome 153.0.8010.47. Produktiv- und Testdaten sind getrennt. Es wurde keine echte öffentliche Veröffentlichung und kein zusätzlicher kostenpflichtiger Medien-API-Auftrag ausgeführt. Native Codex-Text-/Bildtests nutzen das bestehende ChatGPT-Kontingent.
+Abnahme: **2026-09-22**, Linux/Ubuntu, Node 22.23.1, PostgreSQL 16.15, Redis 7.0.15, FFmpeg 6.1.1, Google Chrome 153.0.8010.47. Produktiv- und Testdaten sind getrennt. Es wurde keine echte öffentliche Veröffentlichung und kein zusätzlicher kostenpflichtiger Medien-API-Auftrag ausgeführt. Native Codex-Text-/Bildtests nutzen das bestehende ChatGPT-Kontingent.
+
+## Fünf-Sekunden-Bildwechsel, Stilrecherche und Musikreferenz (2026-09-22)
+
+- **90/90 Unit-/Integrationstests**, `npm run typecheck` und Produktionsbuild bestanden. Neue Prüfungen: Bildzahl aus realer Audiodauer (188,784 Sekunden → 38 Bilder), framegenaue Fenster bis 240 Szenen, zusammenhängende persistente Teilaufträge, Wiederaufnahme ohne erneute KI-Antwort, Budgetstopp und unveränderlicher Gesamtplan. Bestehende Filme behalten ihren Snapshot.
+- **3/3 gezielte Playwright-Szenarien bestanden (2 Minuten):** neue Artist-Erstellung mit Recherchewunsch/MP3/Zustimmung, zusätzliche manuelle Suno-Produktion und vollständiger Musikvideo-Workflow. Echte Uploads, Datenbank, Downloads und FFmpeg; KI-Antworten und Bilder in diesen Browserprüfungen ausdrücklich synthetisch.
+- Reales Browser-Testvideo: **64,266667 Sekunden, 13 verschiedene Bilder, zwei Storyboard-Aufträge, maximal 4,966667 Sekunden pro Motiv**, 1080×1920, 30 fps, H.264/yuv420p und AAC/48 kHz. Vollständige Dekodierung bestanden. Separater Integrationstest prüft einen 36,4-Sekunden-Film und die echte Bildmischung während eines Übergangs.
+- MP3-Upload ohne Übermittlungszustimmung abgewiesen; Originalhash unverändert, Quellen/Analyse im Dashboard sichtbar, beide Berichte in die Identitätsentwicklung übernommen. Fehler ohne tatsächliche Suchaktivität beziehungsweise ohne echte Audioeingabe abgewiesen. Höranalyse auslassen mit Besitz-/Versionsprüfung getestet. Feste Gemini-Dateianlage und Neutralisierung manipulativer `@file`-Eingaben geprüft.
+- Neue automatische Captions filtern KI-/Virtualitätswerbung und entsprechende Hashtags; separate Rechte-/AIGC-Prüfung bleibt bestehen. Bestehende freigegebene Beschreibungen werden nicht nachträglich verändert.
+- Desktop 1440px und Mobil 390px tatsächlich geprüft und Screenshots angesehen; kein horizontaler Überlauf und keine Browserfehler.
+- **Reale Codex-Suche erfolgreich:** CLI 0.154.0, bestehender lokaler ChatGPT-Login, isolierter Runner mit `web_search="live"`, drei bestätigte Suchereignisse und offizielle Kraftwerk-Quelle. Kein API-Key verwendet.
+- **Gemini-Höranalyse live nicht erfolgreich:** lokaler Runner ohne Google-Anmeldung; dorfspy besitzt eine Anmeldung, Google weist Gemini CLI 0.60.0 jedoch mit `IneligibleTierError / UNSUPPORTED_CLIENT` zurück. Synthetische Test-MP3 verwendet, keine Betreiberaufnahme übertragen. Der neue Adapter ist implementiert und mit echter Dateiverarbeitung/simuliertem Anbieter getestet; tatsächliches Hören bleibt extern blockiert. Kein stiller API-Fallback.
+
+Nachweise: [Video-Browserdaten](test-evidence/five-second-browser.json), [Artist-Browserdaten](test-evidence/artist-style-browser.json), [CLI-Liveprüfung](test-evidence/artist-style-cli-live.json), `tests/music-video.test.ts`, `tests/artist-style.test.ts`; [Storyboard](screenshots/five-second-storyboard.png), [Video mobil](screenshots/five-second-mobile.png), [Artist-Erstellung](screenshots/artist-style-create.png), [Stilbericht mobil](screenshots/artist-style-mobile.png). Lokale Logs: `.local/current-update-tests.log`, `.local/current-update-typecheck.log`, `.local/current-update-build.log`, `.local/current-update-browser.log`.
+
+Nicht erneut ausgeführt: sämtliche älteren Provider-Browserszenarien, Restore nach Migration 009/010 und 20-Minuten-Renderlasttest. Keine neue native 38-Bilder-Liveproduktion oder öffentliche Veröffentlichung ausgelöst. Historische Abnahmen unten behalten ihr jeweiliges Datum.
 
 ## Zusätzlicher Produktionsstart und zehnfache Bildlimits (2026-09-20)
 

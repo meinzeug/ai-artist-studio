@@ -46,3 +46,11 @@ Migration 006 ergänzt `artist_automations` (Zeitplan, Hauptreferenz, freigegebe
 ### Zusätzlicher Produktionsstart (Migration 008)
 
 `auto_start` erzeugt nach Betreiberbestätigung einen Lauf mit `start_kind=manual` und eindeutigem `start_key`. Der partielle Tagesindex gilt für `daily`; der bestehende Index gegen mehrere aktive Läufe bleibt erhalten. Settings-/Policy-Sperren, Provider-Versionen und Budgetprüfungen gelten auch beim Zusatzstart. Tagesplan und Künstleridentität werden nicht geändert. Scheduler prüfen den aktiven Lauf erneut innerhalb ihrer Transaktion. Advisory-Locks der beiden Scheduler sind nach Datenbankschema getrennt, damit unabhängige Testschemas sich nicht blockieren; Worker desselben Schemas teilen weiterhin die Sperre.
+
+## Dichtere Bildgeschichte und Stilgrundlagen
+
+Neue Musikvideos speichern `max_image_seconds=5` im Produktionssnapshot; `requiredSceneCount` berechnet mindestens `ceil(ceil(duration*30)/150)` eigenständige Motive (mindestens vier). Framegenaue Zeitfenster ergeben maximal fünf Sekunden je Motiv. Bis 240 Szenen, keine Wiederverwendung desselben Assets als neues Bild. Bestehende Produktionssnapshots verwenden weiterhin ihre alte Gewichtung.
+
+Der Storyboard-Worker bearbeitet höchstens acht Szenen je Job. `storyboard_plan` hält die erste Gesamtgeschichte, Szenen werden positionsweise transaktional gespeichert. Folgejobs erhalten den Plan, kompakte frühere Motive und die letzten zwei vollständigen Aufträge. Wiederholung eines gespeicherten Teils kehrt ohne zweiten Provideraufruf zurück. Jeder Teiljob erhält eine eigene stabile Kennung und Budgetreservierung.
+
+`artist_style_profiles` hält Recherche und optionalen Audioanalysebericht vor der Identitätsentwicklung. `auto_style_research`/`auto_style_audio` bleiben getrennte, idempotente interne Aktionen; `queue_ai` kann diese Freigaben nicht umgehen. Die Künstler- und Song-KI bekommt gespeicherte musikalische Merkmale mit Quellen/Zeit/Unsicherheit. Die native Höranalyse nutzt ausdrücklich Gemini; Codex erhält bei der Identitätsentwicklung nur den Bericht.

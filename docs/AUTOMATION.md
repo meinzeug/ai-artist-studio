@@ -2,7 +2,7 @@
 
 ## Vollständiges Musikvideo und zusätzliche Kurzclips
 
-Neue Artist-Produktionen erstellen standardmäßig ein Musikvideo für die gesamte Aufnahme mit eigenem Lyrics-Storyboard und acht neuen referenzbasierten Bildmotiven. Anzahl und Aktivierung stehen in den Automatik-Einstellungen. Bereits vorhandene Songs erhalten ihre Vollversion über **Manuelle Aufgaben → Vollständige Musikvideos → Vollständiges Musikvideo erstellen**. Die bestehenden drei 30-Sekunden-Videos sind zusätzliche Kurzformate. [Ablauf, Kontingent und Wiederaufnahme](FULL_MUSIC_VIDEOS.md).
+Neue Artist-Produktionen erstellen standardmäßig ein Musikvideo für die gesamte Aufnahme mit eigenem Lyrics-Storyboard und einem neuen referenzbasierten Bild spätestens alle fünf Sekunden. Die Anzahl folgt der realen Songlänge; Aktivierung in den Automatik-Einstellungen. Bereits vorhandene Songs erhalten ihre Vollversion über **Manuelle Aufgaben → Vollständige Musikvideos → Vollständiges Musikvideo erstellen**. Die bestehenden drei 30-Sekunden-Videos sind zusätzliche Kurzformate. [Ablauf, Kontingent und Wiederaufnahme](FULL_MUSIC_VIDEOS.md).
 
 ## Einmal einrichten
 
@@ -10,6 +10,10 @@ Neue Artist-Produktionen erstellen standardmäßig ein Musikvideo für die gesam
 2. **Bild-KI** wählen. Codex nutzt dein ChatGPT-Kontingent ohne zusätzlichen API-Key. Die Gemini-Bild-API benötigt eine eigene Verbindung und bestätigte Kosten. Ist noch keine Bild-KI gewählt, darf die ausdrücklich gestartete Artist-Automatik die vorhandene Codex-Anmeldung verwenden; ein fehlender Login erscheint als Aufgabe. Es gibt keinen stillen Wechsel zu einer kostenpflichtigen API.
 3. Optional **SunoAPI.org** verbinden und Creditbedarf sowie Tages-/Monatsbudget bestätigen. Das ist der ausdrücklich gewählte Drittanbieter, nicht die separate Suno Platform.
 4. **Künstler → Artist erstellen**. Alle Wünsche sind optional. Der Startknopf gibt die beschriebene tägliche interne Produktion innerhalb deiner eingerichteten Grenzen frei.
+
+## Optionale Stilgrundlagen
+
+Bei der Erstellung sind Musikstil, eine Webrecherche und eine Referenzaufnahme möglich. Berichte fließen vor der Identitätsentwicklung ein. Aktueller Gemini-Audiozugang auf dorfspy blockiert; eine ausstehende Höranalyse kann ausdrücklich ausgelassen werden. [Anleitung und geprüfte Grenzen](ARTIST_STYLE.md).
 
 ## Was automatisch passiert
 

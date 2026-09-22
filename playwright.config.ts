@@ -41,7 +41,9 @@ export default defineConfig({
         process.cwd() +
         "/tests/mocks/music-video-preload.mjs --import=" +
         process.cwd() +
-        "/tests/mocks/manual-production-preload.mjs",
+        "/tests/mocks/manual-production-preload.mjs --import=" +
+        process.cwd() +
+        "/tests/mocks/artist-style-preload.mjs",
     },
   },
 });

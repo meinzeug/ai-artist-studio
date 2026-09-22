@@ -65,7 +65,10 @@ const server = http.createServer(async (req, res) => {
     let raw = "";
     for await (const chunk of req) {
       raw += chunk;
-      if (raw.length > (req.url === "/image" ? 6_000_000 : 200000))
+      if (
+        raw.length >
+        (["/image", "/audio"].includes(req.url ?? "") ? 6_000_000 : 200000)
+      )
         throw new Error("Eingabe zu groß.");
     }
     const data = JSON.parse(raw);
@@ -97,7 +100,12 @@ const server = http.createServer(async (req, res) => {
       res.end(JSON.stringify(result));
       return;
     }
-    if (req.url !== "/cancel" && req.url !== "/run" && req.url !== "/image")
+    if (
+      req.url !== "/cancel" &&
+      req.url !== "/run" &&
+      req.url !== "/image" &&
+      req.url !== "/audio"
+    )
       throw new Error("Unbekannte Runner-Funktion.");
     if (req.url === "/cancel") {
       active.get(z.string().uuid().parse(data.id))?.abort();
@@ -113,10 +121,18 @@ const server = http.createServer(async (req, res) => {
           .max(5_500_000)
           .regex(/^[A-Za-z0-9+/]+={0,2}$/)
           .optional(),
+        web_search: z.boolean().default(false),
         prompt: z.string().max(150000),
         schema: z.record(z.string(), z.unknown()).default({}),
       })
       .parse(data);
+    if (
+      req.url === "/audio" &&
+      (input.provider !== "gemini" || !input.reference || input.web_search)
+    )
+      throw new Error(
+        "Audio benötigt Gemini und einen Audioauszug ohne Websuche.",
+      );
     if (active.size >= 1 || loginBusy()) {
       res.writeHead(429);
       res.end('{"error":"Runner ausgelastet."}');
@@ -138,6 +154,16 @@ const server = http.createServer(async (req, res) => {
               input.prompt,
               input.schema,
               controller.signal,
+              {
+                webSearch: input.web_search,
+                ...(req.url === "/audio"
+                  ? {
+                      audio: input.reference
+                        ? Buffer.from(input.reference, "base64")
+                        : undefined,
+                    }
+                  : {}),
+              },
             );
       if (req.url === "/image") imageResult.parse(result.result);
       res.end(JSON.stringify(result));

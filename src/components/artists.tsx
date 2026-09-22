@@ -1,4 +1,5 @@
 "use client";
+import { ArtistStyle } from "./artist-style";
 import { useState } from "react";
 import {
   Plus,
@@ -56,6 +57,7 @@ export function Artists() {
     [concepts, setConcepts] = useState(false),
     [automatic, setAutomatic] = useState(false),
     [automationSettings, setAutomationSettings] = useState<Row | null>(null),
+    [style, setStyle] = useState<Row | null>(null),
     [history, setHistory] = useState<Row | null>(null);
   const conceptJobs = data.jobs.filter(
     (j: Row) => j.kind === "artist_concepts" && j.state === "succeeded",
@@ -157,6 +159,7 @@ export function Artists() {
                       <PenLine size={16} />
                     </button>
                     <button onClick={() => setHistory(a)}>Versionen</button>
+                    <button onClick={() => setStyle(a)}>Stil & Quellen</button>
                     <button onClick={() => setAutomationSettings(a)}>
                       Tägliche Automatik
                     </button>
@@ -174,6 +177,7 @@ export function Artists() {
           onClick={() => setAutomatic(true)}
         />
       )}
+      {style && <ArtistStyle artist={style} onClose={() => setStyle(null)} />}
       {automatic && (
         <CreateAutomaticArtist onClose={() => setAutomatic(false)} />
       )}

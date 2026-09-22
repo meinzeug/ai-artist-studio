@@ -1,3 +1,4 @@
+import { prepareArtistStyle } from "./artist-style";
 import { randomUUID, createHash } from "node:crypto";
 import { z } from "zod";
 import { pool, one, query, transaction, type Client } from "./db";
@@ -14,7 +15,7 @@ import {
 } from "../lib/automation";
 import { artistSchema, timelineSchema } from "../lib/domain";
 import { createMusicVideo } from "./music-video";
-import { sceneCount } from "../lib/music-video";
+import { sceneCount, requiredSceneCount } from "../lib/music-video";
 
 export function automationKey(run: string, step: string, attempt = 1) {
   const hex = createHash("sha256")
@@ -92,6 +93,7 @@ export async function automationCommand(
   action: string,
   d: Record<string, any>,
   key: string,
+  uploadedReference?: { name: string; saved: any },
 ) {
   if (action === "auto_create") {
     const brief = automaticArtistBrief.parse(d.brief ?? {});
@@ -117,7 +119,7 @@ export async function automationCommand(
         runId = randomUUID();
       const a = artistSchema.parse({
         name: brief.name || "Neuer Artist · entsteht",
-        genre: brief.genre,
+        genre: brief.genre.slice(0, 500),
         language: brief.language,
       });
       await c.query(
@@ -151,6 +153,50 @@ export async function automationCommand(
           key,
         ],
       );
+      if (brief.research_query || uploadedReference) {
+        let referenceId: string | null = null;
+        if (uploadedReference) {
+          const { name, saved } = uploadedReference;
+          const size = (await one(
+            "SELECT coalesce(sum(bytes),0) bytes FROM assets x JOIN artists a ON a.id=x.artist_id WHERE a.user_id=$1",
+            [user],
+            c,
+          ))!;
+          if (
+            Number(size.bytes) + saved.bytes >
+            settings.storage_limit_mb * 1024 * 1024
+          )
+            throw new AppError("Speicherbudget überschritten.");
+          referenceId = randomUUID();
+          await c.query(
+            "INSERT INTO assets(id,artist_id,kind,name,storage_key,mime,bytes,sha256,metadata,origin) VALUES($1,$2,'audio',$3,$4,$5,$6,$7,$8,$9)",
+            [
+              referenceId,
+              id,
+              name,
+              saved.storage_key,
+              saved.mime,
+              saved.bytes,
+              saved.sha256,
+              JSON.stringify(saved.metadata),
+              "Vom Betreiber für Stilanalyse importiert; keine eigene Veröffentlichung",
+            ],
+          );
+          await c.query(
+            "INSERT INTO artist_references(id,artist_id,asset_id,type,notes,identity_version) VALUES($1,$2,$3,'musical',$4,1)",
+            [
+              randomUUID(),
+              id,
+              referenceId,
+              "Stilreferenz. Betreiber hat die Übermittlung von bis zu 90 Sekunden an Gemini zur Analyse bestätigt. Keine Freigabe für Samples oder Stimmenkopie.",
+            ],
+          );
+        }
+        await c.query(
+          "INSERT INTO artist_style_profiles(artist_id,user_id,reference_asset_id,research_query) VALUES($1,$2,$3,$4)",
+          [id, user, referenceId, brief.research_query],
+        );
+      }
       await c.query(
         "INSERT INTO automation_runs(id,user_id,artist_id,local_day) VALUES($1,$2,$3,$4)",
         [runId, user, id, localProductionDay(new Date(), settings.timezone)],
@@ -180,6 +226,50 @@ export async function automationCommand(
         c,
       );
       return { id, run_id: runId };
+    });
+  }
+  if (action === "auto_style_skip") {
+    const artist = await ownArtist(user, z.uuid().parse(d.artist_id));
+    return transaction(async (c) => {
+      const p = await one(
+        "SELECT * FROM artist_style_profiles WHERE artist_id=$1 FOR UPDATE",
+        [artist.id],
+        c,
+      );
+      if (!p || p.version !== z.number().int().positive().parse(d.version))
+        throw new AppError("Stilanalyse inzwischen geändert. Neu laden.", 409);
+      const j = await one(
+        "SELECT state FROM jobs WHERE id=$1",
+        [p.audio_job_id],
+        c,
+      );
+      if (p.audio_result || !j || !["failed", "cancelled"].includes(j.state))
+        throw new AppError(
+          "Nur eine angehaltene Höranalyse kann ausgelassen werden.",
+        );
+      await c.query(
+        "UPDATE artist_style_profiles SET audio_result=$2,version=version+1 WHERE artist_id=$1",
+        [
+          artist.id,
+          JSON.stringify({
+            skipped: true,
+            heard_audio: false,
+            summary:
+              "Höranalyse auf Betreiberwunsch ausgelassen. Datei nur als unanalysierte Referenz gespeichert.",
+            uncertainty: "Keine Aussage über gehörte Musik.",
+          }),
+        ],
+      );
+      await c.query(
+        "UPDATE automation_runs SET state='running',error=NULL WHERE artist_id=$1 AND stage='identity' AND state='waiting_for_input'",
+        [artist.id],
+      );
+      await c.query(
+        "UPDATE manual_tasks SET state='done',completed_at=now() WHERE artist_id=$1 AND task_key='identity' AND state='open'",
+        [artist.id],
+      );
+      await audit(user, "artist.audio_analysis_skipped", artist.id, {}, c);
+      return { ok: true };
     });
   }
   if (action === "auto_start") {
@@ -744,14 +834,19 @@ async function advanceRun(run: any) {
         throw new AppError(
           "Bildprovider/Budget geändert. Automatik-Einstellungen erneut bestätigen.",
         );
+      const audio = await one(
+        "SELECT a.metadata FROM audio_variants v JOIN assets a ON a.id=v.asset_id WHERE v.order_id=$1 AND a.kind='audio' AND a.rights_status<>'disputed' ORDER BY v.is_master DESC,v.created_at LIMIT 1",
+        [run.music_order_id],
+      );
+      const count = requiredSceneCount(Number(audio?.metadata.duration));
       full = await createMusicVideo(run.user_id, {
         run_id: run.id,
-        scene_count: run.video_scene_count,
+        scene_count: count,
         approved: true,
         connection_version: connection?.version ?? null,
         approved_cost_usd:
           connection?.provider === "gemini_api"
-            ? Number(connection.estimated_cost_usd) * run.video_scene_count
+            ? Number(connection.estimated_cost_usd) * count
             : null,
       });
     }
@@ -773,6 +868,7 @@ async function advanceRun(run: any) {
       await advance(run, "portrait");
       return;
     }
+    if (!(await prepareArtistStyle(run))) return;
     if (!run.job_id) {
       const j = await enqueue(
         run.user_id,

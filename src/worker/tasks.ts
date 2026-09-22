@@ -1,3 +1,4 @@
+import { MUSIC_CAPTION_GUIDANCE } from "../lib/captions";
 import { z } from "zod";
 import { randomUUID } from "node:crypto";
 import { one, query, transaction } from "../server/db";
@@ -86,6 +87,10 @@ export async function runTask(
   progress: (n: number) => Promise<void>,
 ) {
   const input = job.input;
+  if (["auto_style_research", "auto_style_audio"].includes(job.kind)) {
+    const { runArtistStyle } = await import("./artist-style");
+    return runArtistStyle(job, signal);
+  }
   if (job.kind === "music_video_storyboard") {
     const { runMusicVideoStoryboard } =
       await import("./music-video-storyboard");
@@ -320,7 +325,8 @@ export async function runTask(
   if (job.kind === "prepare_campaign") {
     schema = campaignSchema;
     purpose =
-      "Plane eine Woche mit bewusst unterschiedlichen Content-Ideen für den vorhandenen Song. Keine bestätigten Veröffentlichungstermine erfinden.";
+      "Plane eine Woche mit bewusst unterschiedlichen Content-Ideen für den vorhandenen Song. Keine bestätigten Veröffentlichungstermine erfinden." +
+      MUSIC_CAPTION_GUIDANCE;
     context.song = await one("SELECT * FROM songs WHERE id=$1", [
       input.song_id,
     ]);
